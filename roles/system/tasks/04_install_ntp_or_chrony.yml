@@ -1,0 +1,29 @@
+---
+
+- name: "Gather the package facts"
+  package_facts:
+    manager: auto
+
+- set_fact:
+    chrony_installed: "{{ 'chrony' in ansible_facts.packages }}"
+    ntp_installed: "{{ 'ntp' in ansible_facts.packages }}"
+
+- debug: var=chrony_installed
+- debug: var=ntp_installed
+
+# Case 1: chrony_installed, just start chronyd
+- name: "Start chronyd service on all hosts"
+  service: name=chronyd state=started enabled=yes
+  when: chrony_installed
+
+# Case 2: ntp_installed, just start ntpd
+- name: "Start ntp service on ntp server"
+  service: name=ntpd state=started enabled=yes
+  when: ntp_installed
+
+# Case 3: none installed
+- include_tasks: 04_1_ntp.yml
+  when: (not chrony_installed and not ntp_installed ) and (install_chrony is not defined or not install_chrony) and (install_ntp is not defined or install_ntp)
+
+- include_tasks: 04_2_chrony.yml
+  when: (not chrony_installed and not ntp_installed ) and install_chrony is defined and install_chrony

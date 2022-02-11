@@ -1,4 +1,11 @@
 ---
 
-installer_cache_path: /tmp
 delete_cache_after_install: true
+
+# check_disk_size: false
+installer_root_path_min_size_in_mb: "50*1024"
+installer_cache_min_size_in_mb: "10*1024"
+
+disable_firewall: true
+
+default_domain: "zetyun.local"

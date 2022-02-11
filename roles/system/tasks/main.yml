@@ -3,8 +3,14 @@
 - name: "Install Basic Linux Tools"
   action: resolve_artifacts
 
-- include_tasks: 01_install_basic_tools.yml
-  when: install_system && install_system_basicTools
+- import_tasks: 01_check_install_requirement.yml
 
 - include_tasks: 02_install_system_cfg.yml
   when: install_system && install_system_fileLimits
+
+- import_tasks: 03_hostname.yml
+
+- import_tasks: 04_install_ntp_or_chrony.yml
+
+- include_tasks: 05_install_basic_tools.yml
+  when: install_system && install_system_basicTools

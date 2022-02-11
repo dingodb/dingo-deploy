@@ -1,0 +1,30 @@
+---
+# hostname & /etc/hosts
+
+- name: "Set hostname related vars"
+  set_fact:
+    default_hostname_rhel: "{{ inventory_hostname | replace('.','-') }}"
+    ip_identity: "{{ inventory_hostname.split('.')[3] }}"
+
+- debug:
+    msg: "default_hostname_rhel={{ default_hostname_rhel }}, new_hostname=dingo{{ ip_identity }}.{{ default_domain }}"
+
+- name: "Update hostname if not set"
+  shell: "hostnamectl set-hostname --static dingo{{ ip_identity }}.{{ default_domain }}"
+  args:
+    warn: false
+  when: ansible_hostname == "localhost" or ansible_hostname == default_hostname_rhel
+
+- name: "Refresh facts after hostname changed"
+  setup:
+#  when: ansible_hostname == "localhost" or ansible_hostname == default_hostname_rhel
+
+- debug:
+    msg: "{{ inventory_hostname }} {{ hostvars[inventory_hostname]['ansible_fqdn'] }} {{ hostvars[inventory_hostname]['ansible_hostname'] }}"
+
+- name: "Update /etc/hosts"
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ item }} {{ hostvars[item]['ansible_fqdn'] }} {{ hostvars[item]['ansible_hostname'] }}"
+    state: present
+  with_items: "{{ groups['all_nodes'] }}"

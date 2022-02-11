@@ -1,0 +1,21 @@
+---
+# Check Disk is Avaliable or Not
+
+- name: "[PRE-CHECK] Check Disk Available Size"
+  shell: |
+    target_path={{ item.path }}
+    min_size_in_kb={{ item.min_size_in_mb }}*1024
+
+    existing_path=$target_path
+    until [[ -d $existing_path ]]; do existing_path=$(dirname $existing_path); done
+
+    mountpoint_available_size_in_kb=$(df $existing_path | tail -1 | awk '{print $4}')
+    if [[ $mountpoint_available_size_in_kb -ge $min_size_in_kb ]];then exit 0;else exit 1;fi
+  args:
+    warn: no
+  register: check_result
+  with_items:
+    - { path: "{{ installer_root_path }}" , min_size_in_mb: "{{ installer_root_path_min_size_in_mb }}" }
+    - { path: "{{ installer_cache_path }}" , min_size_in_mb: "{{ installer_cache_min_size_in_mb }}" }
+  failed_when: check_result.rc != 0
+  when: check_disk_size is not defined or check_disk_size

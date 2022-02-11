@@ -1,0 +1,38 @@
+---
+
+
+- name: "<NTP> Install ntp"
+  package: name=ntp state=present
+
+- name: "<NTP> Get netmask"
+  set_fact:
+    netmask="{{ hostvars[inventory_hostname]['ansible_'~item]['ipv4']['netmask'] }}"
+  with_items:
+    - "{{ ansible_interfaces | map('replace', '-','_') | list }}"
+  when:
+    - "'ipv4' in hostvars[inventory_hostname]['ansible_'~item]"
+    - hostvars[inventory_hostname]['ansible_'~item]['ipv4']['address'] == inventory_hostname
+- debug: var=netmask
+
+- name: "<NTP> All LAN ntp access"
+  lineinfile:
+    dest: /etc/ntp.conf
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "server 127.127.1.0"
+    - "fudge 127.127.1.0 stratum 8"
+    - "restrict {{ inventory_hostname }} mask {{ netmask }} nomodify notrap"
+  when: inventory_hostname == ntp_server
+
+- name: "<NTP> Setup NTP server for all hosts"
+  lineinfile:
+    path: "/etc/ntp.conf"
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "server {{ ntp_server }}"
+  when: inventory_hostname != ntp_server
+
+- name: "<NTP> Start ntp service on ntp server"
+  service: name=ntpd state=started enabled=yes

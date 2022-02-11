@@ -1,5 +1,9 @@
 ---
 
+# define the root path of install
+installer_root_path: /home
+installer_cache_path: /tmp
+
 #-----------------------------------------------------
 # 1. Update System Configuration about OS
 #-----------------------------------------------------

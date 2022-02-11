@@ -1,0 +1,41 @@
+---
+
+
+- name: "<CHRONY> Install chrony"
+  package: name=chrony state=present
+
+- name: "<CHRONY> Get netmask"
+  set_fact:
+    netmask="{{ hostvars[inventory_hostname]['ansible_'~item]['ipv4']['netmask'] }}"
+  with_items:
+    - "{{ ansible_interfaces | map('replace', '-','_') | list }}"
+  when:
+    - "'ipv4' in hostvars[inventory_hostname]['ansible_'~item]"
+    - hostvars[inventory_hostname]['ansible_'~item]['ipv4']['address'] == inventory_hostname
+- debug: var=netmask
+
+- name: "<CHRONY> Get CIDR"
+  set_fact:
+    net_cidr: "{{ inventory_hostname | cidr(netmask) }}"
+- debug: var=net_cidr
+
+- name: "<CHRONY> All LAN chronyc access"
+  lineinfile:
+    dest: /etc/chrony.conf
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "allow {{ net_cidr }}"
+  when: inventory_hostname == ntp_server
+
+- name: "<CHRONY> Add cron job for synchronizing date(client nodes only)"
+  lineinfile:
+    dest: /etc/chrony.conf
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "server {{ ntp_server }} iburst"
+  when: inventory_hostname != ntp_server
+
+- name: "<CHRONY> Start chronyd service on all hosts"
+  service: name=chronyd state=started enabled=yes
