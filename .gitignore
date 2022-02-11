@@ -1,0 +1,11 @@
+.idea
+inventory/hosts
+*.log
+*.tar
+*.tar.gz
+*.zip
+*.tgz
+*.pyc
+*.swp
+*.tar.gz
+tests/

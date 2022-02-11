@@ -1,0 +1,4 @@
+---
+
+- name: Update Open file limits
+  copy: src={{ cfg_system_open_file_limits_path }} dest=/etc/security/limits.conf

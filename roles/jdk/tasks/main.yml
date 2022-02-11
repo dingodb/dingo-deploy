@@ -1,0 +1,17 @@
+---
+
+- name: "Load artifacts info"
+  action: resolve_artifacts
+
+- name: "Check jdk installed or not"
+  stat: path={{ jdk_home }}/bin/java
+  register: jdk_installed
+
+- block:
+  - include: 01_os_user.yml
+
+  - include: 02_untar.yml
+
+  - include: 03_config.yml
+
+  when: not jdk_installed.stat.exists

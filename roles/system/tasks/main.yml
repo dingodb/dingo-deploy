@@ -1,0 +1,10 @@
+---
+
+- name: "Install Basic Linux Tools"
+  action: resolve_artifacts
+
+- include_tasks: 01_install_basic_tools.yml
+  when: install_system && install_system_basicTools
+
+- include_tasks: 02_install_system_cfg.yml
+  when: install_system && install_system_fileLimits
