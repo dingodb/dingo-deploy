@@ -1,0 +1,7 @@
+---
+
+- name: "Ensure jdk group exist: {{ jdk_group }}"
+  group: name={{ jdk_group }} state=present
+
+- name: "Ensure jdk user exist: {{ jdk_user }}"
+  user: name={{ jdk_user }} group={{ jdk_group }}

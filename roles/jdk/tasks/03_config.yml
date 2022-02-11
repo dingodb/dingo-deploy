@@ -1,0 +1,20 @@
+---
+
+- name: "Get home directory of user: {{ jdk_user }}"
+  shell: "cat /etc/passwd | grep \"^{{ jdk_user }}:\" | awk -F ':' '{print $6}'"
+  register: user_home_output
+
+- set_fact: env_file="{{ user_home_output.stdout }}/.bash_profile"
+
+- name: "Ensure {{ env_file }} exists"
+  file: path="{{ env_file }}" state=touch owner={{ jdk_user }} group={{ jdk_group }}
+
+- name: "Add environment variables to {{ env_file }}"
+  lineinfile:
+    path: "{{ env_file }}"
+    line: "{{ item }}"
+    state: present
+  with_items:
+  - "JAVA_HOME={{ jdk_home }}"
+  - "PATH=${JAVA_HOME}/bin:$PATH"
+  - "export JAVA_HOME PATH"

@@ -1,0 +1,11 @@
+---
+
+- name: install Vim
+  dnf:
+    name: vim
+    state: present
+
+- name: install Tmux 
+  dnf:
+    name: tmux
+    state: present

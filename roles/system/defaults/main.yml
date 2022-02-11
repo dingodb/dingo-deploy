@@ -1,0 +1,4 @@
+---
+
+installer_cache_path: /tmp
+delete_cache_after_install: true

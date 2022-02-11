@@ -1,0 +1,24 @@
+# CentOS-CR.repo
+#
+# The Continuous Release ( CR )  repository contains rpms that are due in the next
+# release for a specific CentOS Version ( eg. next release in CentOS-8 ); these rpms
+# are far less tested, with no integration checking or update path testing having
+# taken place. They are still built from the upstream sources, but might not map
+# to an exact upstream distro release.
+#
+# These packages are made available soon after they are built, for people willing
+# to test their environments, provide feedback on content for the next release, and
+# for people looking for early-access to next release content.
+#
+# The CR repo is shipped in a disabled state by default; its important that users
+# understand the implications of turning this on.
+#
+
+[cr]
+name=CentOS-$releasever - cr
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=cr&infra=$infra
+#baseurl=http://mirror.centos.org/$contentdir/$releasever/cr/$basearch/os/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-centosofficial
+

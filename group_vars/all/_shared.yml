@@ -1,0 +1,14 @@
+---
+
+#-----------------------------------------------------
+# 1. Update System Configuration about OS
+#-----------------------------------------------------
+install_system: true
+install_system_basicTools: true
+install_system_fileLimits: true
+
+#-----------------------------------------------------
+# 2. Install Java SDK
+#-----------------------------------------------------
+install_java_sdk: true
+jdk_install_path: /opt
