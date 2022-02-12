@@ -4,3 +4,4 @@ version: v0.2.0
 artifacts:
   - { name: "cfg_jdk_local_path",  path_in_repo: "jdk-8u171-linux-x64.tar.gz" }
   - { name: "cfg_system_open_file_limits_path",  path_in_repo: "system/centos8/limits/limits.conf" }
+  - { name: "cfg_dingodb_local_path", path_in_repo: "dingo.zip"}

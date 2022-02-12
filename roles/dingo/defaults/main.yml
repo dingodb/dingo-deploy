@@ -1,0 +1,12 @@
+---
+
+dingo_home: "{{ installer_root_path | default('/opt') }}/dingo"
+
+dingo_log_path: "{{ dingo_home }}/log"
+dingo_data_path: "{{ dingo_home }}/data"
+
+installer_cache_path: /tmp
+delete_cache_after_install: true
+
+dingo_user: root
+dingo_group: root

@@ -19,14 +19,10 @@
       when: install_java_sdk
 
 #---------------------------------
-# 3. Install Coordinator
+# 3. Install Dingo nodes
 #---------------------------------
-
-
-#---------------------------------
-# 4. Install Executor
-#---------------------------------
-
-#---------------------------------
-# 5. Install Driver Proxy
-#---------------------------------
+- hosts:
+    - all_nodes
+  tasks:
+    - include_role: name=dingo
+      when: install_dingo

@@ -7,12 +7,17 @@ installer_cache_path: /tmp
 #-----------------------------------------------------
 # 1. Update System Configuration about OS
 #-----------------------------------------------------
-install_system: true
+install_system: false
 install_system_basicTools: true
 install_system_fileLimits: true
 
 #-----------------------------------------------------
 # 2. Install Java SDK
 #-----------------------------------------------------
-install_java_sdk: true
+install_java_sdk: false
 jdk_install_path: /opt
+
+#-----------------------------------------------------
+# 3. Install Dingo to Dingo home
+#-----------------------------------------------------
+install_dingo: true

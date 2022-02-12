@@ -1,5 +1,9 @@
 ---
 
+- name: "Check current operation is needed"
+  meta: end_play
+  when: install_java_sdk == false
+
 - name: "Load artifacts info"
   action: resolve_artifacts
 
