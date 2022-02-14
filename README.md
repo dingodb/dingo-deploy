@@ -76,6 +76,15 @@ ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
 
 ### 3.3 Install the DingoDB cluster
 
+- Copy artifacts 
+
+```
+1. artifacts/jdk-8u171-linux-x64.tar.gz
+2. artifacts/dingo.zip
+```
+
+- Executor ansible script
+
 ```shell
  ansible-playbook playbook.yml
 ```
