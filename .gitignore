@@ -1,5 +1,4 @@
 .idea
-inventory/hosts
 *.log
 *.tar
 *.tar.gz
