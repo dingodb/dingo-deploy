@@ -1,7 +1,5 @@
 ---
 
-jdk_home: "{{ jdk_install_path }}/jdk"
-
 jdk_user: root
 jdk_group: root
 

@@ -35,4 +35,6 @@ dingo_executor_raft_connection_list: "{{ dingo_executor_raft_list.split() | join
 dingo_executor_exchange_list: "{% for item in dingo_tmp_executor_list %} {{item}}:{{ dingo_executor_exchange_port }} {% endfor %}"
 dingo_executor_exchange_connection_list: "{{ dingo_executor_exchange_list.split() | join(\",\") }}" 
 
+# define the flag to check current role is coordinator or executor
 is_dingo_coordinator: "{{ 'coordinator' in group_names }}"
+is_dingo_executor: "{{ 'executor' in group_names }}"
