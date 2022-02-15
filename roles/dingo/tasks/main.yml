@@ -1,80 +1,18 @@
 ---
 
+- name: "Check DingoDB should install or Not"
+  meta: end_play
+  when: install_dingo == false
+
 - name: "Load artifacts info"
   action: resolve_artifacts
 
-- name: "Ensure dingo user group exist: {{ dingo_group }}"
-  group: name={{ dingo_group }} state=present
+- import_tasks: "{{ playbook_dir }}/roles/dingo/tasks/01_basic_command.yml"
+  when: install_dingo_basic_command
 
-- name: "Ensure dingo user exist {{ dingo_user }}"
-  user: name={{ dingo_user }} group={{ dingo_group }}
+- import_tasks: "{{ playbook_dir }}/roles/dingo/tasks/02_update_configuration.yml"
+  when: install_dingo_update_configuration
 
-- name: "Remove {{ dingo_home }} if exist"
-  file: path="{{ dingo_home }}" state=absent
-
-- name: "Ensure installer cache Directory {{ installer_cache_path }}"
-  file: path={{ installer_cache_path }} state=directory
-
-- name: "Create dingo directories"
-  file: path="{{item}}" state=directory owner={{dingo_user}} group={{dingo_group}}
-  with_items:
-    - "{{ dingo_home }}"
-    - "{{ dingo_data_path }}"
-    - "{{ dingo_log_path }}"
-
-- name: "Copy dingo zip archive to remote host"
-  copy: src={{ item }}  dest={{ installer_cache_path }}
-  with_items:
-    - "{{ cfg_dingodb_local_path }}"
-
-- name: "Unarchive {{ cfg_dingodb_local_path }} to {{ dingo_home }}"
-  unarchive:
-    src: "{{ installer_cache_path }}/{{ cfg_dingodb_local_path|basename}}"
-    dest: "{{ dingo_home }}"
-    mode: "go-w"
-    remote_src: yes
-    list_files: yes
-  register: archive_contents
-
-
-- name: "Delete temporary tarball file: {{ installer_cache_path }}/{{ cfg_dingodb_local_path|basename}}"
-  file: path={{ installer_cache_path }}/{{ cfg_dingodb_local_path|basename }} state=absent
-  when: delete_cache_after_install
-
-# for debugger to display variables
-- name: debug
-  debug: 
-    msg:
-    - "Coordinator Raft Connection: {{ dingo_coordinator_raft_connection_list }}"
-    - "Coordinator Exchange Connection: {{ dingo_coordinator_exchange_connection_list }}"
-    - "Executor Raft Connection: {{ dingo_executor_raft_list }}"
-    - "Executor Exchange Connection: {{ dingo_executor_exchange_list }}"
-
-- name: "Generate dingo configuration files"
-  template: src={{ item.src }} dest={{ item.dest }} owner={{ dingo_user }} group={{ dingo_group }} mode=0644
-  with_items:
-    - {
-      src: "logback-coordinator.xml.j2",
-      dest: "{{ dingo_home }}/conf/logback-coordinator.xml"
-    }
-    - {
-      src: "logback-executor.xml.j2",
-      dest: "{{ dingo_home }}/conf/logback-executor.xml"
-    }
-    - {
-      src: "logback-sqlline.xml.j2",
-      dest: "{{ dingo_home }}/conf/logback-sqlline.xml"
-    }
-    - {
-      src: "config.xml.j2",
-      dest: "{{ dingo_home}}/conf/config.xml"
-    }
-
-- name: "Remove unused configure files"
-  file: path="{{ item }}" state=absent
-  with_items:
-    - "{{ dingo_home }}/conf/logback.xml"
-#
 #- import_tasks: "{{ playbook_dir }}/../roles/jmx/tasks/main.yml"
 #  vars:
 #    svc_name: "{{ dingo_service_name }}"
