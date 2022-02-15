@@ -10,3 +10,27 @@ delete_cache_after_install: true
 
 dingo_user: root
 dingo_group: root
+
+dingo_coordinator_exchange_port: 8000
+dingo_coordinator_raft_port: 18000
+dingo_executor_exchange_port: 9000
+dingo_executor_raft_port: 19000
+
+dingo_tmp_coordinator_list: "{{ groups['coordinator'] }}"
+dingo_tmp_executor_list: "{{ groups['executor'] }}"
+
+# define dingo coordinator raft connection string: 172.20.3.18:8080,172.20.3.19:8080,172.20.3.20:8080
+dingo_coordinator_raft_list: "{% for item in dingo_tmp_coordinator_list %} {{item}}:{{ dingo_coordinator_raft_port }} {% endfor %}"
+dingo_coordinator_raft_connection_list: "{{ dingo_coordinator_raft_list.split() | join(\",\") }}"
+
+# define dingo coordinator exchange connection string: 172.20.3.18:8080,172.20.3.18:8081,172.20.3.18:8082
+dingo_coordinator_exchange_list: "{% for item in dingo_tmp_coordinator_list %} {{item}}:{{ dingo_coordinator_exchange_port }} {% endfor %}"
+dingo_coordinator_exchange_connection_list: "{{ dingo_coordinator_exchange_list.split() | join(\",\") }}"
+
+# define dingo executor exchange connection string: 172.20.3.18:9000,172.20.3.19:9000,172.20.3.20:9000
+dingo_executor_raft_list: "{% for item in dingo_tmp_executor_list %} {{item}}:{{ dingo_executor_exchange_port }} {% endfor %}"
+dingo_executor_raft_connection_list: "{{ dingo_executor_exchange_list.split() | join(\",\") }}" 
+
+# define dingo executor exchange connection string: 172.20.3.18:9000,172.20.3.19:9000,172.20.3.20:9000
+dingo_executor_exchange_list: "{% for item in dingo_tmp_executor_list %} {{item}}:{{ dingo_executor_exchange_port }} {% endfor %}"
+dingo_executor_exchange_connection_list: "{{ dingo_executor_exchange_list.split() | join(\",\") }}" 

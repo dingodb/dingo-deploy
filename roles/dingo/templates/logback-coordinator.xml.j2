@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" monitorInterval="30" strict="true" schema="Log4J-V2.2.xsd">
+    <Properties>
+        <property name="LOG_HOME">{{ dingo_log_path }}</property>
+        <property name="LOG_FILE" value="coordinator-info.log"/>
+        <property name="ERROR_LOG_FILE" value="coordinator-error.log"/>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" /> -->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"/>
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="${LOG_HOME}/${INFO_FILE_NAME}.log" filePattern="${LOG_HOME}/${INFO_FILE_NAME}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="3"/>
+        </RollingFile>
+
+        <RollingFile name="RollingFileError" fileName="${LOG_HOME}/${ERR_FILE_NAME}.log" filePattern="${LOG_HOME}/${ERR_FILE_NAME}-%i.log">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="3"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <logger name="com.alibaba.nacos.client.config.http.ServerHttpAgent" level="ERROR" />
+        <logger name="com.alibaba.nacos.client.naming" level="ERROR" />
+        <logger name="com.alibaba.nacos.client.config.impl.ClientWorker" level="ERROR" />
+        <logger name="org.springframework.cloud.alibaba.nacos.discovery.NacosWatch" level="ERROR" />
+        <logger name="org.springframework.cloud.alibaba.nacos.registry.NacosServiceRegistry" level="ERROR" />
+
+        <Root level="info">
+            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="RollingFileError"/>
+            <AppenderRef ref="AsyncKafka"/>
+        </Root>
+        <!-- avoid recursive logging -->
+        <Logger name="org.apache.kafka" level="INFO"/>
+        <Logger name="org.apache.kafka.clients.NetworkClient" level="ERROR"/>
+
+        <Logger name="org.apache.kafka.clients.producer.ProducerConfig" level="INFO" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="org.apache.kafka.clients.Metadata" level="INFO" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+        <Logger name="org.apache.kafka.common.utils.AppInfoParser" level="INFO" additivity="false">
+            <AppenderRef ref="RollingFile"/>
+        </Logger>
+    </Loggers>
+</Configuration>

@@ -41,31 +41,39 @@
   file: path={{ installer_cache_path }}/{{ cfg_dingodb_local_path|basename }} state=absent
   when: delete_cache_after_install
 
-#- name: "Generate dingo configuration files"
-#  template: src={{ item.src }} dest={{ item.dest }} owner={{ dingo_user }} group={{ dingo_group }} mode=0644
-#  with_items:
-#    - {
-#      src: "application-ci.properties.j2",
-#      dest: "{{ dingo_home }}/conf/application-ci.properties"
-#    }
-#    - {
-#      src: "bootstrap.properties.j2",
-#      dest: "{{ dingo_home }}/conf/bootstrap.properties"
-#    }
-#    - {
-#      src: "application.properties.j2",
-#      dest: "{{ dingo_home }}/conf/application.properties"
-#    }
-#    - {
-#      src: "log4j2.xml.j2",
-#      dest: "{{ dingo_home }}/conf/log4j2.xml"
-#    }
-#
-#- name: "Remove unused configure files"
-#  file: path="{{ item }}" state=absent
-#  with_items:
-#    - "{{ dingo_home }}/conf/application_example.properties"
-#    - "{{ dingo_home }}/conf/logback.xml"
+# for debugger to display variables
+- name: debug
+  debug: 
+    msg:
+    - "Coordinator Raft Connection: {{ dingo_coordinator_raft_connection_list }}"
+    - "Coordinator Exchange Connection: {{ dingo_coordinator_exchange_connection_list }}"
+    - "Executor Raft Connection: {{ dingo_executor_raft_list }}"
+    - "Executor Exchange Connection: {{ dingo_executor_exchange_list }}"
+
+- name: "Generate dingo configuration files"
+  template: src={{ item.src }} dest={{ item.dest }} owner={{ dingo_user }} group={{ dingo_group }} mode=0644
+  with_items:
+    - {
+      src: "logback-coordinator.xml.j2",
+      dest: "{{ dingo_home }}/conf/logback-coordinator.xml"
+    }
+    - {
+      src: "logback-executor.xml.j2",
+      dest: "{{ dingo_home }}/conf/logback-executor.xml"
+    }
+    - {
+      src: "logback-sqlline.xml.j2",
+      dest: "{{ dingo_home }}/conf/logback-sqlline.xml"
+    }
+    - {
+      src: "config.xml.j2",
+      dest: "{{ dingo_home}}/conf/config.xml"
+    }
+
+- name: "Remove unused configure files"
+  file: path="{{ item }}" state=absent
+  with_items:
+    - "{{ dingo_home }}/conf/logback.xml"
 #
 #- import_tasks: "{{ playbook_dir }}/../roles/jmx/tasks/main.yml"
 #  vars:
