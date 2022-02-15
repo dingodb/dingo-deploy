@@ -41,21 +41,22 @@ A host installed with `ansible` is required to  distribute cluster configuration
 
 Edit the configuration `inventory/hosts`, use the real host, user, password to replace the item.
 
-```
+```cfg
 [all:vars]
 ansible_connection=ssh
 ansible_ssh_user=root
 ansible_ssh_pass=123456
+ansible_python_interpreter=/usr/bin/python3
 
 [coordinator]
-172.20.3.13 ansible_python_interpreter=/usr/bin/python3
-172.20.3.14 ansible_python_interpreter=/usr/bin/python3
-172.20.3.15 ansible_python_interpreter=/usr/bin/python3
+172.20.3.13 
+172.20.3.14
+172.20.3.15
 
 [executor]
-172.20.3.15 ansible_python_interpreter=/usr/bin/python3
-172.20.3.16 ansible_python_interpreter=/usr/bin/python3
-172.20.3.17 ansible_python_interpreter=/usr/bin/python3
+172.20.3.15
+172.20.3.16
+172.20.3.17
 
 [driver]
 172.20.3.17
