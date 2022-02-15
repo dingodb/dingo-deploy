@@ -28,6 +28,14 @@
       src: "config.yaml.j2",
       dest: "{{ dingo_home}}/conf/config.yaml"
     }
+    - {
+      src: "start-coordinator.sh.j2",
+      dest: "{{ dingo_home }}/bin/start-coordinator.sh"
+    }
+    - {
+      src: "start-executor.sh.j2",
+      dest: "{{ dingo_home }}/bin/start-executor.sh"
+    }
 
 - name: "Remove unused configure files"
   file: path="{{ item }}" state=absent

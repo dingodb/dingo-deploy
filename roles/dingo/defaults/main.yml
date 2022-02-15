@@ -28,9 +28,11 @@ dingo_coordinator_exchange_list: "{% for item in dingo_tmp_coordinator_list %} {
 dingo_coordinator_exchange_connection_list: "{{ dingo_coordinator_exchange_list.split() | join(\",\") }}"
 
 # define dingo executor exchange connection string: 172.20.3.18:9000,172.20.3.19:9000,172.20.3.20:9000
-dingo_executor_raft_list: "{% for item in dingo_tmp_executor_list %} {{item}}:{{ dingo_executor_exchange_port }} {% endfor %}"
-dingo_executor_raft_connection_list: "{{ dingo_executor_exchange_list.split() | join(\",\") }}" 
+dingo_executor_raft_list: "{% for item in dingo_tmp_executor_list %} {{item}}:{{ dingo_executor_raft_port }} {% endfor %}"
+dingo_executor_raft_connection_list: "{{ dingo_executor_raft_list.split() | join(\",\") }}" 
 
 # define dingo executor exchange connection string: 172.20.3.18:9000,172.20.3.19:9000,172.20.3.20:9000
 dingo_executor_exchange_list: "{% for item in dingo_tmp_executor_list %} {{item}}:{{ dingo_executor_exchange_port }} {% endfor %}"
 dingo_executor_exchange_connection_list: "{{ dingo_executor_exchange_list.split() | join(\",\") }}" 
+
+is_dingo_coordinator: "{{ 'coordinator' in group_names }}"

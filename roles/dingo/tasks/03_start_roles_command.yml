@@ -1,0 +1,24 @@
+---
+
+# start coordinator
+- name: debug
+  debug: 
+    msg:
+    - "Coordinator Raft Connection: {{ dingo_coordinator_raft_connection_list }}"
+    - "Coordinator Exchange Connection: {{ dingo_coordinator_exchange_connection_list }}"
+    - "Executor Raft Connection: {{ dingo_executor_raft_list }}"
+    - "Executor Exchange Connection: {{ dingo_executor_exchange_list }}"
+
+# start executor
+- name: "Remove unused configure files"
+  file: path="{{ item }}" state=absent
+  with_items:
+    - "{{ dingo_home }}/conf/logback.xml"
+
+- name: "Start Coordinator using Script"
+  shell: "/bin/bash ./bin/start-coordinator.sh > log/coordinator.out 2>&1" 
+  args:
+    chdir: "{{ dingo_home }}"
+  when: is_dingo_coordinator
+
+# start jdbc driver proxy
