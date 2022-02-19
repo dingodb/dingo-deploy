@@ -43,5 +43,4 @@ class ActionModule(ActionBase):
         # print(comp)
         artifact_info['path_in_repo'] = artifact_info['path_in_repo'].replace("${version}", version)
         local_file_name = os.path.join(artifact_path, artifact_info['path_in_repo'])
-        display.display("Huzx==> Load path_in_repo '%s'" % artifact_info['path_in_repo'])
         return local_file_name
