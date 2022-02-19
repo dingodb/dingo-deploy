@@ -37,6 +37,8 @@ A host installed with `ansible` is required to  distribute cluster configuration
 
 ## 3. Deployment Guidelines
 
+In the cluster mode, `ansible` is selected as the deployment tools. You can use this guide to install a DingoDB cluster.
+
 ### 3.1 Define the configuration about the Cluster
 
 Edit the configuration `inventory/hosts`, use the real host, user, password to replace the item.
@@ -89,3 +91,9 @@ ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
 ```shell
  ansible-playbook playbook.yml
 ```
+
+### 3.4 Install Steps about DingoDB
+
+You can follow this guide to install a dingo cluster:
+
+[![asciicast](https://asciinema.org/a/4INSgMgv1q7gW5NZrpIGVJWVt.svg)](https://asciinema.org/a/4INSgMgv1q7gW5NZrpIGVJWVt)
