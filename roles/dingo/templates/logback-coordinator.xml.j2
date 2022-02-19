@@ -1,57 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn" monitorInterval="30" strict="true" schema="Log4J-V2.2.xsd">
-    <Properties>
-        <property name="LOG_HOME">{{ dingo_log_path }}</property>
-        <property name="LOG_FILE" value="coordinator-info.log"/>
-        <property name="ERROR_LOG_FILE" value="coordinator-error.log"/>
-    </Properties>
-    <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <!-- <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" /> -->
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"/>
-        </Console>
+<!--
+  ~ Copyright 2021 DataCanvas
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 
-        <RollingFile name="RollingFile" fileName="${LOG_HOME}/${INFO_FILE_NAME}.log" filePattern="${LOG_HOME}/${INFO_FILE_NAME}-%i.log">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="20MB"/>
-            </Policies>
-            <DefaultRolloverStrategy max="3"/>
-        </RollingFile>
 
-        <RollingFile name="RollingFileError" fileName="${LOG_HOME}/${ERR_FILE_NAME}.log" filePattern="${LOG_HOME}/${ERR_FILE_NAME}-%i.log">
-            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="20MB"/>
-            </Policies>
-            <DefaultRolloverStrategy max="3"/>
-        </RollingFile>
-    </Appenders>
-    <Loggers>
-        <logger name="com.alibaba.nacos.client.config.http.ServerHttpAgent" level="ERROR" />
-        <logger name="com.alibaba.nacos.client.naming" level="ERROR" />
-        <logger name="com.alibaba.nacos.client.config.impl.ClientWorker" level="ERROR" />
-        <logger name="org.springframework.cloud.alibaba.nacos.discovery.NacosWatch" level="ERROR" />
-        <logger name="org.springframework.cloud.alibaba.nacos.registry.NacosServiceRegistry" level="ERROR" />
+<configuration>
+    <property name="LOG_HOME" value="{{dingo_log_path }}"/>
+    <property name="LOG_FILE" value="coordinator.log"/>
+    <property name="ERROR_LOG_FILE" value="coordinator-error.log"/>
 
-        <Root level="info">
-            <AppenderRef ref="RollingFile"/>
-            <AppenderRef ref="RollingFileError"/>
-            <AppenderRef ref="AsyncKafka"/>
-        </Root>
-        <!-- avoid recursive logging -->
-        <Logger name="org.apache.kafka" level="INFO"/>
-        <Logger name="org.apache.kafka.clients.NetworkClient" level="ERROR"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <appender name="ALL_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${LOG_FILE}.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>20MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
 
-        <Logger name="org.apache.kafka.clients.producer.ProducerConfig" level="INFO" additivity="false">
-            <AppenderRef ref="RollingFile"/>
-        </Logger>
-        <Logger name="org.apache.kafka.clients.Metadata" level="INFO" additivity="false">
-            <AppenderRef ref="RollingFile"/>
-        </Logger>
-        <Logger name="org.apache.kafka.common.utils.AppInfoParser" level="INFO" additivity="false">
-            <AppenderRef ref="RollingFile"/>
-        </Logger>
-    </Loggers>
-</Configuration>
+    <root level="info">
+        <appender-ref ref="ALL_LOG_FILE"/>
+    </root>
+</configuration>
+

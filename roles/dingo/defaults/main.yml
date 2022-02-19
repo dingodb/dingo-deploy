@@ -11,10 +11,14 @@ delete_cache_after_install: true
 dingo_user: root
 dingo_group: root
 
-dingo_coordinator_exchange_port: 8000
-dingo_coordinator_raft_port: 18000
-dingo_executor_exchange_port: 9000
-dingo_executor_raft_port: 19000
+dingo_coordinator_exchange_port: 19181
+dingo_coordinator_raft_port: 9181
+dingo_executor_exchange_port: 19191
+dingo_executor_raft_port: 9191
+
+dingo_coordinator_meta_path: "{{ dingo_home }}/meta"
+dingo_executor_raft_path: "{{ dingo_home }}/raft"
+dingo_executor_database_path: "{{ dingo_home }}/db"
 
 dingo_tmp_coordinator_list: "{{ groups['coordinator'] }}"
 dingo_tmp_executor_list: "{{ groups['executor'] }}"

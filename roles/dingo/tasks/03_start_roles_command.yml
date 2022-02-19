@@ -1,11 +1,21 @@
 ---
 
+# stop all the coordinator and executor
+
+- name: "Stop Coordinator and Executor on all host"
+  shell: "/bin/bash ./bin/stop-all-component.sh"
+  args:
+    chdir: "{{ dingo_home }}"
+
 # start coordinator
 - name: "Start Coordinator using Script"
   shell: "/bin/bash ./bin/start-coordinator.sh > log/coordinator.out 2>&1" 
   args:
     chdir: "{{ dingo_home }}"
   when: is_dingo_coordinator
+
+- name: "Sleep wait coordinator start"
+  shell: "sleep 20"
 
 # start executor
 - name: "Start Executor using Shell Script"

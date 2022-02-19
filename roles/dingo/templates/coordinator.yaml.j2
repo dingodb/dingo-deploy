@@ -1,0 +1,19 @@
+cluster:
+    name: dingo
+coordinator:
+    ip: {{ inventory_hostname }}
+    exchange:
+        port: {{ dingo_coordinator_exchange_port }}
+    schedule:
+        autoBalanceSplit: true
+    raft:
+        group: COORDINATOR_RAFT
+        port: {{ dingo_coordinator_raft_port }}
+        initCoordSrvList: {{ dingo_coordinator_raft_connection_list }}
+    options:
+        storeDBOptions:
+            dataPath: {{ dingo_coordinator_meta_path }}
+        cliOptions:
+            timeoutMs: 10000
+            maxRetry: 3
+            rpcProcessorThreadPoolSize: 4

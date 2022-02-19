@@ -1,0 +1,12 @@
+cluster:
+    name: dingo
+client:
+    ip: {{ inventory_hostname }}
+    options:
+        coordOptions:
+            group: COORDINATOR_RAFT
+            initCoordSrvList: {{ dingo_coordinator_exchange_connection_list }}
+        cliOptions:
+            timeoutMs: 10000
+            maxRetry: 3
+            rpcProcessorThreadPoolSize: 4
