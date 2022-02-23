@@ -16,7 +16,6 @@
   file: path="{{item}}" state=directory owner={{dingo_user}} group={{dingo_group}}
   with_items:
     - "{{ dingo_home }}"
-    - "{{ dingo_data_path }}"
     - "{{ dingo_log_path }}"
     - "{{ dingo_coordinator_meta_path }}"
     - "{{ dingo_executor_raft_path }}"

@@ -9,7 +9,7 @@ coordinator:
     raft:
         group: COORDINATOR_RAFT
         port: {{ dingo_coordinator_raft_port }}
-        initCoordSrvList: {{ dingo_coordinator_raft_connection_list }}
+        initCoordRaftSvrList: {{ dingo_coordinator_raft_connection_list }}
     options:
         storeDBOptions:
             dataPath: {{ dingo_coordinator_meta_path }}

@@ -6,12 +6,12 @@ executor:
         port: {{ dingo_executor_exchange_port }}
     raft:
         port: {{ dingo_executor_raft_port }}
-        initExecSrvList: {{ dingo_executor_raft_connection_list }} 
+        initExecRaftSvrList: {{ dingo_executor_raft_connection_list }} 
     options:
         coordOptions:
             group: COORDINATOR_RAFT
-            initCoordRaftList: {{ dingo_coordinator_raft_connection_list }}
-            initCoordSrvList: {{ dingo_coordinator_exchange_connection_list }}
+            initCoordRaftSvrList: {{ dingo_coordinator_raft_connection_list }}
+            initCoordExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
         storeEngineOptions:
             kvRpcCoreThreads: 8
             storeDBOptions:

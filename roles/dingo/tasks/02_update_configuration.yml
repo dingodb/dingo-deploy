@@ -33,6 +33,10 @@
       dest: "{{ dingo_home }}/bin/start-executor.sh"
     }
     - {
+      src: "start-driver.sh.j2",
+      dest: "{{ dingo_home }}/bin/start-driver.sh"
+    }
+    - {
       src: "stop-all-component.sh.j2",
       dest: "{{ dingo_home }}/bin/stop-all-component.sh"
     }
