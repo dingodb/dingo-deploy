@@ -1,0 +1,78 @@
+---
+version: '2.2'
+services:
+  coordinator1:
+    image: dingodb.ubuntu:v0.2.0
+    hostname: coordinator1
+    container_name: coordinator1
+    networks:
+      - dingo_net
+    environment:
+      DINGO_ROLE: coordinator
+      DINGO_HOSTNAME: coordinator1
+
+  coordinator2:
+    image: dingodb.ubuntu:v0.2.0
+    hostname: coordinator2
+    container_name: coordinator2
+    networks:
+      - dingo_net
+    environment:
+      DINGO_ROLE: coordinator
+      DINGO_HOSTNAME: coordinator2
+
+  coordinator3:
+    image: dingodb.ubuntu:v0.2.0
+    hostname: coordinator3
+    container_name: coordinator3
+    networks:
+      - dingo_net
+    environment:
+      DINGO_ROLE: coordinator
+      DINGO_HOSTNAME: coordinator3
+
+  executor1:
+    image: dingodb.ubuntu:v0.2.0
+    hostname: executor1
+    container_name: executor1
+    networks:
+      - dingo_net
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+       DINGO_ROLE: executor
+       DINGO_HOSTNAME: executor1
+
+  executor2:
+    image: dingodb.ubuntu:v0.2.0
+    hostname: executor2
+    container_name: executor2
+    networks:
+      - dingo_net
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+       DINGO_ROLE: executor
+       DINGO_HOSTNAME: executor2
+
+  executor3:
+    image: dingodb.ubuntu:v0.2.0
+    hostname: executor3
+    container_name: executor3
+    networks:
+      - dingo_net
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+       DINGO_ROLE: executor
+       DINGO_HOSTNAME: executor3
+
+networks:
+    dingo_net:
+        driver: bridge
