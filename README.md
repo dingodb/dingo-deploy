@@ -2,7 +2,9 @@
 [DingoDB](https://github.com/dingodb/dingo) is a real-time Hybrid Serving & Analytical Processing (HSAP) Database. It can execute high-frequency queries and upsert, interactive analysis, multi-dimensional analysis in extremely low latency. To achieve high concurrency and high throughput, DingoDB uses an elastic distributed deployment mode.
 In order to simplify the deployment, this project introduces the deployment of DingoDB using [ansible](https://www.ansible.com/).
 
-## 1. Typical Physical Topology
+## 1. Cluster Mode
+
+----
 
 ![Physical Topology about DingoDB](./refer/cluster_topology.png)
 
@@ -21,7 +23,7 @@ Executor act as the worker of the cluster. It is responsible for executing the p
 DingoDB uses JDBC driver to perform table-level data operations, such as create, insert, update, delete, etc. Driver Proxy act as the proxy of JDBC Connection.
 
 
-## 2. Installation prerequisites
+### 1.1 Installation prerequisites
 
 - Version of OS
 
@@ -35,11 +37,20 @@ The repository will be used to install basic tools needed by the cluster, such a
 
 A host installed with `ansible` is required to  distribute cluster configuration and related software modules about DingoDB. This machine can also be replaced by one node in DingoDB cluster such as `Node-1`.
 
-## 3. Deployment Guidelines
+### 1.2 Deployment Guidelines
 
 In the cluster mode, `ansible` is selected as the deployment tools. You can use this guide to install a DingoDB cluster.
 
-### 3.1 Define the configuration about the Cluster
+
+### 1.2.1 Install Steps
+
+You can follow this guide to install a dingo cluster:
+
+[![asciicast](https://asciinema.org/a/4INSgMgv1q7gW5NZrpIGVJWVt.svg)](https://asciinema.org/a/4INSgMgv1q7gW5NZrpIGVJWVt)
+
+### 1.2.2 Installation Notes
+
+#### 1. define cluster configuration
 
 Edit the configuration `inventory/hosts`, use the real host, user, password to replace the item.
 
@@ -69,7 +80,7 @@ executor
 driver
 ```
 
-### 3.2 Check Python3 is installed or not on DingoDB cluster
+#### 2. Check Python3 is installed
 
 Check Python3 is installed or not on DingoDB cluster, if `Python3` is not installed, We can use ansible to install `Python3` using such command.
 
@@ -77,7 +88,7 @@ Check Python3 is installed or not on DingoDB cluster, if `Python3` is not instal
 ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
 ```
 
-### 3.3 Install the DingoDB cluster
+#### 3. Start to install
 
 - Copy artifacts 
 
@@ -92,8 +103,19 @@ ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
  ansible-playbook playbook.yml
 ```
 
-### 3.4 Install Steps about DingoDB
 
-You can follow this guide to install a dingo cluster:
 
-[![asciicast](https://asciinema.org/a/4INSgMgv1q7gW5NZrpIGVJWVt.svg)](https://asciinema.org/a/4INSgMgv1q7gW5NZrpIGVJWVt)
+## 2. Docker compose mode
+
+----
+
+> Due to the network firewall, for the convenience of developers, DingoDB team no longer provide a unified GitHub docker repository.
+
+### 2.1 Installation prerequisites
+
+- docker
+- docker-compose
+
+### 2.2 Install Steps
+
+[![asciicast](https://asciinema.org/a/J2BENeRd6yJoDVDfgfDFk7fao.svg)](https://asciinema.org/a/J2BENeRd6yJoDVDfgfDFk7fao)
