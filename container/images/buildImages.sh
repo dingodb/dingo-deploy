@@ -17,9 +17,8 @@
 
 help() {
    echo ""
-   echo "Usage: $0 -a VERSION -b REPOSITORY"
+   echo "Usage: $0 -a VERSION"
    echo -e "\t-a VERSION: represent the version of current, such as v0.2.0"
-   echo -e "\t-b REPOSITORY: local docker or github repository, such as local,github"
    exit 1 # Exit script after printing help
 }
 
@@ -27,17 +26,16 @@ while getopts "a:b:" opt
 do
    case "$opt" in
       a ) VERSION="$OPTARG" ;;
-      b ) REPOSITORY="$OPTARG" ;;
       ? ) help ;; # Print help in case parameter is non-existent
    esac
 done
 
 # Print help in case parameters are empty
-if [ -z "$VERSION" ] || [ -z "$REPOSITORY" ] 
-then
+if [ -z "$VERSION" ]; then
    help
 fi
 
+REPOSITORY=local
 echo -e "0.=============Input: version=$VERSION, repository=$REPOSITORY========="
 
 # stop1. delete old archive package
@@ -69,20 +67,18 @@ DINGO_IMAGE_INTERNAL_REPO=172.20.3.185:5000/dingodb/$DINGO_IMAGE_NAME:$VERSION
 docker build -t $DINGO_IMAGE_NAME:$VERSION .
 
 # step3. upload the docker images to github or internal
-
 IMAGEID=`docker images | grep $DINGO_IMAGE_NAME | grep $VERSION | awk '{print $3}'`
 echo -e "4.=============dingodb $VERSION , current docker image: $DINGO_IMAGE_NAME is: $IMAGEID"
 
+# if [ $REPOSITORY == 'local' ]; then
+#    echo -e "4.1=============>current repository is local, will push image to: $DINGO_IMAGE_INTERNAL_REPO"
+#    docker tag $IMAGEID $DINGO_IMAGE_INTERNAL_REPO
+#    docker push $DINGO_IMAGE_INTERNAL_REPO
+# fi
 
-if [ $REPOSITORY == 'local' ]; then
-   echo -e "4.1=============>current repository is local, will push image to: $DINGO_IMAGE_INTERNAL_REPO"
-   docker tag $IMAGEID $DINGO_IMAGE_INTERNAL_REPO
-   docker push $DINGO_IMAGE_INTERNAL_REPO
-fi
-
-if [ $REPOSITORY == 'github' ]; then
-   echo -e "4.1=============>Current repository is: github"
-fi
+# if [ $REPOSITORY == 'github' ]; then
+#    echo -e "4.1=============>Current repository is: github"
+# fi
 
 # step 5: remove the dingo.zip files
 [ -f dingo.zip ] && rm -rf dingo.zip 

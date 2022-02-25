@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update && apt-get install -y openjdk-8-jdk vim unzip
+RUN apt-get update && apt-get install -y openjdk-8-jdk vim unzip netcat net-tools && unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY
 
 COPY ./dingo.zip /opt
 

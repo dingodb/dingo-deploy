@@ -41,7 +41,7 @@ then
          > ${ROOT}/log/coordinator.out
 elif [[ $ROLE == "executor" ]]
 then
-    sleep 60
+    sleep 30
     /opt/dingo/bin/wait-for-it.sh coordinator1:19181 -t 0 -s -- echo "Wait Coordniator1 Start Successfully!"
     /opt/dingo/bin/wait-for-it.sh coordinator2:19181 -t 0 -s -- echo "Wait Coordniator2 Start Successfully!"
     /opt/dingo/bin/wait-for-it.sh coordinator3:19181 -t 0 -s -- echo "Wait Coordniator3 Start Successfully!"
@@ -53,7 +53,7 @@ then
          > ${ROOT}/log/executor.out
 elif [[ $ROLE == "driver" ]]
 then
-    sleep 120
+    sleep 60
     java ${JAVA_OPTS} \
     -Dlogback.configurationFile=file:${ROOT}/conf/logback-sqlline.xml \
     -classpath ${JAR_PATH} \

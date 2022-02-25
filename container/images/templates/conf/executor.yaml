@@ -6,7 +6,7 @@ executor:
         port: 19191
     raft:
         port: 9191
-        initExecRaftSvrList: coordinator3:9191,coordinator2:9191,coordinator1:9191 
+        initExecRaftSvrList: executor1:9191,executor2:9191,executor3:9191 
     options:
         coordOptions:
             group: COORDINATOR_RAFT
