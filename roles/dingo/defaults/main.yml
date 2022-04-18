@@ -16,9 +16,10 @@ dingo_coordinator_raft_port: 9181
 dingo_executor_exchange_port: 19191
 dingo_executor_raft_port: 9191
 
-dingo_coordinator_meta_path: "{{ dingo_home }}/meta"
-dingo_executor_raft_path: "{{ dingo_home }}/raft"
-dingo_executor_database_path: "{{ dingo_home }}/db"
+dingo_coordinator_meta_path: "{{ dingo_home }}/coordinator"
+dingo_executor_server_db_path: "{{ dingo_home }}/executor/meta"
+dingo_executor_raft_log_path: "{{ dingo_home }}/executor/raftLog"
+dingo_executor_raft_db_path: "{{ dingo_home }}/executor/raftDb"
 
 dingo_tmp_coordinator_list: "{{ groups['coordinator'] }}"
 dingo_tmp_executor_list: "{{ groups['executor'] }}"

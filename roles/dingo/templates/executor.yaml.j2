@@ -1,38 +1,14 @@
 cluster:
     name: dingo
-executor:
-    ip: {{ inventory_hostname }}
-    exchange:
-        port: {{ dingo_executor_exchange_port }}
+exchange:
+    host: {{ inventory_hostname }}
+    port: {{ dingo_executor_exchange_port }}
+server:
+    coordinatorExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
+    dataPath: {{ dingo_executor_server_db_path }}
+store:
+    dbPath: {{ dingo_executor_raft_db_path }}
     raft:
-        port: {{ dingo_executor_raft_port }}
-        initExecRaftSvrList: {{ dingo_executor_raft_connection_list }} 
-    options:
-        coordOptions:
-            group: COORDINATOR_RAFT
-            initCoordRaftSvrList: {{ dingo_coordinator_raft_connection_list }}
-            initCoordExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
-        storeEngineOptions:
-            kvRpcCoreThreads: 8
-            storeDBOptions:
-                dataPath: {{ dingo_executor_database_path }}
-                asyncSnapshot: true
-            raftStoreOptions:
-                dataPath: {{ dingo_executor_raft_path }}
-                raftLogStorageOptions:
-                    dbKeepLogFileNum: 8
-                    dbMaxTotalWalSize: 2147483648
-                    dbMaxBackGroupCompactions: 16
-                    dbMaxBackGroupFlushes: 8
-                    dbRecycleLogFileNum: 8
-                    dbMaxBackGroupJobs: 16
-            leastKeysOnSplit: 100000
-            snapshotCoreThreads: 10
-            commonNodeOptions:
-                electionTimeoutMs: 10000
-                snapshotIntervalSecs: 1800
-                snapshotLogIndexMargin: 10000
-        cliOptions:
-            timeoutMs: 10000
-            maxRetry: 3
-            rpcProcessorThreadPoolSize: 4
+       raftPath: {{ dingo_executor_raft_log_path }}
+       port: {{ dingo_executor_raft_port }}
+    collectStatsInterval: 5

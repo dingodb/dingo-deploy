@@ -18,8 +18,9 @@
     - "{{ dingo_home }}"
     - "{{ dingo_log_path }}"
     - "{{ dingo_coordinator_meta_path }}"
-    - "{{ dingo_executor_raft_path }}"
-    - "{{ dingo_executor_database_path }}"
+    - "{{ dingo_executor_server_db_path }}"
+    - "{{ dingo_executor_raft_log_path }}"
+    - "{{ dingo_executor_raft_db_path }}"
 
 - name: "Copy dingo zip archive to remote host"
   copy: src={{ item }}  dest={{ installer_cache_path }}

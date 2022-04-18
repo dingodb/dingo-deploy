@@ -1,12 +1,7 @@
 cluster:
     name: dingo
+exchange:
+    host: {{ inventory_hostname }}
+    port: 8765
 client:
-    ip: {{ inventory_hostname }}
-    options:
-        coordOptions:
-            group: COORDINATOR_RAFT
-            initCoordExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
-        cliOptions:
-            timeoutMs: 10000
-            maxRetry: 3
-            rpcProcessorThreadPoolSize: 4
+    coordinatorExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}

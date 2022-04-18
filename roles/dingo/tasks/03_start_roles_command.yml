@@ -25,3 +25,9 @@
   when: is_dingo_executor
 
 # start jdbc driver proxy
+- name: "Start JDBC Driver using Shell Script"
+  shell: "/bin/bash ./bin/start-driver.sh > log/driver.out 2>&1" 
+  args:
+    chdir: "{{ dingo_home }}"
+  when: is_dingo_executor
+
