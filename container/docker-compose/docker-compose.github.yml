@@ -35,6 +35,8 @@ services:
     image: ghcr.io/huzx0608/dingo:latest
     hostname: executor1
     container_name: executor1
+    ports:
+      - 8765:8765
     networks:
       - dingo_net
     depends_on:
@@ -49,6 +51,8 @@ services:
     image: ghcr.io/huzx0608/dingo:latest
     hostname: executor2
     container_name: executor2
+    ports:
+      - 8765:8765
     networks:
       - dingo_net
     depends_on:
@@ -63,6 +67,8 @@ services:
     image: ghcr.io/huzx0608/dingo:latest
     hostname: executor3
     container_name: executor3
+    ports:
+      - 8765:8765
     networks:
       - dingo_net
     depends_on:
