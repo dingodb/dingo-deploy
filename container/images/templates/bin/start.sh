@@ -19,6 +19,7 @@ ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 COORDINATOR_JAR_PATH=$(find $ROOT -name dingo-*-coordinator-*.jar)
 EXECUTOR_JAR_PATH=$(find $ROOT -name dingo-*-executor-*.jar)
 DRIVER_JAR_PATH=$(find $ROOT -name dingo-cli-*.jar)
+STORE_JAR_PATH=$(find $ROOT -name dingo-store*.jar)
 
 ROLE=$DINGO_ROLE
 HOSTNAME=$DINGO_HOSTNAME
