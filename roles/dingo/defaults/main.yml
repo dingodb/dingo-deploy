@@ -8,9 +8,6 @@ dingo_data_path: "{{ dingo_home }}/data"
 installer_cache_path: /tmp
 delete_cache_after_install: true
 
-dingo_user: root
-dingo_group: root
-
 dingo_coordinator_exchange_port: 19181
 dingo_coordinator_raft_port: 9181
 dingo_executor_exchange_port: 19191

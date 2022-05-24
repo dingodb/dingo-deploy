@@ -26,3 +26,19 @@
   tasks:
     - include_role: name=dingo
       when: install_dingo
+
+
+#---------------------------------
+# 4. Install prometheus and grafana
+#---------------------------------
+- hosts:
+    - prometheus
+  tasks:
+    - include_role: name=prometheus
+      when: install_prometheus
+
+- hosts:
+    - grafana
+  tasks:
+    - include_role: name=grafana
+      when: install_grafana

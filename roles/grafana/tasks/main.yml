@@ -90,14 +90,6 @@
     - grafana.service.j2
   when: ansible_service_mgr == "systemd"
 
-- name: "Unarchive {{ redis_plugin_local_file }} to {{ grafana_plugin_path }}"
-  unarchive:
-    src: "{{ redis_plugin_local_file }}"
-    dest: "{{ grafana_plugin_path }}"
-    owner: "{{ grafana_user }}"
-    group: "{{ grafana_group }}"
-    mode: "go-w"
-
 - name: "Start grafana with autorun on startup"
   systemd: name={{ grafana_service_name }} state=started enabled=yes daemon_reload=yes
   when: ansible_service_mgr == "systemd"

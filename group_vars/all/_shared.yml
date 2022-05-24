@@ -1,14 +1,14 @@
 ---
 
 # define the root path of install
-installer_root_path: /home/dingo/
+installer_root_path: /home/dingo
 installer_cache_path: /tmp
 delete_cache_after_install: true
 
 # define the global log and data directory
-dingo_log_dir: "{{ install_root_path }}/log"
-dingo_data_dir: "{{ install_root_path }}/data"
-dingo_run_dir: "{{ install_root_path }}/run"
+dingo_log_dir: "{{ installer_root_path }}/log"
+dingo_data_dir: "{{ installer_root_path }}/data"
+dingo_run_dir: "{{ installer_root_path }}/run"
 
 dingo_user: root
 dingo_group: root
@@ -16,21 +16,21 @@ dingo_group: root
 #-----------------------------------------------------
 # 1. Update System Configuration about OS
 #-----------------------------------------------------
-install_system: true
+install_system: false
 install_system_basicTools: true
 install_system_fileLimits: true
 
 #-----------------------------------------------------
 # 2. Install Java SDK
 #-----------------------------------------------------
-install_java_sdk: true
+install_java_sdk: false
 jdk_install_path: /opt
 jdk_home: "{{ jdk_install_path }}/jdk"
 
 #-----------------------------------------------------
 # 3. Install Dingo to Dingo home
 #-----------------------------------------------------
-install_dingo: true
+install_dingo: false
 install_dingo_basic_command: true
 install_dingo_update_configuration: true
 install_dingo_start_roles: true
@@ -60,6 +60,7 @@ pushgateway_port: 19091
 pushgateway_server: "{{ prometheus_server }}"
 
 # Grafana
+install_grafana: true
 grafana_port: 3000
 grafana_server: "{{ ansible_context | local_or_default('grafana') }}"
 default_dashboard_uid: "RNezu0fWk"

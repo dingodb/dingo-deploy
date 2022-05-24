@@ -37,7 +37,7 @@ blackbox_exporter_web_listen_address: "0.0.0.0:{{ blackbox_exporter_port }}"
 # pushgateway
 pushgateway_service_name: "dingo-pushgateway"
 
-pushgateway_home: "{{ install_root_path | default('/opt') }}/pushgateway"
+pushgateway_home: "{{ installer_root_path | default('/opt') }}/pushgateway"
 pushgateway_user: "{{ dingo_user | default('prometheus') }}"
 pushgateway_group: "{{ dingo_group | default('prometheus') }}"
 

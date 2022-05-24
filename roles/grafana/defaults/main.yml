@@ -2,7 +2,7 @@
 
 grafana_service_name: "dingo-grafana"
 
-grafana_home: "{{ install_root_path | default('/opt') }}/grafana"
+grafana_home: "{{ installer_root_path | default('/opt') }}/grafana"
 grafana_user: "{{ dingo_user | default('grafana') }}"
 grafana_group: "{{ dingo_group | default('grafana') }}"
 
