@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Prometheus
+After=network.target
+
+[Service]
+Type=simple
+Environment="GOMAXPROCS={{ ansible_processor_vcpus|default(ansible_processor_count) }}"
+User={{ prometheus_user }}
+Group={{ prometheus_group }}
+LimitNOFILE=1024000
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/bin/sh -c 'exec {{ prometheus_home }}/prometheus \
+  --config.file={{ prometheus_home }}/prometheus.yml \
+  --storage.tsdb.path={{ prometheus_data_path }} \
+  --storage.tsdb.retention={{ prometheus_storage_retention }} \
+  --web.listen-address={{ prometheus_web_listen_address }} \
+  --web.external-url={{ prometheus_web_external_url }} > {{ prometheus_log_path }}/{{ prometheus_service_name }}.out 2>&1 '
+
+SyslogIdentifier={{ prometheus_service_name }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

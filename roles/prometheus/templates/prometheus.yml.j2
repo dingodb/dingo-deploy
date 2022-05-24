@@ -1,0 +1,50 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+# http://prometheus.io/docs/operating/configuration/
+
+global:
+  evaluation_interval: 15s
+  scrape_interval: 15s
+  scrape_timeout: 10s
+
+rule_files:
+  - {{ prometheus_home }}/rules/*.yml
+
+scrape_configs:
+  - job_name: "prometheus"
+    metrics_path: "/prometheus/metrics"
+    static_configs:
+    - targets:
+      - "localhost:{{ prometheus_port }}"
+
+  - job_name: "push-metrics"
+    static_configs:
+    - targets:
+      - "{{ pushgateway_server }}:{{ pushgateway_port }}"
+
+  - job_name: "node"
+    file_sd_configs:
+    - files:
+      - "{{ prometheus_home }}/node*.yml"
+
+  - job_name: "process"
+    static_configs:
+    - targets:
+{% for host in process_exporter_servers %}
+      - {{ host }}:{{ process_exporter_port }}
+{% endfor %}
+
+  - job_name: "blackbox"
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    file_sd_configs:
+    - files:
+      - "{{ prometheus_home }}/blackbox*.yml"
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: {{ blackbox_exporter_server }}:{{ blackbox_exporter_port }}

@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus Pushgateway
+After=network.target
+
+[Service]
+Type=simple
+User={{ pushgateway_user }}
+Group={{ pushgateway_group }}
+WorkingDirectory={{ pushgateway_home }}/
+ExecStart=/bin/sh -c 'exec {{ pushgateway_home }}/{{ pushgateway_exec }} --web.listen-address=:{{ pushgateway_port }} \
+    > {{ pushgateway_log_path }}/{{ pushgateway_service_name }}.out 2>&1 '
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

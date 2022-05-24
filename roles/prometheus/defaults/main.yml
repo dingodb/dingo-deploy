@@ -1,0 +1,50 @@
+---
+
+prometheus_service_name: "dingo-prometheus"
+
+prometheus_home: "{{ installer_root_path | default('/opt') }}/prometheus"
+prometheus_user: "{{ dingo_user | default('prometheus') }}"
+prometheus_group: "{{ dingo_group | default('prometheus') }}"
+
+prometheus_log_path: "{{ dingo_log_dir | default('/var/log') }}/prometheus"
+prometheus_data_path: "{{ dingo_data_dir | default('/var/lib') }}/prometheus"
+prometheus_run_path: "{{ dingo_run_dir | default('/var/run') }}/prometheus"
+
+prometheus_port: 19090
+
+prometheus_web_listen_address: "0.0.0.0:{{ prometheus_port }}"
+prometheus_web_external_url: "http://0.0.0.0:{{ prometheus_port }}/prometheus"
+prometheus_storage_retention: "31d"
+prometheus_url: "{{ inventory_hostname }}:{{ prometheus_port }}/prometheus"
+
+service_list: []
+
+# blackbox exporter
+blackbox_exporter_service_name: "dingo-blackbox-exporter"
+
+blackbox_exporter_home: "{{ installer_root_path | default('/opt') }}/blackbox-exporter"
+blackbox_exporter_user: "{{ dingo_user | default('prometheus') }}"
+blackbox_exporter_group: "{{ dingo_group | default('prometheus') }}"
+
+blackbox_exporter_log_path: "{{ dingo_log_dir | default('/var/log') }}/blackbox-exporter"
+blackbox_exporter_data_path: "{{ dingo_data_dir | default('/var/lib') }}/blackbox-exporter"
+blackbox_exporter_run_path: "{{ dingo_run_dir | default('/var/run') }}/blackbox-exporter"
+
+blackbox_exporter_port: 19115
+
+blackbox_exporter_web_listen_address: "0.0.0.0:{{ blackbox_exporter_port }}"
+
+# pushgateway
+pushgateway_service_name: "dingo-pushgateway"
+
+pushgateway_home: "{{ install_root_path | default('/opt') }}/pushgateway"
+pushgateway_user: "{{ dingo_user | default('prometheus') }}"
+pushgateway_group: "{{ dingo_group | default('prometheus') }}"
+
+pushgateway_log_path: "{{ dingo_log_dir | default('/var/log') }}/pushgateway"
+pushgateway_data_path: "{{ dingo_data_dir | default('/var/lib') }}/pushgateway"
+pushgateway_run_path: "{{ dingo_run_dir | default('/var/run') }}/pushgateway"
+
+pushgateway_port: 19091
+
+pushgateway_exec: "pushgateway"

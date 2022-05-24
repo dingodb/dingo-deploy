@@ -1,0 +1,76 @@
+---
+
+- name: "Ensure prometheus group exist: {{ prometheus_group }}"
+  group: name={{ prometheus_group }} state=present
+
+- name: "Ensure prometheus user exist: {{ prometheus_user }}"
+  user: name="{{ prometheus_user }}" group={{ prometheus_group }}
+
+- name: "Try stopping existing service via systemd"
+  systemd: name={{ prometheus_service_name }} state=stopped
+  when: ansible_service_mgr == "systemd"
+  failed_when: false
+
+- name: "Remove previous install directory"
+  file: path={{ prometheus_home }} state=absent
+
+- name: "Create directories"
+  file: path={{ item }} state=directory owner={{ prometheus_user }} group={{ prometheus_group }}
+  with_items:
+    - "{{ prometheus_home }}"
+    - "{{ prometheus_log_path }}"
+    - "{{ prometheus_data_path }}"
+    - "{{ prometheus_run_path }}"
+
+- set_fact: remote_tarball_path={{ installer_cache_path }}/{{ prometheus_local_file | basename}}
+
+- name: "Ensure installer cache Directory {{ installer_cache_path }}"
+  file: path={{ installer_cache_path }} state=directory
+
+- name: "Copy tarball to remote host"
+  copy: src={{ prometheus_local_file }} dest={{ remote_tarball_path }}
+
+- name: "Unarchive package file"
+  unarchive:
+    src: "{{ remote_tarball_path }}"
+    dest: "{{ prometheus_home }}"
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+    remote_src: yes
+    extra_opts: [ '--strip-components=1' ]
+
+- name: "Delete temporary tarball file: {{ remote_tarball_path }}"
+  file: path={{ remote_tarball_path }} state=absent
+  when: delete_cache_after_install
+
+- name: "Generate prometheus configuration files"
+  template: >
+    src={{ item.src }}  dest={{ item.dest }}
+    owner={{ prometheus_user }} group={{ prometheus_group }} mode=0644 force=yes
+  with_items:
+    - {
+      src: "prometheus.yml.j2",
+      dest: "{{ prometheus_home }}/prometheus.yml"
+    }
+    - {
+      src: "node.yml.j2",
+      dest: "{{ prometheus_home }}/node.yml"
+    }
+    - {
+      src: "datahub.yml.j2",
+      dest: "{{ prometheus_home }}/datahub.yml"
+    }
+    - {
+      src: "blackbox.yml.j2",
+      dest: "{{ prometheus_home }}/blackbox.yml"
+    }
+
+- name: "Generate Systemd service File"
+  template: >
+    src=prometheus.service.j2 dest=/etc/systemd/system/{{ prometheus_service_name }}.service mode=0644
+    force=yes owner={{ prometheus_user }} group={{ prometheus_group }}
+  when: ansible_service_mgr == "systemd"
+
+- name: "Ensure prometheus is started via systemd"
+  systemd: name={{ prometheus_service_name }} state=started enabled=yes daemon_reload=yes
+  when: ansible_service_mgr == "systemd"

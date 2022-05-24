@@ -1,0 +1,6 @@
+- labels:
+    env: cluster
+  targets:
+{% for node_exporter_host in node_exporter_servers %}
+  - {{ node_exporter_host }}:{{ node_exporter_port }}
+{% endfor %}

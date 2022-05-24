@@ -1,0 +1,205 @@
+---
+
+- name: "Load artifacts info"
+  action: resolve_artifacts
+
+- name: "Install required packages"
+  package: name={{ item }} state=present
+  with_items:
+    - "unzip"
+
+- name: "Ensure grafana group exist"
+  group: name={{ grafana_group }} state=present
+
+- name: "Ensure grafana user exist"
+  user: name="{{ grafana_user }}" group={{ grafana_group }}
+
+- name: "Stop grafana if exist"
+  service: name={{ grafana_service_name }} state=stopped
+  failed_when: false
+
+- name: "Remove grafana installation if exist"
+  file: path="{{ item }}" state=absent
+  with_items:
+    - "{{ grafana_home }}"
+    - "{{ grafana_log_path }}"
+    - "{{ grafana_run_path }}"
+
+- name: "create grafana directories"
+  file: path="{{ item }}" state=directory owner={{ grafana_user }} group={{ grafana_group }}
+  with_items:
+    - "{{ grafana_data_path }}"
+    - "{{ grafana_plugin_path }}"
+    - "{{ grafana_log_path }}"
+    - "{{ grafana_run_path }}"
+    - "{{ grafana_home }}"
+
+- set_fact: remote_tarball_path={{ installer_cache_path }}/{{ grafana_local_file | basename }}
+
+- name: "Ensure installer cache Directory {{ installer_cache_path }}"
+  file: path={{ installer_cache_path }} state=directory
+
+- name: "Copy grafana tarball to remote"
+  copy:
+    src: "{{ grafana_local_file }}"
+    dest: "{{ installer_cache_path }}"
+
+- name: "Unarchive {{ remote_tarball_path }} to {{ grafana_home }}"
+  unarchive:
+    src: "{{ remote_tarball_path }}"
+    dest: "{{ grafana_home }}"
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    mode: "go-w"
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+
+- name: "Delete temporary tarball file: {{ remote_tarball_path }}"
+  file: path={{ remote_tarball_path }} state=absent
+  when: delete_cache_after_install
+
+- name: "Generate grafana configuration files"
+  template: >
+    src={{ item.src }}  dest={{ item.dest }}
+    owner={{ grafana_user }} group={{ grafana_group }} mode={{ item.mode }} force=yes
+  with_items:
+    - {
+      src: "grafana-env.j2",
+      dest: "{{ grafana_home }}/grafana-env",
+      mode: "0644"
+    }
+    - {
+      src: "grafana.ini.j2",
+      dest: "{{ grafana_conf_path }}/grafana.ini",
+      mode: "0644"
+    }
+    - {
+      src: "index.html.j2",
+      dest: "{{ grafana_home }}/public/views/index.html",
+      mode: "0644"
+    }
+
+- name: "Set ownership of {{ grafana_home }} to {{ grafana_user }}"
+  file: path={{ grafana_home }} owner={{ grafana_user }} group={{ grafana_group }} recurse=yes
+
+- name: "Generate systemd service config"
+  template: >-
+    src={{ item }}  dest=/etc/systemd/system/{{ grafana_service_name }}.service
+    owner={{ grafana_user }} group={{ grafana_group }} mode=0644
+  with_items:
+    - grafana.service.j2
+  when: ansible_service_mgr == "systemd"
+
+- name: "Unarchive {{ redis_plugin_local_file }} to {{ grafana_plugin_path }}"
+  unarchive:
+    src: "{{ redis_plugin_local_file }}"
+    dest: "{{ grafana_plugin_path }}"
+    owner: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    mode: "go-w"
+
+- name: "Start grafana with autorun on startup"
+  systemd: name={{ grafana_service_name }} state=started enabled=yes daemon_reload=yes
+  when: ansible_service_mgr == "systemd"
+
+- name: "Wait for Grafana server ready"
+  wait_for: host={{ inventory_hostname }} port={{ grafana_port }} delay=5 connect_timeout=1
+
+- name: "Check datasource exists or not"
+  shell: "curl -I -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} localhost:{{ grafana_port }}/api/datasources/name/{{ default_datasource_name }} | head -n 1 | awk '{ print $2}'"
+  args:
+    warn: false
+  register: datasource_result
+
+- debug: var=datasource_result
+
+- name: "Setup datasource: {{ default_datasource_name }}"
+  shell: >
+    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST localhost:{{ grafana_port }}/api/datasources -H "Content-Type:application/json" -d '
+    {
+      "name":"{{ default_datasource_name }}",
+      "type":"prometheus",
+      "url":"{{ prometheus_url }}",
+      "access":"proxy",
+      "isDefault": true,
+      "basicAuth":false
+    }
+    '
+  args:
+    warn: false
+  register: datasource_setup_result
+  when: datasource_result.stdout != '200'
+
+- debug: var=datasource_setup_result
+  when: datasource_result.stdout != '200'
+
+- name: "Generate grafana dashboard configuration file"
+  template: >
+    src={{ default_dashboard_template }}  dest={{ installer_cache_path }}/dingo.json
+    mode=0644 force=yes
+
+- name: "Delete existing dashboard uid={{ default_dashboard_uid }}"
+  shell: >
+    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XDELETE localhost:{{ grafana_port }}/api/dashboards/uid/{{ default_dashboard_uid }}
+  args:
+    warn: false
+  register: delete_result
+
+- debug: var=delete_result
+
+- name: "Import grafana dashboard"
+  shell: >
+    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST localhost:{{ grafana_port }}/api/dashboards/db -H "Content-Type:application/json" -d @{{ installer_cache_path }}/dingo.json
+  args:
+    warn: false
+  register: import_result
+
+- debug: var=import_result
+
+- name: "Get Dingo dashboard info"
+  shell: "curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} localhost:{{ grafana_port }}/api/dashboards/uid/{{ default_dashboard_uid }}"
+  args:
+    warn: false
+  register: get_dashboard_result
+
+- debug: var=get_dashboard_result
+  when: get_dashboard_result.rc != 0
+
+- set_fact:
+    dingo_dashboard_id: "{{ (get_dashboard_result.stdout | json_result )['dashboard']['id'] }}"
+
+- debug: var=dingo_dashboard_id
+
+- name: "Star imported dashboard"
+  shell: >
+    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST \
+      localhost:{{ grafana_port }}/api/user/stars/dashboard/{{ dingo_dashboard_id }} -H "Content-Type:application/json"
+  args:
+    warn: false
+  register: star_result
+
+- debug: var=star_result
+
+- name: "Set Dingo as default dashboard"
+  shell: >
+    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPUT \
+      localhost:{{ grafana_port }}/api/org/preferences \
+      -H "Content-Type:application/json" \
+      -d '
+      {
+        "theme": "",
+        "homeDashboardId":{{ dingo_dashboard_id }},
+        "timezone":""
+      }
+    '
+  args:
+    warn: false
+  register: set_default_result
+
+- debug: var=set_default_result
+
+- name: "Delete temporary file: dingo.json"
+  file: path={{ item }} state=absent
+  with_items:
+    - "{{ installer_cache_path }}/dingo.json"
+  when: delete_cache_after_install

@@ -1,0 +1,20 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Prometheus Blackbox Exporter
+After=network.target
+
+[Service]
+Type=simple
+User={{ blackbox_exporter_user }}
+Group={{ blackbox_exporter_group }}
+Nice=-5
+ExecStart=/bin/sh -c 'exec {{ blackbox_exporter_home }}/blackbox_exporter \
+    --web.listen-address {{ blackbox_exporter_web_listen_address }} \
+    --config.file={{ blackbox_exporter_home }}/blackbox.yml \
+    > {{ blackbox_exporter_log_path }}/{{ blackbox_exporter_service_name }}.out 2>&1 '
+
+SyslogIdentifier={{ blackbox_exporter_service_name }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

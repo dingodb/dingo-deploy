@@ -1,0 +1,15 @@
+---
+
+- name: Gather facts from extra hosts (regardless of limit or tags)
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  when: hostvars[item]['ansible_default_ipv4'] is not defined
+  with_items: "{{ groups['all'] }}"
+
+- import_tasks: 01_blackbox_exporter.yml
+
+- import_tasks: 02_pushgateway.yml
+
+- import_tasks: 03_prometheus_server.yml
+

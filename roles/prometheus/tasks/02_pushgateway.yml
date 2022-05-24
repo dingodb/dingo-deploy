@@ -1,0 +1,56 @@
+---
+
+- name: "Try stopping existing service via systemd"
+  systemd: name={{ pushgateway_service_name }} state=stopped
+  when: ansible_service_mgr == "systemd"
+  failed_when: false
+
+- name: "Remove previous install directory"
+  file: path={{ pushgateway_home }} state=absent
+
+- name: "Create directories"
+  file: path={{ item }} state=directory owner={{ pushgateway_user }} group={{ pushgateway_group }}
+  with_items:
+    - "{{ pushgateway_home }}"
+    - "{{ pushgateway_log_path }}"
+    - "{{ pushgateway_data_path }}"
+    - "{{ pushgateway_run_path }}"
+
+- set_fact: remote_tarball_path={{ installer_cache_path }}/{{ pushgateway_local_file | basename}}
+
+- name: "Ensure installer cache Directory {{ installer_cache_path }}"
+  file: path={{ installer_cache_path }} state=directory
+
+- name: "Copy tarball to remote host"
+  copy: src={{ pushgateway_local_file }} dest={{ remote_tarball_path }}
+
+- name: "Unarchive package file"
+  unarchive:
+    src: "{{ remote_tarball_path }}"
+    dest: "{{ pushgateway_home }}"
+    owner: "{{ pushgateway_user }}"
+    group: "{{ pushgateway_group }}"
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+
+- name: "Delete temporary tarball file: {{ remote_tarball_path }}"
+  file: path={{ remote_tarball_path }} state=absent
+  when: delete_cache_after_install
+
+- name: "Ensure program file is executable"
+  file:
+    path: "{{ pushgateway_home }}/{{ pushgateway_exec }}"
+    owner: "{{ pushgateway_user }}"
+    group: "{{ pushgateway_group }}"
+    mode: 0755
+
+- name: "Generate systemd service config file"
+  template: >
+    src=pushgateway.service.j2
+    dest=/etc/systemd/system/{{ pushgateway_service_name }}.service
+    mode=0644 force=yes owner={{ pushgateway_user }} group={{ pushgateway_group }}
+  when: ansible_service_mgr == "systemd"
+
+- name: "Ensure pushgateway is started via systemd"
+  systemd: name={{ pushgateway_service_name }} state=restarted enabled=yes daemon_reload=yes
+  when: ansible_service_mgr == "systemd"

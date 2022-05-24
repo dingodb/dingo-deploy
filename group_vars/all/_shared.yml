@@ -1,8 +1,17 @@
 ---
 
 # define the root path of install
-installer_root_path: /home
+installer_root_path: /home/dingo/
 installer_cache_path: /tmp
+delete_cache_after_install: true
+
+# define the global log and data directory
+dingo_log_dir: "{{ install_root_path }}/log"
+dingo_data_dir: "{{ install_root_path }}/data"
+dingo_run_dir: "{{ install_root_path }}/run"
+
+dingo_user: root
+dingo_group: root
 
 #-----------------------------------------------------
 # 1. Update System Configuration about OS
@@ -25,3 +34,32 @@ install_dingo: true
 install_dingo_basic_command: true
 install_dingo_update_configuration: true
 install_dingo_start_roles: true
+
+#-----------------------------------------------------
+# 4. Install Prometheus to Dingo directory
+#-----------------------------------------------------
+install_prometheus: true
+blackbox_exporter_port: 19115
+blackbox_exporter_server: "{{ prometheus_server }}"
+
+# Node Exporter
+node_exporter_port: 19100
+node_exporter_servers: "{{ ansible_context | server_list('node_exporter') }}"
+
+# Process Exporter
+process_exporter_port: 19256
+process_exporter_servers: "{{ ansible_context | server_list('process_exporter') }}"
+
+# Prometheus
+prometheus_port: 19090
+prometheus_server: "{{ ansible_context | local_or_default('prometheus') }}"
+prometheus_url: "http://{{ prometheus_server }}:{{ prometheus_port }}/prometheus"
+
+# Pushgateway
+pushgateway_port: 19091
+pushgateway_server: "{{ prometheus_server }}"
+
+# Grafana
+grafana_port: 3000
+grafana_server: "{{ ansible_context | local_or_default('grafana') }}"
+default_dashboard_uid: "RNezu0fWk"

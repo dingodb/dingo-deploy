@@ -1,0 +1,59 @@
+---
+
+- name: "Ensure blackbox-exporter group exist: {{ blackbox_exporter_group }}"
+  group: name={{ blackbox_exporter_group }} state=present
+
+- name: "Ensure blackbox-exporter user exist: {{ blackbox_exporter_user }}"
+  user: name="{{ blackbox_exporter_user }}" group={{ blackbox_exporter_group }}
+
+- name: "Try stopping existing service via systemd"
+  systemd: name={{ blackbox_exporter_service_name }} state=stopped
+  when: ansible_service_mgr == "systemd"
+  failed_when: false
+
+- name: "Remove previous install directory"
+  file: path={{ blackbox_exporter_home }} state=absent
+
+- name: "Create directories"
+  file: path={{ item }} state=directory owner={{ blackbox_exporter_user }} group={{ blackbox_exporter_group }}
+  with_items:
+    - "{{ blackbox_exporter_home }}"
+    - "{{ blackbox_exporter_log_path }}"
+    - "{{ blackbox_exporter_data_path }}"
+    - "{{ blackbox_exporter_run_path }}"
+
+- set_fact: remote_tarball_path={{ installer_cache_path }}/{{ blackbox_exporter_local_file | basename}}
+
+- name: "Ensure installer cache Directory {{ installer_cache_path }}"
+  file: path={{ installer_cache_path }} state=directory
+
+- name: "Copy tarball to remote host"
+  copy: src={{ blackbox_exporter_local_file }} dest={{ remote_tarball_path }}
+
+- name: "Unarchive package file"
+  unarchive:
+    src: "{{ remote_tarball_path }}"
+    dest: "{{ blackbox_exporter_home }}"
+    owner: "{{ blackbox_exporter_user }}"
+    group: "{{ blackbox_exporter_group }}"
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+
+- name: "Delete temporary tarball file: {{ remote_tarball_path }}"
+  file: path={{ remote_tarball_path }} state=absent
+  when: delete_cache_after_install
+
+- name: "Generate module config file: blackbox.yml"
+  template: >
+    src=blackbox-exporter.yml.j2 dest={{ blackbox_exporter_home }}/blackbox.yml mode=0644
+    force=yes owner={{ blackbox_exporter_user }} group={{ blackbox_exporter_group }}
+
+- name: "Generate Systemd service File"
+  template: >
+    src=blackbox-exporter.service.j2 dest=/etc/systemd/system/{{ blackbox_exporter_service_name }}.service mode=0644
+    force=yes owner={{ blackbox_exporter_user }} group={{ blackbox_exporter_group }}
+  when: ansible_service_mgr == "systemd"
+
+- name: "Ensure blackbox-exporter is started via systemd"
+  systemd: name={{ blackbox_exporter_service_name }} state=started enabled=yes daemon_reload=yes
+  when: ansible_service_mgr == "systemd"

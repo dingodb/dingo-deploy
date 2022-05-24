@@ -1,0 +1,23 @@
+---
+
+grafana_service_name: "dingo-grafana"
+
+grafana_home: "{{ install_root_path | default('/opt') }}/grafana"
+grafana_user: "{{ dingo_user | default('grafana') }}"
+grafana_group: "{{ dingo_group | default('grafana') }}"
+
+grafana_log_path: "{{ dingo_log_dir | default('/var/log') }}/grafana"
+grafana_data_path: "{{ dingo_data_dir | default('/var/lib') }}/grafana"
+grafana_run_path: "{{ dingo_run_dir | default('/var/run') }}/grafana"
+
+grafana_conf_path: "{{ grafana_home }}/conf"
+grafana_plugin_path: "{{ grafana_data_path }}/plugins"
+
+grafana_port: 3000
+
+default_datasource_name: "Prometheus"
+grafana_admin_user: "admin"
+grafana_admin_password: "admin"
+default_dashboard_title: "Dingo"
+default_dashboard_uid: "RNezu0fWk"
+default_dashboard_template: "dingo.json.j2"

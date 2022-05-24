@@ -1,0 +1,9 @@
+{% for svc in service_list %}
+- targets:
+{% for host in svc.hosts %}
+  - {{ host }}:{{ svc.port }}
+{% endfor %}
+  labels:
+    group: {{ svc.group }}
+
+{% endfor %}
