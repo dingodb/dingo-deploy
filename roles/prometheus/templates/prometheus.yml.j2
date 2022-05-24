@@ -17,7 +17,11 @@ scrape_configs:
     - targets:
       - "localhost:{{ prometheus_port }}"
 
+  - job_name: "node"
+    file_sd_configs:
+    - files:
+      - "{{ prometheus_home }}/file_sd/node*.yml"
   - job_name: "jmx"
-  file_sd_configs:
-  - files:
-    - {{ prometheus_home }}/jmx.json
+    file_sd_configs:
+    - files:
+      - {{ prometheus_home }}/file_sd/jmx.json

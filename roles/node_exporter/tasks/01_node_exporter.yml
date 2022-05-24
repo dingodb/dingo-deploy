@@ -1,0 +1,54 @@
+---
+
+- name: "Ensure node_exporter group exist: {{ node_exporter_group }}"
+  group: name={{ node_exporter_group }} state=present
+
+- name: "Ensure node_exporter user exist: {{ node_exporter_user }}"
+  user: name="{{ node_exporter_user }}" group={{ node_exporter_group }}
+
+- name: "Try stopping existing service via systemd"
+  systemd: name={{ node_exporter_service_name }} state=stopped
+  when: ansible_service_mgr == "systemd"
+  failed_when: false
+
+- name: "Remove previous install directory"
+  file: path={{ node_exporter_home }} state=absent
+
+- name: "Create directories"
+  file: path={{ item }} state=directory owner={{ node_exporter_user }} group={{ node_exporter_group }}
+  with_items:
+    - "{{ node_exporter_home }}"
+    - "{{ node_exporter_log_path }}"
+    - "{{ node_exporter_data_path }}"
+    - "{{ node_exporter_run_path }}"
+
+- set_fact: remote_tarball_path={{ installer_cache_path }}/{{ node_exporter_local_file | basename}}
+
+- name: "Ensure installer cache Directory {{ installer_cache_path }}"
+  file: path={{ installer_cache_path }} state=directory
+
+- name: "Copy tarball to remote host"
+  copy: src={{ node_exporter_local_file }} dest={{ remote_tarball_path }}
+
+- name: "Unarchive package file"
+  unarchive:
+    src: "{{ remote_tarball_path }}"
+    dest: "{{ node_exporter_home }}"
+    owner: "{{ node_exporter_user }}"
+    group: "{{ node_exporter_group }}"
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+
+- name: "Delete temporary tarball file: {{ remote_tarball_path }}"
+  file: path={{ remote_tarball_path }} state=absent
+  when: delete_cache_after_install
+
+- name: "Generate Systemd service File"
+  template: >
+    src=node-exporter.service.j2 dest=/etc/systemd/system/{{ node_exporter_service_name }}.service mode=0644
+    force=yes owner={{ node_exporter_user }} group={{ node_exporter_group }}
+  when: ansible_service_mgr == "systemd"
+
+- name: "Ensure node-exporter is started via systemd"
+  systemd: name={{ node_exporter_service_name }} state=started enabled=yes daemon_reload=yes
+  when: ansible_service_mgr == "systemd"

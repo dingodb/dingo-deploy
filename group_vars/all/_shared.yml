@@ -43,16 +43,17 @@ blackbox_exporter_port: 19115
 blackbox_exporter_server: "{{ prometheus_server }}"
 
 # Node Exporter
+install_node_exporter: true
 node_exporter_port: 19100
-node_exporter_servers: "{{ ansible_context | server_list('node_exporter') }}"
+node_exporter_servers: "{{ groups['node_exporter'] }}"
 
 # Process Exporter
 process_exporter_port: 19256
-process_exporter_servers: "{{ ansible_context | server_list('process_exporter') }}"
+process_exporter_servers: "{{ groups['process_exporter'] }}"
 
 # Prometheus
 prometheus_port: 19090
-prometheus_server: "{{ ansible_context | local_or_default('prometheus') }}"
+prometheus_server: "{{ groups['prometheus'][0] }}"
 prometheus_url: "http://{{ prometheus_server }}:{{ prometheus_port }}/prometheus"
 
 # Pushgateway
@@ -62,5 +63,5 @@ pushgateway_server: "{{ prometheus_server }}"
 # Grafana
 install_grafana: true
 grafana_port: 3000
-grafana_server: "{{ ansible_context | local_or_default('grafana') }}"
+grafana_server: "{{ groups['grafana'][0] }}"
 default_dashboard_uid: "RNezu0fWk"

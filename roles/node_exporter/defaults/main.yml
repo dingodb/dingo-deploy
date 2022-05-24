@@ -1,0 +1,15 @@
+---
+
+node_exporter_service_name: "dingo-node-exporter"
+
+node_exporter_home: "{{ installer_root_path | default('/opt') }}/node-exporter"
+node_exporter_user: "{{ dingo_user | default('prometheus') }}"
+node_exporter_group: "{{ dingo_group | default('prometheus') }}"
+
+node_exporter_log_path: "{{ dingo_log_dir | default('/var/log') }}/node-exporter"
+node_exporter_data_path: "{{ dingo_data_dir | default('/var/lib') }}/node-exporter"
+node_exporter_run_path: "{{ dingo_run_dir | default('/var/run') }}/node-exporter"
+
+node_exporter_port: 19100
+
+node_exporter_web_listen_address: "0.0.0.0:{{ node_exporter_port }}"

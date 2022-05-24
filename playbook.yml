@@ -42,3 +42,10 @@
   tasks:
     - include_role: name=grafana
       when: install_grafana
+
+- hosts:
+    - all_nodes
+  tasks:
+    - include_role: name=node_exporter
+      when: install_node_exporter
+

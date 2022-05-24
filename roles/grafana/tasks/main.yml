@@ -1,5 +1,9 @@
 ---
 
+- name: "Check grafana should install or Not"
+  meta: end_play
+  when: install_grafana == false
+
 - name: "Load artifacts info"
   action: resolve_artifacts
 
@@ -155,7 +159,7 @@
   register: get_dashboard_result
 
 - debug: var=get_dashboard_result
-  when: get_dashboard_result.rc != 0
+#  when: get_dashboard_result.rc != 0
 
 - set_fact:
     dingo_dashboard_id: "{{ (get_dashboard_result.stdout | json_result )['dashboard']['id'] }}"

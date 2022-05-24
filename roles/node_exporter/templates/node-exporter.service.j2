@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Prometheus Node Exporter
+After=network.target
+
+[Service]
+Type=simple
+User={{ node_exporter_user }}
+Group={{ node_exporter_group }}
+Nice=-5
+ExecStart=/bin/sh -c 'exec {{ node_exporter_home }}/node_exporter \
+    --web.listen-address {{ node_exporter_web_listen_address }} \
+    --collector.filesystem.ignored-mount-points=^/\(sys\|proc\|dev\)\($\|/\) \
+    --collector.filesystem.ignored-fs-types=^\(sys\|proc\|auto\)fs$ \
+    --collector.systemd \
+    --no-collector.logind \
+    --no-collector.ntp \
+    > {{ node_exporter_log_path }}/{{ node_exporter_service_name }}.out 2>&1 '
+
+SyslogIdentifier={{ node_exporter_service_name }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,5 +1,8 @@
 ---
 
+- name: "Load artifacts info"
+  action: resolve_artifacts
+
 - name: "Ensure prometheus group exist: {{ prometheus_group }}"
   group: name={{ prometheus_group }} state=present
 
@@ -18,6 +21,7 @@
   file: path={{ item }} state=directory owner={{ prometheus_user }} group={{ prometheus_group }}
   with_items:
     - "{{ prometheus_home }}"
+    - "{{ prometheus_home }}/file_sd"
     - "{{ prometheus_log_path }}"
     - "{{ prometheus_data_path }}"
     - "{{ prometheus_run_path }}"
@@ -54,7 +58,11 @@
     } 
     - {
       src: "jmx.json.j2",
-      dest: "{{ prometheus_home }}/jmx.json"
+      dest: "{{ prometheus_home }}/file_sd/jmx.json"
+    }
+    - {
+      src: "node.yml.j2",
+      dest: "{{ prometheus_home }}/file_sd/node.yml"
     }
 
 - name: "Generate Systemd service File"
