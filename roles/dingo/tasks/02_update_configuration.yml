@@ -25,6 +25,10 @@
       dest: "{{ dingo_home }}/conf/logback-sqlline.xml"
     }
     - {
+      src: "logback-web.xml.j2",
+      dest: "{{ dingo_home }}/conf/logback-web.xml"
+    }
+    - {
       src: "start-coordinator.sh.j2",
       dest: "{{ dingo_home }}/bin/start-coordinator.sh"
     }
@@ -35,6 +39,10 @@
     - {
       src: "start-driver.sh.j2",
       dest: "{{ dingo_home }}/bin/start-driver.sh"
+    }
+    - {
+      src: "start-web.sh.j2",
+      dest: "{{ dingo_home }}/bin/start-web.sh"
     }
     - {
       src: "stop-all-component.sh.j2",
@@ -51,6 +59,10 @@
     - {
       src: "client.yaml.j2",
       dest: "{{ dingo_home }}/conf/client.yaml"
+    }
+    - {
+      src: "application-dev.yaml.j2",
+      dest: "{{ dingo_home }}/conf/application-dev.yaml"
     }
 
 - name: "Remove unused configure files"

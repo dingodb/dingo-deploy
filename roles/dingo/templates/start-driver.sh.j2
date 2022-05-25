@@ -24,4 +24,4 @@ nohup {{ jdk_home }}/bin/java ${JAVA_OPTS} \
     io.dingodb.cli.Tools driver \
     --config ${ROOT}/conf/client.yaml \
     $@ \
-     > ${ROOT}/log/driver.out 2>&1 &
+     > {{ dingo_log_path }}/driver.out 2>&1 &

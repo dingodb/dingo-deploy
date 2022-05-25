@@ -2,8 +2,8 @@
 
 dingo_home: "{{ installer_root_path | default('/opt') }}/dingo"
 
-dingo_log_path: "{{ dingo_home }}/log"
-dingo_data_path: "{{ dingo_home }}/data"
+dingo_log_path: "{{ dingo_log_dir }}/dingo"
+dingo_data_path: "{{ dingo_data_dir }}/dingo"
 
 installer_cache_path: /tmp
 delete_cache_after_install: true
@@ -13,10 +13,10 @@ dingo_coordinator_raft_port: 9181
 dingo_executor_exchange_port: 19191
 dingo_executor_raft_port: 9191
 
-dingo_coordinator_meta_path: "{{ dingo_home }}/coordinator"
-dingo_executor_server_db_path: "{{ dingo_home }}/executor/meta"
-dingo_executor_raft_log_path: "{{ dingo_home }}/executor/raftLog"
-dingo_executor_raft_db_path: "{{ dingo_home }}/executor/raftDb"
+dingo_coordinator_meta_path: "{{ dingo_data_path }}/coordinator"
+dingo_executor_server_db_path: "{{ dingo_data_path }}/executor/meta"
+dingo_executor_raft_log_path: "{{ dingo_data_path }}/executor/raftLog"
+dingo_executor_raft_db_path: "{{ dingo_data_path }}/executor/raftDb"
 
 dingo_tmp_coordinator_list: "{{ groups['coordinator'] }}"
 dingo_tmp_executor_list: "{{ groups['executor'] }}"
@@ -40,3 +40,4 @@ dingo_executor_exchange_connection_list: "{{ dingo_executor_exchange_list.split(
 # define the flag to check current role is coordinator or executor
 is_dingo_coordinator: "{{ 'coordinator' in group_names }}"
 is_dingo_executor: "{{ 'executor' in group_names }}"
+is_dingo_web: "{{ 'web' in group_names }}"

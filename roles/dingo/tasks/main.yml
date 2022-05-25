@@ -7,18 +7,11 @@
 - name: "Load artifacts info"
   action: resolve_artifacts
 
-- import_tasks: "{{ playbook_dir }}/roles/dingo/tasks/01_basic_command.yml"
+- import_tasks: 01_basic_command.yml
   when: install_dingo_basic_command
 
-- import_tasks: "{{ playbook_dir }}/roles/dingo/tasks/02_update_configuration.yml"
+- import_tasks: 02_update_configuration.yml
   when: install_dingo_update_configuration
 
 - import_tasks: 03_start_roles_command.yml
   when: install_dingo_start_roles
-
-#- import_tasks: "{{ playbook_dir }}/../roles/jmx/tasks/main.yml"
-#  vars:
-#    svc_name: "{{ dingo_service_name }}"
-#    svc_home: "{{ dingo_home }}"
-#    jmx_port: "{{ dingo_jmx_port }}"
-#

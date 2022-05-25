@@ -1,7 +1,6 @@
 ---
 
 # stop all the coordinator and executor
-
 - name: "Stop Coordinator and Executor on all host"
   shell: "/bin/bash ./bin/stop-all-component.sh"
   args:
@@ -9,7 +8,7 @@
 
 # start coordinator
 - name: "Start Coordinator using Script"
-  shell: "/bin/bash ./bin/start-coordinator.sh > log/coordinator.out 2>&1" 
+  shell: "/bin/bash ./bin/start-coordinator.sh " 
   args:
     chdir: "{{ dingo_home }}"
   when: is_dingo_coordinator
@@ -19,15 +18,22 @@
 
 # start executor
 - name: "Start Executor using Shell Script"
-  shell: "/bin/bash ./bin/start-executor.sh > log/executor.out 2>&1" 
+  shell: "/bin/bash ./bin/start-executor.sh " 
   args:
     chdir: "{{ dingo_home }}"
   when: is_dingo_executor
 
 # start jdbc driver proxy
 - name: "Start JDBC Driver using Shell Script"
-  shell: "/bin/bash ./bin/start-driver.sh > log/driver.out 2>&1" 
+  shell: "/bin/bash ./bin/start-driver.sh" 
   args:
     chdir: "{{ dingo_home }}"
   when: is_dingo_executor
+
+# Start dingo web 
+- name: "Start Dingo Web appliaction using Shell script"
+  shell: "/bin/bash ./bin/start-web.sh"
+  args:
+    chdir: "{{ dingo_home }}"
+  when: is_dingo_web
 

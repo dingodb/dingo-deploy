@@ -25,4 +25,4 @@ nohup {{ jdk_home }}/bin/java ${JAVA_OPTS} \
      -classpath ${JAR_PATH}:${STORE_JAR_PATH}  \
      io.dingodb.server.executor.Starter \
      --config ${ROOT}/conf/executor.yaml \
-     > ${ROOT}/log/executor.out &
+     > {{ dingo_log_path }}/executor.out &

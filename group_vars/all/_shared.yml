@@ -30,7 +30,7 @@ jdk_home: "{{ jdk_install_path }}/jdk"
 #-----------------------------------------------------
 # 3. Install Dingo to Dingo home
 #-----------------------------------------------------
-install_dingo: false
+install_dingo: true
 install_dingo_basic_command: true
 install_dingo_update_configuration: true
 install_dingo_start_roles: true

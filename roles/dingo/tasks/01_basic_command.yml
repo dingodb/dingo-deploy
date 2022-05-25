@@ -6,8 +6,13 @@
 - name: "Ensure dingo user exist {{ dingo_user }}"
   user: name={{ dingo_user }} group={{ dingo_group }}
 
-- name: "Remove {{ dingo_home }} if exist"
-  file: path="{{ dingo_home }}" state=absent
+- name: "Remove dingo home/log/data directories if exist"
+  file: path="{{ item }}" state=absent
+  with_items: 
+    - "{{ dingo_home }}"
+    - "{{ dingo_log_path }}"
+    - "{{ dingo_data_path }}"
+
 
 - name: "Ensure installer cache Directory {{ installer_cache_path }}"
   file: path={{ installer_cache_path }} state=directory
@@ -17,6 +22,7 @@
   with_items:
     - "{{ dingo_home }}"
     - "{{ dingo_log_path }}"
+    - "{{ dingo_data_path }}"
     - "{{ dingo_coordinator_meta_path }}"
     - "{{ dingo_executor_server_db_path }}"
     - "{{ dingo_executor_raft_log_path }}"
