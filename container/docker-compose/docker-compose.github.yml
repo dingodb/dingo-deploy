@@ -2,7 +2,7 @@
 version: '2.2'
 services:
   coordinator1:
-    image: ghcr.io/huzx0608/dingo:latest
+    image: ghcr.io/dingodb/dingo:latest
     hostname: coordinator1
     container_name: coordinator1
     networks:
@@ -12,7 +12,7 @@ services:
       DINGO_HOSTNAME: coordinator1
 
   coordinator2:
-    image: ghcr.io/huzx0608/dingo:latest
+    image: ghcr.io/dingodb/dingo:latest
     hostname: coordinator2
     container_name: coordinator2
     networks:
@@ -22,7 +22,7 @@ services:
       DINGO_HOSTNAME: coordinator2
 
   coordinator3:
-    image: ghcr.io/huzx0608/dingo:latest
+    image: ghcr.io/dingodb/dingo:latest
     hostname: coordinator3
     container_name: coordinator3
     networks:
@@ -32,7 +32,7 @@ services:
       DINGO_HOSTNAME: coordinator3
 
   executor1:
-    image: ghcr.io/huzx0608/dingo:latest
+    image: ghcr.io/dingodb/dingo:latest
     hostname: executor1
     container_name: executor1
     ports:
@@ -48,11 +48,11 @@ services:
        DINGO_HOSTNAME: executor1
 
   executor2:
-    image: ghcr.io/huzx0608/dingo:latest
+    image: ghcr.io/dingodb/dingo:latest
     hostname: executor2
     container_name: executor2
     ports:
-      - 8765:8765
+      - 8766:8765
     networks:
       - dingo_net
     depends_on:
@@ -64,11 +64,11 @@ services:
        DINGO_HOSTNAME: executor2
 
   executor3:
-    image: ghcr.io/huzx0608/dingo:latest
+    image: ghcr.io/dingodb/dingo:latest
     hostname: executor3
     container_name: executor3
     ports:
-      - 8765:8765
+      - 8767:8765
     networks:
       - dingo_net
     depends_on:
@@ -78,6 +78,22 @@ services:
     environment:
        DINGO_ROLE: executor
        DINGO_HOSTNAME: executor3
+
+  web:
+    image: ghcr.io/dingodb/dingo:latest
+    hostname: web
+    container_name: web
+    ports:
+      - 13000:13000
+    networks:
+      - dingo_net
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+      DINGO_ROLE: web
+      DINGO_HOSTNAME: web
 
 networks:
     dingo_net:

@@ -52,7 +52,7 @@ services:
     hostname: executor2
     container_name: executor2
     ports:
-      - 8765:8765
+      - 8766:8765
     networks:
       - dingo_net
     depends_on:
@@ -68,7 +68,7 @@ services:
     hostname: executor3
     container_name: executor3
     ports:
-      - 8765:8765
+      - 8767:8765
     networks:
       - dingo_net
     depends_on:
@@ -78,6 +78,22 @@ services:
     environment:
        DINGO_ROLE: executor
        DINGO_HOSTNAME: executor3
+ 
+  web:
+    image: dingodb.ubuntu:v0.3.0
+    hostname: web
+    container_name: web
+    ports:
+      - 13000:13000
+    networks:
+      - dingo_net
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+      DINGO_ROLE: web
+      DINGO_HOSTNAME: web
 
 networks:
     dingo_net:

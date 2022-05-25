@@ -78,6 +78,22 @@ services:
     environment:
        DINGO_ROLE: executor
        DINGO_HOSTNAME: executor3
+ 
+  web:
+    image: dingodb.ubuntu:v0.3.0
+    hostname: web
+    container_name: web
+    ports:
+      - 13000:13000
+    networks:
+      - dingo_net
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+      DINGO_ROLE: web
+      DINGO_HOSTNAME: web
 
 networks:
     dingo_net:
