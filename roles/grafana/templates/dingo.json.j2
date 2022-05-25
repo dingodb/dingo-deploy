@@ -1,4 +1,6 @@
 {
+    "dashboard":
+{
   "annotations": {
     "list": [
       {
@@ -15,9 +17,9 @@
   },
   "description": "【English version】Update 2020.10.10, add the overall resource overview! Support Grafana6&7,Support Node Exporter v0.16 and above.Optimize the main metrics display. Includes: CPU, memory, disk IO, network, temperature and other monitoring metrics。https://github.com/starsliao/Prometheus",
   "editable": true,
-  "gnetId": 11074,
+  "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
+  "id": null,
   "iteration": 1653387564057,
   "links": [
     {
@@ -53,7 +55,7 @@
   "panels": [
     {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -67,7 +69,7 @@
     },
     {
       "columns": [],
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "description": "Partition utilization, disk read, disk write, download bandwidth, upload bandwidth, if there are multiple network cards or multiple partitions, it is the value of the network card or partition with the highest utilization rate collected.\n\nCurrEstab: The number of TCP connections whose current status is ESTABLISHED or CLOSE-WAIT.",
       "fieldConfig": {
         "defaults": {
@@ -563,7 +565,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": null,
       "description": "",
       "fieldConfig": {
@@ -723,7 +725,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 1,
       "fieldConfig": {
         "defaults": {
@@ -869,7 +871,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 1,
       "description": "",
       "fieldConfig": {
@@ -1011,7 +1013,7 @@
     },
     {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1025,7 +1027,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -1105,7 +1107,7 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1214,7 +1216,7 @@
     },
     {
       "columns": [],
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "description": "In this kanban: the total disk, usage, available, and usage rate are consistent with the values of the Size, Used, Avail, and Use% columns of the df command, and the value of Use% will be rounded to one decimal place, which will be more accurate .\n\nNote: The Use% algorithm in df is: (size-free) * 100 / (avail + (size-free)), the result is divisible by this value, non-divisible by this value is +1, and the unit of the result is %.\nRefer to the df command source code:",
       "fieldConfig": {
         "defaults": {
@@ -1423,7 +1425,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -1515,7 +1517,7 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "editable": true,
       "error": false,
       "fieldConfig": {
@@ -1578,7 +1580,7 @@
           "expr": "increase(node_network_receive_bytes_total{instance=~\"$node\",device=~\"$device\"}[60m])",
           "interval": "60m",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_receive",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_receive",
           "metric": "",
           "refId": "A",
           "step": 600,
@@ -1589,7 +1591,7 @@
           "hide": false,
           "interval": "60m",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_transmit",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_transmit",
           "refId": "B",
           "step": 600
         }
@@ -1639,7 +1641,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -1717,7 +1719,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -1796,7 +1798,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -1865,7 +1867,7 @@
           "instant": true,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
+          "legendFormat": "{{ '{{' }} instance {{ '}}' }}",
           "refId": "A",
           "step": 20
         }
@@ -1875,7 +1877,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -1970,7 +1972,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 2,
       "description": "",
       "fieldConfig": {
@@ -2134,7 +2136,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 2,
       "fieldConfig": {
         "defaults": {
@@ -2329,7 +2331,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 2,
       "fieldConfig": {
         "defaults": {
@@ -2392,7 +2394,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_receive",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_receive",
           "refId": "A",
           "step": 4
         },
@@ -2401,7 +2403,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_transmit",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_transmit",
           "refId": "B",
           "step": 4
         }
@@ -2458,7 +2460,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 2,
       "editable": true,
       "error": false,
@@ -2613,7 +2615,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 2,
       "description": "Per second read / write bytes ",
       "fieldConfig": {
@@ -2676,7 +2678,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_Read bytes",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_Read bytes",
           "refId": "A",
           "step": 10
         },
@@ -2686,7 +2688,7 @@
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_Written bytes",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_Written bytes",
           "refId": "B",
           "step": 10
         }
@@ -2740,7 +2742,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 1,
       "description": "",
       "fieldConfig": {
@@ -2805,14 +2807,14 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{mountpoint}}",
+          "legendFormat": "{{ '{{' }} mountpoint {{ '}}' }}",
           "refId": "A"
         },
         {
           "expr": "node_filesystem_files_free{instance=~'$node',fstype=~\"ext.?|xfs\"} / node_filesystem_files{instance=~'$node',fstype=~\"ext.?|xfs\"}",
           "hide": true,
           "interval": "",
-          "legendFormat": "Inodes：{{instance}}：{{mountpoint}}",
+          "legendFormat": "Inodes:{{ '{{' }} instance {{ '}}' }} : {{ '{{' }} mountpoint {{ '}}' }}",
           "refId": "B"
         }
       ],
@@ -2868,7 +2870,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 2,
       "description": "Read/write completions per second\n\nWrites completed: 每个磁盘分区每秒写完成次数\n\nIO now 每个磁盘分区每秒正在处理的输入/输出请求数",
       "fieldConfig": {
@@ -2932,7 +2934,7 @@
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_Reads completed",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_Reads completed",
           "refId": "A",
           "step": 10
         },
@@ -2942,7 +2944,7 @@
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_Writes completed",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_Writes completed",
           "refId": "B",
           "step": 10
         },
@@ -2952,7 +2954,7 @@
           "hide": true,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}",
           "refId": "C"
         }
       ],
@@ -3018,7 +3020,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": null,
       "description": "The time spent on I/O in the natural time of each second.（wall-clock time）",
       "fieldConfig": {
@@ -3077,7 +3079,7 @@
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_ IO time",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_ IO time",
           "refId": "C"
         }
       ],
@@ -3132,7 +3134,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 2,
       "description": "Time spent on each read/write operation",
       "fieldConfig": {
@@ -3197,7 +3199,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_Read time",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_Read time",
           "refId": "B"
         },
         {
@@ -3207,7 +3209,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_Write time",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_Write time",
           "refId": "C"
         },
         {
@@ -3216,7 +3218,7 @@
           "hide": true,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}",
           "refId": "A",
           "step": 10
         },
@@ -3226,7 +3228,7 @@
           "hide": true,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{device}}_加权",
+          "legendFormat": "{{ '{{' }} device {{ '}}' }}_加权",
           "refId": "D"
         }
       ],
@@ -3282,7 +3284,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "decimals": 2,
       "description": "Sockets_used - Sockets currently in use\n\nCurrEstab - TCP connections for which the current state is either ESTABLISHED or CLOSE- WAIT\n\nTCP_alloc - Allocated sockets\n\nTCP_tw - Sockets wating close\n\nUDP_inuse - Udp sockets currently in use\n\nRetransSegs - TCP retransmission packets\n\nOutSegs - Number of packets sent by TCP\n\nInSegs - Number of packets received by TCP",
       "fieldConfig": {
@@ -3390,14 +3392,14 @@
           "expr": "rate(node_netstat_Tcp_PassiveOpens{instance=~'$node'}[$interval])",
           "hide": true,
           "interval": "",
-          "legendFormat": "{{instance}}_Tcp_PassiveOpens",
+          "legendFormat": "{{ '{{' }} instance {{ '}}' }}_Tcp_PassiveOpens",
           "refId": "G"
         },
         {
           "expr": "rate(node_netstat_Tcp_ActiveOpens{instance=~'$node'}[$interval])",
           "hide": true,
           "interval": "",
-          "legendFormat": "{{instance}}_Tcp_ActiveOpens",
+          "legendFormat": "{{ '{{' }} instance {{ '}}' }}_Tcp_ActiveOpens",
           "refId": "F"
         },
         {
@@ -3483,7 +3485,7 @@
       "cacheTimeout": null,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "{{ default_datasource_name }}",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -3569,7 +3571,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 5,
-          "legendFormat": "使用的文件描述符占比_{{instance}}",
+          "legendFormat": "使用的文件描述符占比_{{ '{{' }} instance {{ '}}' }}",
           "refId": "C"
         }
       ],
@@ -3635,7 +3637,7 @@
           "text": "None",
           "value": ""
         },
-        "datasource": "Prometheus",
+        "datasource": "{{ default_datasource_name }}",
         "definition": "label_values(origin_prometheus)",
         "error": null,
         "hide": 0,
@@ -3662,7 +3664,7 @@
           "text": "node",
           "value": "node"
         },
-        "datasource": "Prometheus",
+        "datasource": "{{ default_datasource_name }}",
         "definition": "label_values(node_uname_info{origin_prometheus=~\"$origin_prometheus\"}, job)",
         "error": null,
         "hide": 0,
@@ -3689,7 +3691,7 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "Prometheus",
+        "datasource": "{{ default_datasource_name }}",
         "definition": "label_values(node_uname_info{origin_prometheus=~\"$origin_prometheus\",job=~\"$job\"}, nodename)",
         "error": null,
         "hide": 0,
@@ -3717,7 +3719,7 @@
           "text": "172.20.31.10:19100",
           "value": "172.20.31.10:19100"
         },
-        "datasource": "Prometheus",
+        "datasource": "{{ default_datasource_name }}",
         "definition": "label_values(node_uname_info{origin_prometheus=~\"$origin_prometheus\",job=~\"$job\",nodename=~\"$hostname\"},instance)",
         "error": null,
         "hide": 0,
@@ -3746,7 +3748,7 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "Prometheus",
+        "datasource": "{{ default_datasource_name }}",
         "definition": "label_values(node_network_info{origin_prometheus=~\"$origin_prometheus\",device!~'tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*'},device)",
         "error": null,
         "hide": 0,
@@ -3830,7 +3832,7 @@
           "text": "/",
           "value": "/"
         },
-        "datasource": "Prometheus",
+        "datasource": "{{ default_datasource_name }}",
         "definition": "query_result(topk(1,sort_desc (max(node_filesystem_size_bytes{origin_prometheus=~\"$origin_prometheus\",instance=~'$node',fstype=~\"ext.?|xfs\",mountpoint!~\".*pods.*\"}) by (mountpoint))))",
         "error": null,
         "hide": 2,
@@ -3854,10 +3856,10 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "dingo10.zetyun.local",
-          "value": "dingo10.zetyun.local"
+          "text": "All",
+          "value": "$__all"
         },
-        "datasource": "Prometheus",
+        "datasource": "{{ default_datasource_name }}",
         "definition": "label_values(node_uname_info{origin_prometheus=~\"$origin_prometheus\",job=~\"$job\",instance=~\"$node\"}, nodename)",
         "error": null,
         "hide": 2,
@@ -3884,7 +3886,7 @@
           "text": "3",
           "value": "3"
         },
-        "datasource": "Prometheus",
+        "datasource": "{{ default_datasource_name }}",
         "definition": "query_result(count(node_uname_info{origin_prometheus=~\"$origin_prometheus\",job=~\"$job\"}))",
         "error": null,
         "hide": 2,
@@ -3933,8 +3935,11 @@
       "30d"
     ]
   },
-  "timezone": "browser",
-  "title": "Dingo-Monitor01",
-  "uid": "xfpJB9FGz",
-  "version": 1
+  "timezone": "",
+  "title": "{{ default_dashboard_title }}",
+  "uid": "{{ default_dashboard_uid }}",
+  "version": 24
+},
+    "folderId": 0,
+    "overwrite": true
 }
