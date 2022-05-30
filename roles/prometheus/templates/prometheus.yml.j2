@@ -21,7 +21,18 @@ scrape_configs:
     file_sd_configs:
     - files:
       - "{{ prometheus_home }}/file_sd/node*.yml"
+
   - job_name: "jmx"
     file_sd_configs:
     - files:
       - {{ prometheus_home }}/file_sd/jmx.json
+
+  - job_name: "coordinator-exporter"
+    static_configs:
+    - targets:
+      - {{ dingo_coordinator_http_monitor_list }}
+
+  - job_name: "executor-exporter"
+    static_configs:
+    - targets:
+      - {{ dingo_executor_http_monitor_list }}

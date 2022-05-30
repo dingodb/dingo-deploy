@@ -8,3 +8,6 @@ server:
     raft:
         port: {{ dingo_coordinator_raft_port }}
         initRaftSvrList: {{ dingo_coordinator_raft_connection_list }}
+    schedule:
+        autoSplit: true
+    monitorPort: {{ dingo_coordinator_http_monitor_port }}

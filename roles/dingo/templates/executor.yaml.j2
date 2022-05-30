@@ -6,6 +6,7 @@ exchange:
 server:
     coordinatorExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
     dataPath: {{ dingo_executor_server_db_path }}
+    monitorPort: {{ dingo_executor_http_monitor_port }}
 store:
     dbPath: {{ dingo_executor_raft_db_path }}
     raft:

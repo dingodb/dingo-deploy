@@ -8,3 +8,5 @@ server:
     raft:
         port: 9181
         initRaftSvrList: coordinator3:9181,coordinator2:9181,coordinator1:9181
+    schedule:
+        autoSplit: true
