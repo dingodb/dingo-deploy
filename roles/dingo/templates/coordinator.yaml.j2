@@ -6,8 +6,7 @@ exchange:
 server:
     dataPath: {{ dingo_coordinator_meta_path }}
     raft:
-        port: {{ dingo_coordinator_raft_port }}
-        initRaftSvrList: {{ dingo_coordinator_raft_connection_list }}
+        initRaftSvrList: {{ dingo_coordinator_exchange_connection_list }}
     schedule:
         autoSplit: true
     monitorPort: {{ dingo_coordinator_http_monitor_port }}
