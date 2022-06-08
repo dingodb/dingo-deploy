@@ -30,7 +30,7 @@ jdk_home: "{{ jdk_install_path }}/jdk"
 #-----------------------------------------------------
 # 3. Install Dingo to Dingo home
 #-----------------------------------------------------
-install_dingo: false
+install_dingo: true
 install_dingo_basic_command: true
 install_dingo_update_configuration: true
 install_dingo_start_roles: true
@@ -43,7 +43,7 @@ blackbox_exporter_port: 19115
 blackbox_exporter_server: "{{ prometheus_server }}"
 
 # Node Exporter
-install_node_exporter: false
+install_node_exporter: true
 node_exporter_port: 19100
 node_exporter_servers: "{{ groups['node_exporter'] }}"
 

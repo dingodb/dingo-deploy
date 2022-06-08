@@ -21,8 +21,12 @@
       dest: "{{ dingo_home }}/conf/logback-executor.xml"
     }
     - {
-      src: "logback-sqlline.xml.j2",
-      dest: "{{ dingo_home }}/conf/logback-sqlline.xml"
+      src: "log4j-sqlline.properties.j2",
+      dest: "{{ dingo_home }}/conf/log4j-sqlline.properties"
+    }
+    - {
+      src: "log4j-driver.properties.j2",
+      dest: "{{ dingo_home }}/conf/log4j-driver.properties"
     }
     - {
       src: "logback-web.xml.j2",

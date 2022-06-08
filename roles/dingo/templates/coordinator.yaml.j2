@@ -9,4 +9,6 @@ server:
         initRaftSvrList: {{ dingo_coordinator_exchange_connection_list }}
     schedule:
         autoSplit: true
+        defaultAutoMaxSize: 1073741824
+        defaultAutoMaxCount: 1000000
     monitorPort: {{ dingo_coordinator_http_monitor_port }}
