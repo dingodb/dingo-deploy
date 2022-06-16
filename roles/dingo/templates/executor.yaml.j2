@@ -10,5 +10,6 @@ server:
 store:
     dbPath: {{ dingo_executor_raft_db_path }}
     raft:
+       port: {{ dingo_executor_raft_port }}
        raftPath: {{ dingo_executor_raft_log_path }}
     collectStatsInterval: 5

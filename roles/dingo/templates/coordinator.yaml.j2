@@ -6,7 +6,8 @@ exchange:
 server:
     dataPath: {{ dingo_coordinator_meta_path }}
     raft:
-        initRaftSvrList: {{ dingo_coordinator_exchange_connection_list }}
+        port: {{ dingo_coordinator_raft_port }}
+        initRaftSvrList: {{ dingo_coordinator_raft_connection_list }}
     schedule:
         autoSplit: true
         defaultAutoMaxSize: 1073741824
