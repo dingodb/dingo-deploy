@@ -19,9 +19,8 @@ ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 JAR_PATH=$(find $ROOT -name dingo-cli-*.jar)
 
 java ${JAVA_OPTS} \
-    -Dlog4j.configuration=file:${ROOT}/conf/log4j-driver.properties \
+    -Dlogback.configurationFile=file:${ROOT}/conf/logback-driver.xml \
     -classpath ${JAR_PATH} \
     io.dingodb.cli.Tools driver \
     --config ${ROOT}/conf/client.yaml \
     $@ > ${ROOT}/log/driver.out
-
