@@ -5,11 +5,13 @@ exchange:
     port: {{ dingo_coordinator_exchange_port }}
 server:
     dataPath: {{ dingo_coordinator_meta_path }}
-    raft:
-        port: {{ dingo_coordinator_raft_port }}
-        initRaftSvrList: {{ dingo_coordinator_raft_connection_list }}
-    schedule:
-        autoSplit: true
-        defaultAutoMaxSize: 1073741824
-        defaultAutoMaxCount: 1000000
+    servers: {{ dingo_coordinator_exchange_connection_list }} 
     monitorPort: {{ dingo_coordinator_http_monitor_port }}
+security:
+    cipher:
+        keyPath: {{ dingo_home }}/conf/dingodb.jks
+        keyPass: dingodb
+        storePass: dingodb
+        alias: dingodb
+        issuer: dingo
+    verify: true

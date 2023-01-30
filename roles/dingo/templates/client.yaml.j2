@@ -5,3 +5,11 @@ exchange:
     port: 8765
 client:
     coordinatorExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
+security:
+    cipher:
+        keyPath: {{ dingo_home }}/conf/dingodb.jks
+        keyPass: dingodb
+        storePass: dingodb
+        alias: dingodb
+        issuer: dingo
+    verify: true

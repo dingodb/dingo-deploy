@@ -24,5 +24,4 @@ nohup {{ jdk_home }}/bin/java ${JAVA_OPTS} \
      -Dlogback.configurationFile=file:${ROOT}/conf/logback-web.xml \
      -jar ${JAR_PATH} \
      --spring.config.location=${ROOT}/conf/application.yaml \
-     io.dingodb.web.DingoApplication \
      > {{ dingo_log_path }}/dingo-web.out &

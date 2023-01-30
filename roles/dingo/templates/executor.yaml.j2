@@ -9,9 +9,34 @@ server:
     monitorPort: {{ dingo_executor_http_monitor_port }}
 store:
     dbPath: {{ dingo_executor_raft_db_path }}
-    dbRocksOptionsFile: {{ dingo_home }}/conf/db_rocks.ini
-    logRocksOptionsFile: {{ dingo_home }}/conf/log_rocks.ini
-    raft:
-       port: {{ dingo_executor_raft_port }}
-       raftPath: {{ dingo_executor_raft_log_path }}
-    collectStatsInterval: 120
+    dcfConfiguration:
+      tcBlockSize: 131072
+      tcBlockCacheSize: 67108864
+      cfArenaBlockSize: 67108864
+      cfMinWriteBufferNumberToMerge: 4
+      cfMaxWriteBufferNumber: 2
+      cfMaxCompactionBytes: 134217728
+      cfWriteBufferSize: 67108864
+      cfFixedLengthPrefixExtractor: 8
+      cfMaxBytesForLevelBase: 134217728
+      cfTargetFileSizeBase: 67108864
+    icfConfiguration:
+      tcBlockSize: 131072
+      tcBlockCacheSize: 67108864
+      cfArenaBlockSize: 67108864
+      cfMinWriteBufferNumberToMerge: 4
+      cfMaxWriteBufferNumber: 3
+      cfMaxCompactionBytes: 134217728
+      cfWriteBufferSize: 67108864
+      cfFixedLengthPrefixExtractor: 8
+      cfMaxBytesForLevelBase: 134217728
+      cfTargetFileSizeBase: 67108864
+    collectStatsInterval: 5
+security:
+    cipher:
+        keyPath: {{ dingo_home }}/conf/dingodb.jks
+        keyPass: dingodb
+        storePass: dingodb
+        alias: dingodb
+        issuer: dingo
+    verify: true
