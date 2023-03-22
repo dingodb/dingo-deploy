@@ -3,7 +3,7 @@
 # define the root path of install
 installer_root_path: /home/dingo
 installer_cache_path: /tmp
-delete_cache_after_install: true
+delete_cache_after_install: false
 
 # define the global log and data directory
 dingo_log_dir: "{{ installer_root_path }}/log"
@@ -38,16 +38,17 @@ install_dingo_start_roles: true
 #-----------------------------------------------------
 # 4. Install Prometheus to Dingo directory
 #-----------------------------------------------------
-install_prometheus: true
+install_prometheus: false
 blackbox_exporter_port: 19115
 blackbox_exporter_server: "{{ prometheus_server }}"
 
 # Node Exporter
-install_node_exporter: true
+install_node_exporter: false
 node_exporter_port: 19100
 node_exporter_servers: "{{ groups['node_exporter'] }}"
 
 # Process Exporter
+install_process_exporter: false
 process_exporter_port: 19256
 process_exporter_servers: "{{ groups['process_exporter'] }}"
 
@@ -61,7 +62,7 @@ pushgateway_port: 19091
 pushgateway_server: "{{ prometheus_server }}"
 
 # Grafana
-install_grafana: true
+install_grafana: false
 grafana_port: 3000
 grafana_server: "{{ groups['grafana'][0] }}"
 default_dashboard_uid: "RNezu0fWk"

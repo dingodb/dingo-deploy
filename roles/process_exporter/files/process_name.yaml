@@ -1,0 +1,12 @@
+process_names:
+#  - name: "{{.Comm}}"
+#    cmdline:
+#    - '.+'
+
+  - name: "{{.Matches}}"
+    cmdline:
+    - 'coordinator'
+
+  - name: "{{.Matches}}"
+    cmdline:
+    - 'store'
