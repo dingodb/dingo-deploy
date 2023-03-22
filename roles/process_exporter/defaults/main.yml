@@ -1,0 +1,15 @@
+---
+
+process_exporter_service_name: "dingo-process-exporter"
+
+process_exporter_home: "{{ installer_root_path | default('/opt') }}/process-exporter"
+process_exporter_user: "{{ dingo_user | default('prometheus') }}"
+process_exporter_group: "{{ dingo_group | default('prometheus') }}"
+
+process_exporter_log_path: "{{ dingo_log_dir | default('/var/log') }}/process-exporter"
+process_exporter_data_path: "{{ dingo_data_dir | default('/var/lib') }}/process-exporter"
+process_exporter_run_path: "{{ dingo_run_dir | default('/var/run') }}/process-exporter"
+
+process_exporter_port: 19256
+
+process_exporter_web_listen_address: "0.0.0.0:{{ process_exporter_port }}"

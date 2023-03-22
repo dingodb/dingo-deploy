@@ -1,0 +1,11 @@
+---
+
+- name: "Check process-exporter should install or Not"
+  meta: end_play
+  when: install_process_exporter == false
+
+- name: "Load artifacts info"
+  action: resolve_artifacts
+
+- import_tasks: 01_process_exporter.yml
+

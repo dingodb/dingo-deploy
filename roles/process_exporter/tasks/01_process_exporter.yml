@@ -1,0 +1,57 @@
+---
+
+- name: "Ensure process_exporter group exist: {{ process_exporter_group }}"
+  group: name={{ process_exporter_group }} state=present
+
+- name: "Ensure process_exporter user exist: {{ process_exporter_user }}"
+  user: name="{{ process_exporter_user }}" group={{ process_exporter_group }}
+
+- name: "Try stopping existing service via systemd"
+  systemd: name={{ process_exporter_service_name }} state=stopped
+  when: ansible_service_mgr == "systemd"
+  failed_when: false
+
+- name: "Remove previous install directory"
+  file: path={{ process_exporter_home }} state=absent
+
+- name: "Create directories"
+  file: path={{ item }} state=directory owner={{ process_exporter_user }} group={{ process_exporter_group }}
+  with_items:
+    - "{{ process_exporter_home }}"
+    - "{{ process_exporter_log_path }}"
+    - "{{ process_exporter_data_path }}"
+    - "{{ process_exporter_run_path }}"
+
+- set_fact: remote_tarball_path={{ installer_cache_path }}/{{ process_exporter_local_file | basename}}
+
+- name: "Ensure installer cache Directory {{ installer_cache_path }}"
+  file: path={{ installer_cache_path }} state=directory
+
+- name: "Copy tarball to remote host"
+  copy: src={{ process_exporter_local_file }} dest={{ remote_tarball_path }}
+
+- name: "Unarchive package file"
+  unarchive:
+    src: "{{ remote_tarball_path }}"
+    dest: "{{ process_exporter_home }}"
+    owner: "{{ process_exporter_user }}"
+    group: "{{ process_exporter_group }}"
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+    
+- name: "Copy files to home host"
+  copy: src=process_name.yaml dest={{ process_exporter_home }}
+
+- name: "Delete temporary tarball file: {{ remote_tarball_path }}"
+  file: path={{ remote_tarball_path }} state=absent
+  when: delete_cache_after_install
+
+- name: "Generate Systemd service File"
+  template: >
+    src=process-exporter.service.j2 dest=/etc/systemd/system/{{ process_exporter_service_name }}.service mode=0644
+    force=yes owner={{ process_exporter_user }} group={{ process_exporter_group }}
+  when: ansible_service_mgr == "systemd"
+
+- name: "Ensure process-exporter is started via systemd"
+  systemd: name={{ process_exporter_service_name }} state=started enabled=yes daemon_reload=yes
+  when: ansible_service_mgr == "systemd"

@@ -1,0 +1,6 @@
+- labels:
+    env: process
+  targets:
+{% for process_exporter_host in process_exporter_servers %}
+  - {{ process_exporter_host }}:{{ process_exporter_port }}
+{% endfor %}

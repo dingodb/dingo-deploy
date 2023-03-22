@@ -64,6 +64,10 @@
       src: "node.yml.j2",
       dest: "{{ prometheus_home }}/file_sd/node.yml"
     }
+    - {
+      src: "process.yml.j2",
+      dest: "{{ prometheus_home }}/file_sd/process.yml"
+    }
 
 - name: "Generate Systemd service File"
   template: >

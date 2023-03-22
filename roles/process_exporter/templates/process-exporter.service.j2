@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+[Unit]
+Description=Prometheus Node Exporter
+After=network.target
+
+[Service]
+Type=simple
+User={{ process_exporter_user }}
+Group={{ process_exporter_group }}
+Nice=-5
+ExecStart=/bin/sh -c 'exec {{ process_exporter_home }}/process-exporter -config.path={{ process_exporter_home }}/process_name.yaml \
+    --web.listen-address {{ process_exporter_web_listen_address }} \
+    > {{ process_exporter_log_path }}/{{ process_exporter_service_name }}.out 2>&1 '
+
+SyslogIdentifier={{ process_exporter_service_name }}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
