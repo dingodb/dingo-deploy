@@ -33,6 +33,10 @@
       dest: "{{ dingo_home }}/conf/logback-web.xml"
     }
     - {
+      src: "logback-import.xml.j2",
+      dest: "{{ dingo_home }}/conf/logback-import.xml"
+    }
+    - {
       src: "start-coordinator.sh.j2",
       dest: "{{ dingo_home }}/bin/start-coordinator.sh"
     }
@@ -51,6 +55,10 @@
     - {
       src: "stop-all-component.sh.j2",
       dest: "{{ dingo_home }}/bin/stop-all-component.sh"
+    }
+    - {
+      src: "import.sh.j2",
+      dest: "{{ dingo_home }}/bin/import.sh"
     }
     - {
       src: "coordinator.yaml.j2",

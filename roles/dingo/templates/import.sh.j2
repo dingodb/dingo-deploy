@@ -16,13 +16,12 @@
 #
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
-JAR_PATH=$(find $ROOT -name driver-server-*.jar)
+JAR_PATH=$(find $ROOT -name dingo-cli-*.jar)
 NET_JAR_PATH=$(find $ROOT -name dingo-net-*.jar)
 
-nohup {{ jdk_home }}/bin/java ${JAVA_OPTS} \
-    -Dlogback.configurationFile=file:${ROOT}/conf/logback-driver.xml \
-    -classpath ${JAR_PATH}:${NET_JAR_PATH} \
-    io.dingodb.driver.server.Starter \
-    --config ${ROOT}/conf/client.yaml \
-    $@ \
-     > {{ dingo_log_path }}/driver.out 2>&1 &
+{{ jdk_home }}/bin/java ${JAVA_OPTS} \
+     -Dlogback.configurationFile=file:${ROOT}/conf/logback-import.xml \
+     -classpath ${JAR_PATH}:${NET_JAR_PATH} \
+     io.dingodb.cli.source.Import \
+     --config ${ROOT}/conf/client.yaml \
+     $@
