@@ -61,7 +61,7 @@
         </filter>
     </appender>
 
-    <root level="error">
+    <root level="{{ root_log_level }}">
         <appender-ref ref="ALL_LOG_FILE"/>
         <appender-ref ref="ERROR_LOG_FILE"/>
     </root>
