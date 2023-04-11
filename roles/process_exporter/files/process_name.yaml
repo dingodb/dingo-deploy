@@ -3,10 +3,14 @@ process_names:
 #    cmdline:
 #    - '.+'
 
-  - name: "{{.Matches}}"
+  - name: "{{.ExeFull}}"
     cmdline:
-    - 'coordinator'
+    - 'dingodb_server'
 
-  - name: "{{.Matches}}"
+  - name: prometheus
     cmdline:
-    - 'store'
+    - 'prometheus'
+
+  - name: grafana
+    cmdline:
+    - 'grafana'

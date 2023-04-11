@@ -1,0 +1,17 @@
+---
+
+- name: "Check DingoDB should install or Not"
+  meta: end_play
+  when: install_dingo_store == false
+
+- name: "Load artifacts info"
+  action: resolve_artifacts
+
+- import_tasks: 01_basic_command.yml
+  when: install_dingo_store_basic_command
+
+- import_tasks: 02_update_configuration.yml
+  when: install_dingo_store_update_configuration
+
+- import_tasks: 03_start_roles_command.yml
+  when: install_dingo_store_start_roles

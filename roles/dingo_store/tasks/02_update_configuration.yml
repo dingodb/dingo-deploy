@@ -1,0 +1,16 @@
+---
+
+
+- name: "Generate dingo configuration files"
+  template: src={{ item.src }} dest={{ item.dest }} owner={{ dingo_user }} group={{ dingo_group }} mode=0755
+  with_items:
+    - {
+      src: "start-coordinator.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/start-coordinator.sh"
+    }
+    - {
+      src: "start-store.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/start-store.sh"
+     }
+
+

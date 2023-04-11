@@ -27,6 +27,14 @@
     - include_role: name=dingo
       when: install_dingo
 
+#---------------------------------
+# 3. Install Dingo_store nodes
+#---------------------------------
+- hosts:
+    - all_nodes
+  tasks:
+    - include_role: name=dingo_store
+      when: install_dingo_store
 
 #---------------------------------
 # 4. Install prometheus and grafana
@@ -48,10 +56,9 @@
   tasks:
     - include_role: name=node_exporter
       when: install_node_exporter
-      
- - hosts:
+
+- hosts:
     - all_nodes
   tasks:
     - include_role: name=process_exporter
       when: install_process_exporter
-
