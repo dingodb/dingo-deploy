@@ -1,23 +1,40 @@
 [all:vars]
 ansible_connection=ssh
-ansible_ssh_user=root
-ansible_ssh_pass=123456
+#ansible_ssh_user=root
+#ansible_ssh_pass=datacanvas@123
 ansible_python_interpreter=/usr/bin/python3
 
 [coordinator]
-172.20.3.13 
-172.20.3.14
-172.20.3.15
+172.20.3.201 
+172.20.3.200
+172.20.3.202
 
-[executor]
-172.20.3.15
-172.20.3.16
-172.20.3.17
+[store]
+172.20.3.201 store_num=2
+172.20.3.200
+172.20.3.202
 
-[driver]
-172.20.3.17
+
+[prometheus]
+172.20.3.201
+
+[grafana]
+172.20.3.201
+
 
 [all_nodes:children]
 coordinator
-executor
-driver
+store
+
+
+[node_exporter]
+172.20.3.201
+172.20.3.200
+172.20.3.202
+
+
+[process_exporter]
+172.20.3.201
+172.20.3.200
+172.20.3.202
+

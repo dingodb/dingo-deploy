@@ -1,0 +1,26 @@
+---
+
+# stop all the coordinator and executor
+- name: "Stop and Del db Coordinator and Store on all host"
+  shell: "/bin/bash ./scripts/start-coordinator.sh clean"
+  args:
+    chdir: "{{ dingo_store_home }}"
+
+# start coordinator
+- name: "Deploy and Start Coordinator using Script"
+  shell: "/bin/bash ./scripts/start-coordinator.sh cleanstart" 
+  args:
+    chdir: "{{ dingo_store_home }}"
+  when: is_dingo_store_coordinator
+
+- name: "Sleep wait coordinator start"
+  shell: "sleep 20"
+
+# start store
+- name: "Deploy and Start Store using Shell Script"
+  shell: "/bin/bash ./scripts/start-store.sh cleanstart" 
+  args:
+    chdir: "{{ dingo_store_home }}"
+  when: is_dingo_store_store
+
+
