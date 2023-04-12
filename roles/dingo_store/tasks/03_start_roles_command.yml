@@ -2,12 +2,16 @@
 
 # stop all the coordinator and executor
 - name: "Stop and Del db Coordinator and Store on all host"
+  become: true
+  become_user: "{{ dingo_user }}"
   shell: "/bin/bash ./scripts/start-coordinator.sh clean"
   args:
     chdir: "{{ dingo_store_home }}"
 
 # start coordinator
 - name: "Deploy and Start Coordinator using Script"
+  become: true
+  become_user: "{{ dingo_user }}"
   shell: "/bin/bash ./scripts/start-coordinator.sh cleanstart" 
   args:
     chdir: "{{ dingo_store_home }}"
@@ -18,6 +22,8 @@
 
 # start store
 - name: "Deploy and Start Store using Shell Script"
+  become: true
+  become_user: "{{ dingo_user }}"
   shell: "/bin/bash ./scripts/start-store.sh cleanstart" 
   args:
     chdir: "{{ dingo_store_home }}"

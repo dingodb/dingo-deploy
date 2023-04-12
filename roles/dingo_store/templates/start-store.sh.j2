@@ -148,7 +148,7 @@ clean()
 
 stop() 
 {
-   k_pid=$(ps -ef | grep "dingodb_server --role store"   |grep -v grep|awk '{printf $2 "\n"}')
+   k_pid=$(ps -fu {{ dingo_user }} | grep "dingodb_server --role store"   |grep -v grep|awk '{printf $2 "\n"}')
    for i in $k_pid
    do
    echo $i 
