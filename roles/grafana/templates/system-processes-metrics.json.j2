@@ -1,0 +1,2245 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "description": "Show Linux Process information as captured by \n https://github.com/ncabatoff/process-exporter  designed for PMM",
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "gnetId": null,
+    "graphTooltip": 1,
+    "id": null,
+    "iteration": 1681211584743,
+    "links": [
+      {
+        "icon": "dashboard",
+        "includeVars": false,
+        "keepTime": true,
+        "tags": [
+          "QAN"
+        ],
+        "targetBlank": false,
+        "title": "Query Analytics",
+        "type": "link",
+        "url": "/graph/dashboard/db/_pmm-query-analytics"
+      },
+      {
+        "asDropdown": true,
+        "includeVars": false,
+        "keepTime": true,
+        "tags": [
+          "OS"
+        ],
+        "targetBlank": false,
+        "title": "OS",
+        "type": "dashboards"
+      },
+      {
+        "asDropdown": true,
+        "includeVars": false,
+        "keepTime": true,
+        "tags": [
+          "MySQL"
+        ],
+        "targetBlank": false,
+        "title": "MySQL",
+        "type": "dashboards"
+      },
+      {
+        "asDropdown": true,
+        "includeVars": false,
+        "keepTime": true,
+        "tags": [
+          "MongoDB"
+        ],
+        "targetBlank": false,
+        "title": "MongoDB",
+        "type": "dashboards"
+      },
+      {
+        "asDropdown": true,
+        "includeVars": false,
+        "keepTime": true,
+        "tags": [
+          "HA"
+        ],
+        "targetBlank": false,
+        "title": "HA",
+        "type": "dashboards"
+      },
+      {
+        "asDropdown": true,
+        "includeVars": false,
+        "keepTime": true,
+        "tags": [
+          "Cloud"
+        ],
+        "targetBlank": false,
+        "title": "Cloud",
+        "type": "dashboards"
+      },
+      {
+        "asDropdown": true,
+        "includeVars": true,
+        "keepTime": true,
+        "tags": [
+          "Insight"
+        ],
+        "targetBlank": false,
+        "title": "Insight",
+        "type": "dashboards"
+      },
+      {
+        "asDropdown": true,
+        "includeVars": false,
+        "keepTime": true,
+        "tags": [
+          "PMM"
+        ],
+        "targetBlank": false,
+        "title": "PMM",
+        "type": "dashboards"
+      }
+    ],
+    "liveNow": false,
+    "panels": [
+      {
+        "gridPos": {
+          "h": 2,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 16,
+        "links": [],
+        "options": {
+          "content": "<h1><i><font color=#5991A7><b><center>Data for </font><font color=#e68a00>$host</font> <font color=#5991A7> with</font> </font><font color=#e68a00>$interval</font> <font color=#5991A7>resolution</center></b></font></i></h1>",
+          "mode": "html"
+        },
+        "pluginVersion": "7.3.1",
+        "type": "text"
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 2
+        },
+        "id": 31,
+        "panels": [],
+        "title": "Process CPU Usage",
+        "type": "row"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "{{ default_datasource_name }}",
+        "decimals": 2,
+        "editable": true,
+        "error": false,
+        "fill": 2,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 0,
+          "y": 3
+        },
+        "hiddenSeries": false,
+        "id": 2,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": true,
+          "min": true,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.3.1",
+        "pointradius": 1,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "topk(5,(rate(namedprocess_namegroup_cpu_user_seconds_total{groupname=~\"$processes\",instance=~\"$host\"}[$interval]) \n+\nrate(namedprocess_namegroup_cpu_system_seconds_total{groupname=~\"$processes\",instance=~\"$host\"}[$interval]))\nor \n(irate(namedprocess_namegroup_cpu_user_seconds_total{groupname=~\"$processes\",instance=~\"$host\"}[5m])\n+\nirate(namedprocess_namegroup_cpu_system_seconds_total{groupname=~\"$processes\",instance=~\"$host\"}[5m])))",
+            "format": "time_series",
+            "interval": "$interval",
+            "intervalFactor": 1,
+            "legendFormat": "{{ '{{' }} groupname {{ '}}' }}",
+            "metric": "process_namegroup_cpu_seconds_total",
+            "refId": "A",
+            "step": 10
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Top processes by Total CPU cores used",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "cumulative"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          },
+          {
+            "decimals": 2,
+            "format": "short",
+            "logBase": 1,
+            "show": false
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "{{ default_datasource_name }}",
+        "decimals": 2,
+        "editable": true,
+        "error": false,
+        "fill": 2,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 12,
+          "y": 3
+        },
+        "hiddenSeries": false,
+        "id": 20,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": true,
+          "min": true,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.3.1",
+        "pointradius": 1,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "topk(5,\nrate(namedprocess_namegroup_cpu_system_seconds_total{groupname=~\"$processes\",instance=~\"$host\"}[$interval])\nor \n(\nirate(namedprocess_namegroup_cpu_system_seconds_total{groupname=~\"$processes\",instance=~\"$host\"}[5m])))",
+            "format": "time_series",
+            "interval": "$interval",
+            "intervalFactor": 1,
+            "legendFormat": "{{ '{{' }} groupname {{ '}}' }}",
+            "metric": "process_namegroup_cpu_seconds_total",
+            "refId": "A",
+            "step": 10
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Top processes by System CPU cores used",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "cumulative"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "percentunit",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          },
+          {
+            "decimals": 2,
+            "format": "short",
+            "logBase": 1,
+            "show": false
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 10
+        },
+        "id": 39,
+        "panels": [],
+        "title": "Process Memory Usage",
+        "type": "row"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "{{ default_datasource_name }}",
+        "decimals": 2,
+        "description": "Memory Used by Processes, counted as Resident Memory + Space used in Swap Space",
+        "editable": true,
+        "error": false,
+        "fill": 2,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 0,
+          "y": 11
+        },
+        "hiddenSeries": false,
+        "id": 22,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": true,
+          "min": true,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.3.1",
+        "pointradius": 1,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "topk(5,(\r\n(avg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"swapped\",instance=~\"$host\"}[$interval])+ ignoring (memtype) avg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"resident\",instance=~\"$host\"}[$interval]))\r\nor\r\n(avg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"swapped\",instance=~\"$host\"}[5m])+ ignoring (memtype) avg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"resident\",instance=~\"$host\"}[5m]))\r\n))",
+            "format": "time_series",
+            "interval": "$interval",
+            "intervalFactor": 1,
+            "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+            "metric": "namedprocess_namegroup_memory_bytes",
+            "refId": "A",
+            "step": 10
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Top processes by Used  memory",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "bytes",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "{{ default_datasource_name }}",
+        "decimals": 2,
+        "editable": true,
+        "error": false,
+        "fill": 2,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 12,
+          "y": 11
+        },
+        "hiddenSeries": false,
+        "id": 5,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": true,
+          "min": true,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.3.1",
+        "pointradius": 1,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "topk(5,\n(avg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"resident\",instance=~\"$host\"}[$interval]) \nor\navg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"resident\",instance=~\"$host\"}[5m])\n))",
+            "format": "time_series",
+            "interval": "$interval",
+            "intervalFactor": 1,
+            "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+            "metric": "namedprocess_namegroup_memory_bytes",
+            "refId": "A",
+            "step": 10
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Top processes by Resident Memory",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "bytes",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "{{ default_datasource_name }}",
+        "decimals": 2,
+        "editable": true,
+        "error": false,
+        "fill": 2,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 0,
+          "y": 18
+        },
+        "hiddenSeries": false,
+        "id": 6,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": true,
+          "min": true,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.3.1",
+        "pointradius": 1,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "topk(5,(\navg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"virtual\",instance=~\"$host\"}[$interval])\nor\navg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"virtual\",instance=~\"$host\"}[5m])))\n",
+            "format": "time_series",
+            "interval": "$interval",
+            "intervalFactor": 1,
+            "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+            "metric": "namedprocess_namegroup_memory_bytes",
+            "refId": "A",
+            "step": 10
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Top processes by Virtual memory",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "bytes",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "{{ default_datasource_name }}",
+        "decimals": 2,
+        "editable": true,
+        "error": false,
+        "fill": 2,
+        "fillGradient": 0,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 12,
+          "y": 18
+        },
+        "hiddenSeries": false,
+        "id": 21,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": true,
+          "min": true,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.3.1",
+        "pointradius": 1,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "topk(5,(\navg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"swapped\",instance=~\"$host\"}[$interval])\nor\navg_over_time(namedprocess_namegroup_memory_bytes{groupname=~\"$processes\", memtype=\"swapped\",instance=~\"$host\"}[5m])))\n",
+            "format": "time_series",
+            "hide": false,
+            "interval": "$interval",
+            "intervalFactor": 1,
+            "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+            "metric": "namedprocess_namegroup_memory_bytes",
+            "refId": "A",
+            "step": 10
+          }
+        ],
+        "thresholds": [],
+        "timeRegions": [],
+        "title": "Top processes by Swapped Memory",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "bytes",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 25
+        },
+        "id": 37,
+        "panels": [],
+        "title": "Process Disk IO Usage",
+        "type": "row"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "{{ default_datasource_name }}",
+        "decimals": 2,
+        "editable": true,
+        "error": false,
+        "fill": 2,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 0,
+          "y": 26
+        },
+        "id": 4,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": true,
+          "min": true,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pluginVersion": "7.3.1",
+        "pointradius": 1,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "topk(5,(rate(namedprocess_namegroup_write_bytes_total{groupname=~\"$processes\",instance=~\"$host\"}[$interval]) or irate(namedprocess_namegroup_write_bytes_total{groupname=~\"$processes\",instance=~\"$host\"}[5m])))",
+            "format": "time_series",
+            "interval": "$interval",
+            "intervalFactor": 1,
+            "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+            "metric": "namedprocess_namegroup_read_bytes_total",
+            "refId": "A",
+            "step": 10
+          }
+        ],
+        "thresholds": [],
+        "title": "Top processes by Bytes Written",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "Bps",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "{{ default_datasource_name }}",
+        "decimals": 2,
+        "editable": true,
+        "error": false,
+        "fill": 2,
+        "grid": {},
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 12,
+          "y": 26
+        },
+        "id": 3,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": false,
+          "max": true,
+          "min": true,
+          "rightSide": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "percentage": false,
+        "pluginVersion": "7.3.1",
+        "pointradius": 1,
+        "points": true,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "topk(5,(rate(namedprocess_namegroup_read_bytes_total{groupname=~\"$processes\",instance=~\"$host\"}[$interval]) or irate(namedprocess_namegroup_read_bytes_total{groupname=~\"$processes\",instance=~\"$host\"}[5m])))",
+            "format": "time_series",
+            "interval": "$interval",
+            "intervalFactor": 1,
+            "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+            "metric": "namedprocess_namegroup_read_bytes_total",
+            "refId": "A",
+            "step": 10
+          }
+        ],
+        "thresholds": [],
+        "title": "Top processes by Bytes Read",
+        "tooltip": {
+          "msResolution": false,
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "mode": "time",
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "Bps",
+            "logBase": 1,
+            "min": 0,
+            "show": true
+          },
+          {
+            "format": "short",
+            "logBase": 1,
+            "show": false
+          }
+        ],
+        "yaxis": {
+          "align": false
+        }
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 33
+        },
+        "id": 33,
+        "panels": [
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "editable": true,
+            "error": false,
+            "fill": 2,
+            "grid": {},
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 0,
+              "y": 34
+            },
+            "id": 1,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "hideZero": true,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "topk(5,(max_over_time(namedprocess_namegroup_num_procs{groupname=~\"$processes\",instance=~\"$host\"}[$interval]) \nor max_over_time(namedprocess_namegroup_num_procs{groupname=~\"$processes\",instance=~\"$host\"}[5m])))",
+                "format": "time_series",
+                "hide": false,
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "metric": "process_namegroup_num_procs",
+                "refId": "A",
+                "step": 10
+              }
+            ],
+            "thresholds": [],
+            "title": "Top processes by number of  processes instances",
+            "tooltip": {
+              "msResolution": false,
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": true
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          },
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "fill": 2,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 12,
+              "y": 34
+            },
+            "id": 10,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "hideZero": true,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "topk(5,(max_over_time(namedprocess_namegroup_num_threads{groupname=~\"$processes\",instance=~\"$host\"}[$interval]) or\nmax_over_time(namedprocess_namegroup_num_threads{groupname=~\"$processes\",instance=~\"$host\"}[5m])))",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Top processes by number of threads",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          }
+        ],
+        "title": "Process and Thread Counts",
+        "type": "row"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 34
+        },
+        "id": 43,
+        "panels": [
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "fill": 2,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 0,
+              "y": 7
+            },
+            "id": 24,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "topk(5,(\nrate(namedprocess_namegroup_context_switches_total{groupname=~\"$processes\",instance=~\"$host\",ctxswitchtype=\"voluntary\"}[$interval]) or\nirate(namedprocess_namegroup_context_switches_total{groupname=~\"$processes\",instance=~\"$host\",ctxswitchtype=\"voluntary\"}[5m])))",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Top Processes by Voluntary Context Switches",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "ops",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          },
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "fill": 2,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 12,
+              "y": 7
+            },
+            "id": 25,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "topk(5,(\nrate(namedprocess_namegroup_context_switches_total{groupname=~\"$processes\",instance=~\"$host\",ctxswitchtype=\"nonvoluntary\"}[$interval]) or\nirate(namedprocess_namegroup_context_switches_total{groupname=~\"$processes\",instance=~\"$host\",ctxswitchtype=\"nonvoluntary\"}[5m])))",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Top Processes by  Non-Voluntary Context Switches",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "ops",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          }
+        ],
+        "title": "Process Context Switches",
+        "type": "row"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 35
+        },
+        "id": 35,
+        "panels": [
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "fill": 2,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 0,
+              "y": 8
+            },
+            "id": 13,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": true,
+            "targets": [
+              {
+                "expr": "topk(5,(max_over_time(namedprocess_namegroup_open_filedesc{groupname=~\"$processes\",instance=~\"$host\"}[$interval]) or\nmax_over_time(namedprocess_namegroup_open_filedesc{groupname=~\"$processes\",instance=~\"$host\"}[5m])))",
+                "format": "time_series",
+                "hide": false,
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Top processes by Open File Descriptors",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          },
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "fill": 2,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 12,
+              "y": 8
+            },
+            "id": 7,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": true,
+            "targets": [
+              {
+                "expr": "topk(5,(\nmax_over_time(namedprocess_namegroup_worst_fd_ratio{groupname=~\"$processes\",instance=~\"$host\"}[$interval]) or\nmax_over_time(namedprocess_namegroup_worst_fd_ratio{groupname=~\"$processes\",instance=~\"$host\"}[5m])\n))*100",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Top processes by File Descriptor Usage Percent",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "percent",
+                "label": "",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          }
+        ],
+        "title": "Process File Descriptors",
+        "type": "row"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 36
+        },
+        "id": 27,
+        "panels": [
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "fill": 2,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 0,
+              "y": 9
+            },
+            "id": 8,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "topk(5,(\nrate(namedprocess_namegroup_major_page_faults_total{groupname=~\"$processes\",instance=~\"$host\"}[$interval]) or\nirate(namedprocess_namegroup_major_page_faults_total{groupname=~\"$processes\",instance=~\"$host\"}[5m])))",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Top processes by Major Page Faults",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "ops",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          },
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "fill": 2,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 12,
+              "y": 9
+            },
+            "id": 9,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "topk(5,(\nrate(namedprocess_namegroup_minor_page_faults_total{groupname=~\"$processes\",instance=~\"$host\"}[$interval]) or\nirate(namedprocess_namegroup_minor_page_faults_total{groupname=~\"$processes\",instance=~\"$host\"}[5m])))",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Top processes by Minor Page Faults",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "ops",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          }
+        ],
+        "title": "Process Page Faults",
+        "type": "row"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 37
+        },
+        "id": 29,
+        "panels": [
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "description": "",
+            "fill": 2,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 0,
+              "y": 10
+            },
+            "id": 11,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "hideZero": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 2,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": true,
+            "targets": [
+              {
+                "expr": "topk(5,(\nmax_over_time(namedprocess_namegroup_states{instance=~\"$host\", groupname=~\"$processes\", state=\"Running\"}[$interval]) or\nmax_over_time(namedprocess_namegroup_states{instance=~\"$host\", groupname=~\"$processes\", state=\"Running\"}[5m])))",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Top running processes",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          },
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "description": "",
+            "fill": 1,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 12,
+              "y": 10
+            },
+            "id": 14,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 1,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "topk(5,(\nmax_over_time(namedprocess_namegroup_states{instance=~\"$host\", groupname=~\"$processes\", state=\"Waiting\"}[$interval]) or\nmax_over_time(namedprocess_namegroup_states{instance=~\"$host\", groupname=~\"$processes\", state=\"Waiting\"}[5m])))",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Top of processes waiting on IO",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          }
+        ],
+        "title": "Process Statuses",
+        "type": "row"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 38
+        },
+        "id": 45,
+        "panels": [
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "description": "",
+            "fill": 1,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 0,
+              "y": 18
+            },
+            "id": 46,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 1,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "topk(5,sum(avg_over_time(namedprocess_namegroup_threads_wchan{instance=~\"$host\", groupname=~\"$processes\"}[$interval])) by (wchan) )",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} wchan  {{ '}}' }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Kernel waits for $processes",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          },
+          {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "{{ default_datasource_name }}",
+            "decimals": 2,
+            "description": "",
+            "fill": 1,
+            "gridPos": {
+              "h": 7,
+              "w": 12,
+              "x": 12,
+              "y": 18
+            },
+            "id": 47,
+            "legend": {
+              "alignAsTable": true,
+              "avg": true,
+              "current": false,
+              "max": true,
+              "min": true,
+              "rightSide": true,
+              "show": true,
+              "sort": "avg",
+              "sortDesc": true,
+              "total": false,
+              "values": true
+            },
+            "lines": false,
+            "linewidth": 1,
+            "links": [],
+            "nullPointMode": "null as zero",
+            "percentage": false,
+            "pointradius": 1,
+            "points": true,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+              {
+                "expr": "topk(5,sum(avg_over_time(namedprocess_namegroup_threads_wchan{instance=~\"$host\", groupname=~\"$processes\"}[$interval])) by (wchan,groupname) )",
+                "format": "time_series",
+                "interval": "$interval",
+                "intervalFactor": 1,
+                "legendFormat": "{{ '{{' }} groupname {{ '}}'  }} : {{ '{{' }} wchan  {{ '}}' }}",
+                "refId": "A"
+              }
+            ],
+            "thresholds": [],
+            "title": "Kernel wait Details for $processes",
+            "tooltip": {
+              "shared": true,
+              "sort": 0,
+              "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+              "mode": "time",
+              "show": true,
+              "values": []
+            },
+            "yaxes": [
+              {
+                "format": "short",
+                "logBase": 1,
+                "min": "0",
+                "show": true
+              },
+              {
+                "format": "short",
+                "logBase": 1,
+                "show": false
+              }
+            ],
+            "yaxis": {
+              "align": false
+            }
+          }
+        ],
+        "title": "Process Kernel Waits (WCHAN)",
+        "type": "row"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 39
+        },
+        "id": 41,
+        "panels": [
+          {
+            "columns": [],
+            "datasource": "{{ default_datasource_name }}",
+            "fontSize": "100%",
+            "gridPos": {
+              "h": 10,
+              "w": 24,
+              "x": 0,
+              "y": 12
+            },
+            "id": 19,
+            "links": [],
+            "scroll": true,
+            "showHeader": true,
+            "sort": {
+              "col": 4,
+              "desc": true
+            },
+            "styles": [
+              {
+                "alias": "Time",
+                "align": "auto",
+                "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                "pattern": "Time",
+                "type": "hidden"
+              },
+              {
+                "alias": "Uptime",
+                "align": "auto",
+                "colors": [
+                  "rgba(245, 54, 54, 0.9)",
+                  "rgba(237, 129, 40, 0.89)",
+                  "rgba(50, 172, 45, 0.97)"
+                ],
+                "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                "decimals": 2,
+                "pattern": "Value",
+                "thresholds": [],
+                "type": "number",
+                "unit": "s"
+              },
+              {
+                "alias": "",
+                "align": "auto",
+                "colors": [
+                  "rgba(245, 54, 54, 0.9)",
+                  "rgba(237, 129, 40, 0.89)",
+                  "rgba(50, 172, 45, 0.97)"
+                ],
+                "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                "decimals": 2,
+                "pattern": "instance",
+                "sanitize": false,
+                "thresholds": [],
+                "type": "hidden",
+                "unit": "short"
+              },
+              {
+                "alias": "",
+                "align": "auto",
+                "colors": [
+                  "rgba(245, 54, 54, 0.9)",
+                  "rgba(237, 129, 40, 0.89)",
+                  "rgba(50, 172, 45, 0.97)"
+                ],
+                "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                "decimals": 2,
+                "pattern": "job",
+                "thresholds": [],
+                "type": "hidden",
+                "unit": "short"
+              },
+              {
+                "alias": "Processes",
+                "align": "auto",
+                "colors": [
+                  "rgba(245, 54, 54, 0.9)",
+                  "rgba(237, 129, 40, 0.89)",
+                  "rgba(50, 172, 45, 0.97)"
+                ],
+                "dateFormat": "YYYY-MM-DD HH:mm:ss",
+                "decimals": 2,
+                "pattern": "groupname",
+                "thresholds": [],
+                "type": "string",
+                "unit": "short"
+              },
+              {
+                "alias": "",
+                "align": "auto",
+                "colors": [
+                  "rgba(245, 54, 54, 0.9)",
+                  "rgba(237, 129, 40, 0.89)",
+                  "rgba(50, 172, 45, 0.97)"
+                ],
+                "decimals": 2,
+                "pattern": "/.*/",
+                "thresholds": [],
+                "type": "number",
+                "unit": "short"
+              }
+            ],
+            "targets": [
+              {
+                "expr": "time()-(namedprocess_namegroup_oldest_start_time_seconds{instance=~\"$host\"}>0)",
+                "format": "table",
+                "instant": true,
+                "interval": "",
+                "intervalFactor": 1,
+                "legendFormat": "",
+                "refId": "A"
+              }
+            ],
+            "title": "Processes by uptime",
+            "transform": "table",
+            "type": "table-old"
+          }
+        ],
+        "title": "Process Uptime",
+        "type": "row"
+      }
+    ],
+    "refresh": "1m",
+    "schemaVersion": 35,
+    "style": "dark",
+    "tags": [
+      "Insight"
+    ],
+    "templating": {
+      "list": [
+        {
+          "auto": true,
+          "auto_count": 200,
+          "auto_min": "1s",
+          "current": {
+            "selected": false,
+            "text": "auto",
+            "value": "$__auto_interval_interval"
+          },
+          "hide": 0,
+          "includeAll": false,
+          "label": "Interval",
+          "multi": false,
+          "name": "interval",
+          "options": [
+            {
+              "selected": true,
+              "text": "auto",
+              "value": "$__auto_interval_interval"
+            },
+            {
+              "selected": false,
+              "text": "1s",
+              "value": "1s"
+            },
+            {
+              "selected": false,
+              "text": "5s",
+              "value": "5s"
+            },
+            {
+              "selected": false,
+              "text": "1m",
+              "value": "1m"
+            },
+            {
+              "selected": false,
+              "text": "5m",
+              "value": "5m"
+            },
+            {
+              "selected": false,
+              "text": "1h",
+              "value": "1h"
+            },
+            {
+              "selected": false,
+              "text": "6h",
+              "value": "6h"
+            },
+            {
+              "selected": false,
+              "text": "1d",
+              "value": "1d"
+            }
+          ],
+          "query": "1s,5s,1m,5m,1h,6h,1d",
+          "refresh": 2,
+          "skipUrlSync": false,
+          "type": "interval"
+        },
+        {
+          "current": {},
+          "datasource": "{{ default_datasource_name }}",
+          "definition": "",
+          "hide": 0,
+          "includeAll": false,
+          "label": "Host",
+          "multi": false,
+          "name": "host",
+          "options": [],
+          "query": "label_values(namedprocess_namegroup_num_procs, instance)",
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": ".+",
+          "current": {},
+          "datasource": "{{ default_datasource_name }}",
+          "definition": "",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Processes",
+          "multi": true,
+          "name": "processes",
+          "options": [],
+          "query": "label_values(namedprocess_namegroup_cpu_user_seconds_total{instance=~\"$host\"},groupname)",
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "tagValuesQuery": "",
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "browser",
+    "title": "{{ process_dashboard_title }}",
+    "uid": "{{ process_dashboard_uid }}",
+    "version": 5,
+    "weekStart": ""
+  },
+  "folderId": 0,
+  "overwrite": true
+}

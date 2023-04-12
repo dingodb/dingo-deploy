@@ -23,7 +23,7 @@
   file: path={{ installer_cache_path }} state=directory
 
 - name: "Create dingo directories"
-  file: path="{{item}}" state=directory owner={{dingo_user}} group={{dingo_group}}
+  file: path="{{item}}" state=directory owner={{ dingo_user }} group={{ dingo_group }}
   with_items:
     - "{{ dingo_store_home }}"
     - "{{ dingo_store_log_path }}"
@@ -43,6 +43,8 @@
     mode: "go-w"
     remote_src: yes
     list_files: yes
+    owner: "{{ dingo_user }}"
+    group: "{{ dingo_group }}"
   register: archive_contents
 
 - name: "Delete temporary tarball file: {{ installer_cache_path }}/{{ cfg_dingodb_store_local_path|basename}}"
