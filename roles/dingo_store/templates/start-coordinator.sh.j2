@@ -144,7 +144,9 @@ clean()
 
 stop() 
 {
+
    k_pid=$(ps -fu {{ dingo_user }} | grep "dingodb_server --role coordinator" |grep -v grep|awk '{printf $2 "\n"}')
+
    for i in $k_pid
    do
    echo $i 
