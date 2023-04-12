@@ -114,7 +114,7 @@ function start_program() {
 
   cd ${root_dir}
 
-  nohup ./bin/dingodb_server --role ${role}  --conf ./conf/${role}.yaml 2>&1 >./log/out &
+  nohup ${root_dir}/bin/dingodb_server --role ${role}  --conf ./conf/${role}.yaml 2>&1 >./log/out &
   #./bin/dingodb_server --role ${role}  --conf ./conf/${role}.yaml
 }
 
