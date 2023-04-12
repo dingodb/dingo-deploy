@@ -19,6 +19,7 @@ dingo_group: root
 install_system: true
 install_system_basicTools: true
 install_system_fileLimits: true
+set_core_file: false
 
 #-----------------------------------------------------
 # 2. Install Java SDK

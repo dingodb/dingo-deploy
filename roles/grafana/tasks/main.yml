@@ -134,6 +134,11 @@
     src={{ default_dashboard_template }}  dest={{ installer_cache_path }}/dingo.json
     mode=0644 force=yes
 
+- name: "Generate grafana dashboard configuration file process"
+  template: >
+    src={{ process_dashboard_template }}  dest={{ installer_cache_path }}/process.json
+    mode=0644 force=yes
+
 - name: "Delete existing dashboard uid={{ default_dashboard_uid }}"
   shell: >
     curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XDELETE localhost:{{ grafana_port }}/api/dashboards/uid/{{ default_dashboard_uid }}
@@ -142,6 +147,13 @@
   register: delete_result
 
 - debug: var=delete_result
+
+- name: "Import grafana dashboard process"
+  shell: >
+    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST localhost:{{ grafana_port }}/api/dashboards/db -H "Content-Type:application/json" -d @{{ installer_cache_path }}/process.json
+  args:
+    warn: false
+
 
 - name: "Import grafana dashboard"
   shell: >
