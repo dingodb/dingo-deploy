@@ -7,10 +7,10 @@
 - name: "Load artifacts info"
   action: resolve_artifacts
 
-- name: "Install required packages"
-  package: name={{ item }} state=present
-  with_items:
-    - "unzip"
+# - name: "Install required packages"
+#   package: name={{ item }} state=present
+#   with_items:
+#     - "unzip"
 
 - name: "Ensure grafana group exist"
   group: name={{ grafana_group }} state=present

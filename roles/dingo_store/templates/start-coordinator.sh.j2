@@ -24,8 +24,8 @@ DIST_DIR=$BASE_DIR/dist
 if [ ! -d "$DIST_DIR" ]; then
   mkdir "$DIST_DIR"
 fi
-SERVER_HOST={{ inventory_hostname | default(127.0.0.1) }}
-RAFT_HOST={{ inventory_hostname | default(127.0.0.1) }}
+SERVER_HOST={{ inventory_hostname | default('127.0.0.1') }}
+RAFT_HOST={{ inventory_hostname | default('127.0.0.1') }}
 COORDINATOR_RAFT_START_PORT={{ dingo_store_coordinator_raft_port }}
 COORDINATOR_SERVER_START_PORT={{ dingo_store_coordinator_exchange_port }}
 COOR_RAFT_PEERS={{ dingo_coordinator_raft_connection_list }}
