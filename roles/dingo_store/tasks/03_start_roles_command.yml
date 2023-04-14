@@ -1,10 +1,18 @@
 ---
 
-# stop all the coordinator and executor
-- name: "Stop and Del db Coordinator and Store on all host"
+# stop all the coordinator and store
+- name: "Stop and Del db Coordinator on all host"
   become: true
   become_user: "{{ dingo_user }}"
   shell: "/bin/bash ./scripts/start-coordinator.sh clean"
+  args:
+    chdir: "{{ dingo_store_home }}"
+
+# stop all the coordinator and store
+- name: "Stop and Del db Store on all host"
+  become: true
+  become_user: "{{ dingo_user }}"
+  shell: "/bin/bash ./scripts/start-store.sh clean"
   args:
     chdir: "{{ dingo_store_home }}"
 

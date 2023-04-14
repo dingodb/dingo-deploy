@@ -32,7 +32,7 @@
 
 
 - name: "Copy dingo zip archive to remote host"
-  copy: src={{ item }}  dest={{ installer_cache_path }}
+  copy: src={{ item }}  dest={{ installer_cache_path }} owner={{ dingo_user }} group={{ dingo_group }}
   with_items:
     - "{{ cfg_dingodb_store_local_path }}"
 

@@ -2,8 +2,8 @@
 .gitignore export-ignore
 artifacts/.placeholder export-ignore
 artifacts/download.py export-ignore
-inventory/hosts export-ignore
-config.sh export-ignore
-relink.sh export-ignore
-package.sh export-ignore
-README.md export-ignore
+inventory/hosts ignore
+config.sh ignore
+relink.sh ignore
+package.sh ignore
+README.md ignore

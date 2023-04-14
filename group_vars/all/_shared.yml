@@ -17,9 +17,10 @@ dingo_group: root
 # 1. Update System Configuration about OS
 #-----------------------------------------------------
 install_system: true
-install_system_basicTools: true
-install_system_fileLimits: true
+install_system_basicTools: false
+install_system_fileLimits: false
 set_core_file: false
+core_file_dir: /home/corefiles
 
 #-----------------------------------------------------
 # 2. Install Java SDK
@@ -43,6 +44,7 @@ install_dingo_store: true
 install_dingo_store_basic_command: true
 install_dingo_store_update_configuration: true
 install_dingo_store_start_roles: true
+open_dingo_store_logrotate: false
 
 
 #-----------------------------------------------------
