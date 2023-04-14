@@ -27,3 +27,7 @@ dingo_store_store_exchange_connection_list: "{{ dingo_store_store_exchange_list.
 
 is_dingo_store_coordinator: "{{ 'coordinator' in group_names }}"
 is_dingo_store_store: "{{ 'store' in group_names }}"
+
+store_num: "{{ hostvars[inventory_hostname]['store_num'] | default(1) }}"
+default_disk_join: "{{ (dingo_store_home | string ~ '/dist ') * (store_num | int) }}"
+default_disk_list: "{{ default_disk_join | trim}}"

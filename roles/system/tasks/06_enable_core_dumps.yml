@@ -1,6 +1,7 @@
+
 - name: Ensure directory for core file pattern exists
   file:
-    path: "{{ installer_root_path }}/corefiles"
+    path: "{{ core_file_dir }}"
     state: directory
     mode: "0777"
 
@@ -12,9 +13,16 @@
     - "* soft core unlimited"
     - "* hard core unlimited"
 
+- name: Set suid_dumpable value to 2
+  sysctl:
+    name: fs.suid_dumpable
+    value: 2
+    state: present
+    reload: yes
+
 - name: Set core file pattern in /etc/sysctl.conf
   sysctl:
     name: kernel.core_pattern
-    value: "{{ installer_root_path }}/corefiles/core.%e.%p.%t"
+    value: "{{ core_file_dir }}/core.%e.%p.%t"
     state: present
     reload: yes
