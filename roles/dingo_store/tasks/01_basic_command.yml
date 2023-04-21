@@ -51,4 +51,10 @@
   file: path={{ installer_cache_path }}/{{ cfg_dingodb_store_local_path|basename }} state=absent
   when: delete_cache_after_install
 
+- name: Change owner of all files in directory
+  file:
+    path: "{{ dingo_store_home }}"
+    owner: "{{ dingo_user }}"
+    group: "{{ dingo_group }}"
+    recurse: yes
 
