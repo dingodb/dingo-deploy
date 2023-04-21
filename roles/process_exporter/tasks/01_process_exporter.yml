@@ -40,7 +40,7 @@
     extra_opts: ['--strip-components=1']
     
 - name: "Copy files to home host"
-  copy: src=process_name.yaml dest={{ process_exporter_home }}
+  copy: src=process_name.yaml dest={{ process_exporter_home }} owner={{ process_exporter_user }} group={{ process_exporter_group }}
 
 - name: "Delete temporary tarball file: {{ remote_tarball_path }}"
   file: path={{ remote_tarball_path }} state=absent

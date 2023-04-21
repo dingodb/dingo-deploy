@@ -27,7 +27,7 @@
   when: open_dingo_store_logrotate == false
   
 - name: "Generate dingo configuration files logrotate"
-  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0777
+  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
   with_items:
      - {
       src: "store-logrotate.j2",
