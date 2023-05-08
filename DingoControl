@@ -1,0 +1,490 @@
+#!/bin/bash
+
+# auto read INSTALLER_PATH and USER
+INSTALLER_PATH=$(grep "^installer_root_path:" group_vars/all/_shared.yml | cut -d "=" -f 2 | awk '{print $2}')
+USER=$(grep "^dingo_user" group_vars/all/_shared.yml | cut -d "=" -f 2 | awk '{print $2}')
+
+echo "INSTALLER_PATH: ${INSTALLER_PATH}"
+echo "USER: ${USER}"
+
+
+
+function help() {
+  echo "Usage: Dingocontrol.sh [OPTION]..."
+  echo "Options:"
+  echo "  --help        display this help and exit"
+  echo "  deploy        deploy the application"
+  echo "  show          show all process for user"
+  echo "  stop          stop  server"
+  echo "  clean         clean server"
+  echo "  start         start server"
+  echo "  cleanstart    stop clean deploy  and start server"
+  echo "  install       install playbook"  
+  echo ""
+  
+  echo ""
+  echo "For help on specific deploy or run options, run:"
+  echo "  Dingocontrol.sh show --help"
+  echo "  Dingocontrol.sh deploy --help"
+  echo "  Dingocontrol.sh stop --help"
+  echo "  Dingocontrol.sh clean --help"
+  echo "  Dingocontrol.sh start --help"
+  echo "  Dingocontrol.sh cleanstart --help"
+  echo "  Dingocontrol.sh install --help"
+}
+
+function show_help() {
+  echo "Usage: Dingocontrol.sh show [OPTION]..."
+  echo "Options:"
+  echo "  --help           show info help"
+  echo "  process          show all process"
+  echo "  file             show all file not user"
+}
+
+function show_process() {
+  ansible all_nodes -m shell -a "ps -fu ${USER}"
+}
+
+function show_file() {
+  ansible all_nodes -m shell -a "find ${INSTALLER_PATH} -not -user ${USER}"
+}
+
+
+function show() {
+  if [ "$1" == "--help" ]; then
+    show_help
+  elif [ "$1" == "process" ]; then
+    show_process
+  elif [ "$1" == "file" ]; then
+    show_file
+  else
+    show_help
+  fi
+}
+
+function deploy_help() {
+  echo "Usage: Dingocontrol.sh clean [OPTION]..."
+  echo "Options:"
+  echo "  --help            deploy info help"
+  echo "  all               stop/clean/deploy store/coordinator"
+  echo "  store             stop/clean/deploy store"
+  echo "  coordinator       stop/clean/deploy coordinator"
+}
+
+function deploy() {
+  if [ "$1" == "--help" ]; then
+    deploy_help
+  elif [ "$1" == "all" ]; then
+    deploy_all
+  elif [ "$1" == "store" ]; then
+    deploy_store
+  elif [ "$1" == "coordinator" ]; then
+    deploy_coordinator
+  else
+    deploy_help
+  fi
+}
+function deploy_all() {
+  deploy_coordinator
+  deploy_store
+}
+
+function deploy_store() {
+  ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  clean" --become --become-user ${USER}
+  ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  deploy" --become --become-user ${USER}
+}
+
+function deploy_coordinator() {
+ ansible coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  clean" --become --become-user ${USER}
+ ansible coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  deploy" --become --become-user ${USER}
+}
+
+
+
+
+function clean_help() {
+  echo "Usage: Dingocontrol.sh clean [OPTION]..."
+  echo "Options:"
+  echo "  --help            clean info help"
+  echo "  all               stop all server and clean all file, if want del completely"
+  echo "  dingo-store       stop/clean store/coordinator and clean dingo-store, deprecated"
+  echo "  store             stop/clean store"
+  echo "  coordinator       stop/clean coordinator"
+  echo "  node-exporter     stop/clean node-exporter"
+  echo "  process-exporter  stop/clean process-exporter"
+  echo "  prometheus        stop/clean prometheus"
+  echo "  grafana           stop/clean grafana"
+}
+
+function clean() {
+  if [ "$1" == "--help" ]; then
+    clean_help
+  elif [ "$1" == "all" ]; then
+    clean_all
+  elif [ "$1" == "store" ]; then
+    clean_store
+  elif [ "$1" == "coordinator" ]; then
+    clean_coordinator
+  elif [ "$1" == "node-exporter" ]; then
+    clean_node
+  elif [ "$1" == "process-exporter" ]; then
+    clean_process
+  elif [ "$1" == "prometheus" ]; then
+    clean_prometheus
+  elif [ "$1" == "grafana" ]; then
+    clean_grafana
+  else
+    clean_help
+  fi
+}
+
+function clean_all() {
+  clean_store
+  clean_coordinator
+  stop_executor
+  clean_node
+  clean_process
+  clean_prometheus
+  clean_grafana
+  ansible all_nodes -m shell -a "rm -rf ${INSTALLER_PATH}"
+}
+
+function clean_store() {
+  ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  clean" --become --become-user ${USER}
+}
+
+function clean_coordinator() {
+ ansible coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  clean" --become --become-user ${USER}
+}
+
+function clean_node() {
+  stop_node
+  ansible node_exporter -m shell -a "rm -f /etc/systemd/system/dingo-node-exporter.service"
+}
+
+function clean_process() {
+  stop_process
+  ansible process_exporter -m shell -a "rm -f /etc/systemd/system/dingo-process-exporter.service"
+}
+
+function clean_prometheus() {
+  stop_prometheus
+  ansible prometheus -m shell -a "rm -f /etc/systemd/system/dingo-prometheus.service"
+}
+
+function clean_grafana() {
+  stop_grafana
+  ansible grafana -m shell -a "rm -f /etc/systemd/system/dingo-grafana.service"
+}
+
+
+function start_help() {
+  echo "Usage: Dingocontrol.sh start[OPTION]..."
+  echo "Options:"
+  echo "  all               start all process"
+  echo "  store             start store"
+  echo "  coordinator       start coordinator"
+  echo "  executor          start executor"
+  echo "  node-exporter     start node-exporter"
+  echo "  process-exporter  start process-exporter"
+  echo "  prometheus        start prometheus"
+  echo "  grafana           start grafana"
+}
+
+function start() {
+  if [ "$1" == "--help" ]; then
+    start_help
+  elif [ "$1" == "all" ]; then
+    start_all
+  elif [ "$1" == "store" ]; then
+    start_store
+  elif [ "$1" == "coordinator" ]; then
+    start_coordinator
+  elif [ "$1" == "executor" ]; then
+    start_executor
+  elif [ "$1" == "node-exporter" ]; then
+    start_node
+  elif [ "$1" == "process-exporter" ]; then
+    start_process
+  elif [ "$1" == "prometheus" ]; then
+    start_prometheus
+  elif [ "$1" == "grafana" ]; then
+    start_grafana
+  else
+    start_help
+  fi
+}
+
+function start_all() {
+  start_coordinator
+  sleep 10
+  start_store
+  start_executor
+  start_node
+  start_process
+  start_prometheus
+  start_grafana 
+}
+
+function start_store() {
+  ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  start" --become --become-user ${USER}
+  ansible store --list-hosts | grep -oP '(\d{1,3}\.){3}\d{1,3}' | head -n 1 | xargs ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/mysql_init.sh"  --limit
+}
+
+function start_coordinator() {
+ ansible coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  start" --become --become-user ${USER}
+ sleep 10
+}
+
+function start_executor() {
+ ansible executor -m shell -a "${INSTALLER_PATH}/dingo/bin/start-executor.sh" --become --become-user ${USER}
+}
+
+function start_node() {
+  ansible node_exporter -m shell -a "systemctl start dingo-node-exporter.service"
+}
+
+function start_process() {
+  ansible process_exporter -m shell -a "systemctl start dingo-process-exporter.service"
+}
+
+function start_prometheus() {
+  ansible prometheus -m shell -a "systemctl start dingo-prometheus.service"
+}
+
+function start_grafana() {
+  ansible grafana -m shell -a "systemctl start dingo-grafana.service"
+}
+
+
+
+function stop_help() {
+  echo "Usage: Dingocontrol.sh stop [OPTION]..."
+  echo "Options:"
+  echo "  all               stop all process"
+  echo "  store             stop store"
+  echo "  coordinator       stop coordinator"
+  echo "  executor          stop executor"
+  echo "  node-exporter     stop node-exporter"
+  echo "  process-exporter  stop process-exporter"
+  echo "  prometheus        stop prometheus"
+  echo "  grafana           stop grafana"
+}
+
+function stop() {
+  if [ "$1" == "--help" ]; then
+    stop_help
+  elif [ "$1" == "all" ]; then
+    stop_all
+  elif [ "$1" == "store" ]; then
+    stop_store
+  elif [ "$1" == "coordinator" ]; then
+    stop_coordinator
+  elif [ "$1" == "executor" ]; then
+    stop_executor
+  elif [ "$1" == "node-exporter" ]; then
+    stop_node
+  elif [ "$1" == "process-exporter" ]; then
+    stop_process
+  elif [ "$1" == "prometheus" ]; then
+    stop_prometheus
+  elif [ "$1" == "grafana" ]; then
+    stop_grafana
+    
+  else
+    stop_help
+  fi
+}
+
+function stop_all() {
+  stop_store
+  stop_coordinator
+  stop_executor
+  stop_node
+  stop_process
+  stop_prometheus
+  stop_grafana 
+}
+
+function stop_store() {
+  ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  stop" --become --become-user ${USER}
+}
+
+function stop_coordinator() {
+ ansible coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  stop" --become --become-user ${USER}
+}
+
+function stop_executor() {
+ ansible executor -m shell -a "${INSTALLER_PATH}/dingo/bin/stop-all-component.sh" --become --become-user ${USER}
+}
+
+function stop_node() {
+  ansible node_exporter -m shell -a "systemctl stop dingo-node-exporter.service"
+}
+
+function stop_process() {
+  ansible process_exporter -m shell -a "systemctl stop dingo-process-exporter.service"
+}
+
+function stop_prometheus() {
+  ansible prometheus -m shell -a "systemctl stop dingo-prometheus.service"
+}
+
+function stop_grafana() {
+  ansible grafana -m shell -a "systemctl stop dingo-grafana.service"
+}
+
+
+function cleanstart_help() {
+  echo "Usage: Dingocontrol.sh cleanstart [OPTION]..."
+  echo "Options:"
+  echo "  all   stop-clean-deploy store/coordinator and restart executor"
+}
+
+function cleanstart() {
+  if [ "$1" == "--help" ]; then
+    cleanstart_help
+  elif [ "$1" == "all" ]; then
+    cleanstart_all
+
+  else
+    cleanstart_help
+  fi
+}
+
+function cleanstart_all(){
+  clean_store
+  clean_coordinator
+  stop_executor
+  deploy_coordinator
+  deploy_store
+  start_coordinator
+  sleep 20
+  start_store
+  start_executor
+}
+
+
+function install_help() {
+  echo "Usage: Dingocontrol.sh install [OPTION]..."
+  echo "Options:"
+  echo "  playbook    playbook.yml"
+  echo "  system      install system"
+  echo "  jdk         install jdk"
+  echo "  dingo       install dingo"
+  echo "  dingo-store install dingo-store"
+  echo "  dingodb     install dingo and dingo-store"
+  echo "  prometheus  install prometheus"
+  echo "  grafana     install grafana"
+  echo "  node        install node_exporter"
+  echo "  process     install process_exporter"
+  echo "  monitor     install prometheus grafana node_exporter process_exporter"
+   
+}
+
+function install() {
+  if [ "$1" == "--help" ]; then
+    install_help
+  elif [ "$1" == "playbook" ]; then
+    install_playbook
+  elif [ "$1" == "system" ]; then
+    install_system
+  elif [ "$1" == "jdk" ]; then
+    install_jdk
+  elif [ "$1" == "dingo" ]; then
+    install_dingo
+  elif [ "$1" == "dingo-store" ]; then
+    install_dingo-store
+  elif [ "$1" == "dingodb" ]; then
+    install_dingodb
+  elif [ "$1" == "prometheus" ]; then
+    install_prometheus
+  elif [ "$1" == "grafana" ]; then
+    install_grafana
+  elif [ "$1" == "node" ]; then
+    install_node
+  elif [ "$1" == "process" ]; then
+    install_process
+  elif [ "$1" == "monitor" ]; then
+    install_monitor
+
+  else
+    install_help
+  fi
+}
+
+function install_playbook(){
+  ansible-playbook playbook.yml
+}
+
+function install_system(){
+  ansible-playbook playbooks/01_system.yml -e "install_system=true"
+}
+
+function install_jdk(){
+  ansible-playbook playbooks/02_jdk.yml -e "install_java_sdk=true"
+}
+
+function install_dingo(){
+  ansible-playbook playbooks/04_dingo.yml -e "install_dingo=true"
+}
+
+function install_dingo-store(){
+  ansible-playbook playbooks/03_dingo-store.yml -e "install_dingo_store=true"
+}
+
+function install_dingodb(){
+  install_dingo-store
+  install_dingo
+}
+
+function install_prometheus(){
+  ansible-playbook playbooks/05_prometheus.yml -e "install_prometheus=true"
+}
+
+function install_grafana(){
+  ansible-playbook playbooks/08_grafana.yml -e "install_grafana=true"
+}
+
+function install_node(){
+  ansible-playbook playbooks/06_node_exporter.yml -e "install_node_exporter=true"
+}
+
+function install_process(){
+  ansible-playbook playbooks/07_process_exporter.yml -e "install_process_exporter=true"
+}
+
+function install_monitor(){
+  install_prometheus
+  install_node
+  install_process
+  install_grafana
+}
+
+
+
+
+
+if [ $# -eq 0 ] || [ "$1" == "--help" ]; then
+  help
+elif [ "$1" == "show" ]; then
+  show "${@:2}"
+elif [ "$1" == "deploy" ]; then
+  deploy "${@:2}"
+elif [ "$1" == "clean" ]; then
+  clean "${@:2}"
+elif [ "$1" == "start" ]; then
+  start "${@:2}"
+elif [ "$1" == "stop" ]; then
+  stop "${@:2}"
+elif [ "$1" == "cleanstart" ]; then
+  cleanstart "${@:2}"
+
+elif [ "$1" == "install" ]; then
+  install "${@:2}"
+
+else
+  echo "Invalid option: $1"
+  echo ""
+  help
+fi

@@ -37,4 +37,18 @@
     chdir: "{{ dingo_store_home }}"
   when: is_dingo_store_store
 
+- name: "Sleep wait store start"
+  shell: "sleep 20"
+
+# start init mysql
+- name: "init mysql using Shell Script"
+  become: true
+  become_user: "{{ dingo_user }}"
+  shell: "/bin/bash ./scripts/mysql_init.sh" 
+  args:
+    chdir: "{{ dingo_store_home }}"
+  when: 
+    - is_dingo_store_coordinator
+    - inventory_hostname == ansible_play_batch[0]
+
 

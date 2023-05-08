@@ -12,6 +12,8 @@ dingo_run_dir: "{{ installer_root_path }}/run"
 
 dingo_user: root
 dingo_group: root
+jdk_user: root
+jdk_group: root
 
 #-----------------------------------------------------
 # 1. Update System Configuration about OS
@@ -25,14 +27,14 @@ core_file_dir: /home/corefiles
 #-----------------------------------------------------
 # 2. Install Java SDK
 #-----------------------------------------------------
-install_java_sdk: false
+install_java_sdk: true
 jdk_install_path: /opt
 jdk_home: "{{ jdk_install_path }}/jdk"
 
 #-----------------------------------------------------
 # 3. Install Dingo to Dingo home
 #-----------------------------------------------------
-install_dingo: false
+install_dingo: true
 install_dingo_basic_command: true
 install_dingo_update_configuration: true
 install_dingo_start_roles: true

@@ -23,7 +23,6 @@
     - "{{ dingo_home }}"
     - "{{ dingo_log_path }}"
     - "{{ dingo_data_path }}"
-    - "{{ dingo_coordinator_meta_path }}"
     - "{{ dingo_executor_server_db_path }}"
     - "{{ dingo_executor_raft_log_path }}"
     - "{{ dingo_executor_raft_db_path }}"
@@ -40,7 +39,21 @@
     mode: "go-w"
     remote_src: yes
     list_files: yes
+    owner: "{{ dingo_user }}"
+    group: "{{ dingo_group }}"
   register: archive_contents
+
+- name: Change owner of all files in directory
+  file:
+    path: "{{ dingo_home }}"
+    owner: "{{ dingo_user }}"
+    group: "{{ dingo_group }}"
+    recurse: yes
+
+- name: "Move contents of temp directory to {{ dingo_home }}"
+  become: true
+  become_user: "{{ dingo_user }}"
+  shell: "mv {{ dingo_home }}/dingo/* {{ dingo_home }}/"
 
 - name: "Delete temporary tarball file: {{ installer_cache_path }}/{{ cfg_dingodb_local_path|basename}}"
   file: path={{ installer_cache_path }}/{{ cfg_dingodb_local_path|basename }} state=absent

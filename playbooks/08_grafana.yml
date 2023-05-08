@@ -1,0 +1,15 @@
+---
+
+
+#---------------------------------
+# 8. Install  grafana
+#---------------------------------
+
+- hosts:
+    - grafana
+  vars_files:
+    - ../group_vars/all/_shared.yml
+  tasks:
+    - include_role: name=grafana
+      when: install_grafana
+

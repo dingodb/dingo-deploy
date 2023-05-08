@@ -4,39 +4,12 @@ exchange:
     host: {{ inventory_hostname }}
     port: {{ dingo_executor_exchange_port }}
 server:
-    coordinatorExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
-    dataPath: {{ dingo_executor_server_db_path }}
-    monitorPort: {{ dingo_executor_http_monitor_port }}
-store:
-    dbPath: {{ dingo_executor_raft_db_path }}
-    dcfConfiguration:
-      tcBlockSize: 131072
-      tcBlockCacheSize: 67108864
-      cfArenaBlockSize: 67108864
-      cfMinWriteBufferNumberToMerge: 4
-      cfMaxWriteBufferNumber: 2
-      cfMaxCompactionBytes: 134217728
-      cfWriteBufferSize: 67108864
-      cfFixedLengthPrefixExtractor: 8
-      cfMaxBytesForLevelBase: 134217728
-      cfTargetFileSizeBase: 67108864
-    icfConfiguration:
-      tcBlockSize: 131072
-      tcBlockCacheSize: 67108864
-      cfArenaBlockSize: 67108864
-      cfMinWriteBufferNumberToMerge: 4
-      cfMaxWriteBufferNumber: 3
-      cfMaxCompactionBytes: 134217728
-      cfWriteBufferSize: 67108864
-      cfFixedLengthPrefixExtractor: 8
-      cfMaxBytesForLevelBase: 134217728
-      cfTargetFileSizeBase: 67108864
-    collectStatsInterval: 5
-security:
-    cipher:
-        keyPath: {{ dingo_home }}/conf/dingodb.jks
-        keyPass: dingodb
-        storePass: dingodb
-        alias: dingodb
-        issuer: dingo
-    verify: true
+    coordinators: {{ dingo_coordinator_exchange_connection_list }}
+    user: user
+    keyring: TO_BE_CONTINUED
+    resourceTag: 1
+    mysqlPort: 3307
+variable:
+    autoIncrementCacheCount: 100
+    autoIncrementIncrement: 1
+    autoIncrementOffset: 1

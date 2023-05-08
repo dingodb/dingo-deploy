@@ -1,0 +1,13 @@
+---
+
+
+#---------------------------------
+# 5. Install prometheus
+#---------------------------------
+- hosts:
+    - prometheus
+  vars_files:
+    - ../group_vars/all/_shared.yml
+  tasks:
+    - include_role: name=prometheus
+      when: install_prometheus

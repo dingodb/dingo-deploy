@@ -1,0 +1,27 @@
+#!/bin/bash
+source ~/.bash_profile
+BASE_DIR=$(dirname $(cd $(dirname $0); pwd))
+
+cd $BASE_DIR/build/bin/ || exit 1
+DINGODB_HAVE_STORE_AVAILABLE=0
+
+while [ "${DINGODB_HAVE_STORE_AVAILABLE}" -eq 0 ]; do
+    echo "DINGODB_HAVE_STORE_AVAILABLE = 0, wait 1 second"
+    sleep 1
+    DINGODB_HAVE_STORE_AVAILABLE=$(./dingodb_client_coordinator --method=GetStoreMap 2>&1 >/dev/null |grep -c DINGODB_HAVE_STORE_AVAILABLE)
+done
+
+echo "DINGODB_HAVE_STORE_AVAILABLE = 1, start to initialize MySQL"
+cd - || exit 1
+
+
+# run Java start mysql_init 
+{{ jdk_home }}/bin/java -cp $BASE_DIR/build/bin/dingo-mysql-init-0.6.0-SNAPSHOT.jar io.dingodb.mysql.MysqlInit {{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} > mysql_init.log
+
+# check status
+if [ $? -eq 0 ]
+then
+  echo "Java mysql init succes"
+else
+  echo "Java mysql init fail"
+fi
