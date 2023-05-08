@@ -1,0 +1,12 @@
+---
+
+#---------------------------------
+# 4. Install Dingo nodes
+#---------------------------------
+- hosts:
+    - executor_nodes
+  vars_files:
+    - ../group_vars/all/_shared.yml
+  tasks:
+    - include_role: name=dingo
+      when: install_dingo

@@ -1,0 +1,12 @@
+---
+
+#---------------------------------
+# 1. Prepare System
+#---------------------------------
+- hosts:
+    - all_nodes
+  vars_files:
+    - ../group_vars/all/_shared.yml
+  tasks:
+    - include_role: name=system
+      when: install_system

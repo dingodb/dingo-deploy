@@ -15,6 +15,7 @@
 - import_tasks: 03_hostname.yml
 
 - import_tasks: 04_install_ntp_or_chrony.yml
+  when:  install_system_basicTools
 
 - include_tasks: 05_install_basic_tools.yml
   when:  install_system_basicTools

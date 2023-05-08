@@ -4,49 +4,23 @@
 - name: debug
   debug: 
     msg:
-    - "Coordinator Raft Connection: {{ dingo_coordinator_raft_connection_list }}"
     - "Coordinator Exchange Connection: {{ dingo_coordinator_exchange_connection_list }}"
-    - "Executor Raft Connection: {{ dingo_executor_raft_list }}"
-    - "Executor Exchange Connection: {{ dingo_executor_exchange_list }}"
 
 - name: "Generate dingo configuration files"
+
   template: src={{ item.src }} dest={{ item.dest }} owner={{ dingo_user }} group={{ dingo_group }} mode=0755
   with_items:
     - {
-      src: "logback-coordinator.xml.j2",
-      dest: "{{ dingo_home }}/conf/logback-coordinator.xml"
-    }
-    - {
       src: "logback-executor.xml.j2",
       dest: "{{ dingo_home }}/conf/logback-executor.xml"
-    }
-    - {
-      src: "logback-sqlline.xml.j2",
-      dest: "{{ dingo_home }}/conf/logback-sqlline.xml"
-    }
-    - {
-      src: "logback-driver.xml.j2",
-      dest: "{{ dingo_home }}/conf/logback-driver.xml"
     }
     - {
       src: "logback-web.xml.j2",
       dest: "{{ dingo_home }}/conf/logback-web.xml"
     }
     - {
-      src: "logback-import.xml.j2",
-      dest: "{{ dingo_home }}/conf/logback-import.xml"
-    }
-    - {
-      src: "start-coordinator.sh.j2",
-      dest: "{{ dingo_home }}/bin/start-coordinator.sh"
-    }
-    - {
       src: "start-executor.sh.j2",
       dest: "{{ dingo_home }}/bin/start-executor.sh"
-    }
-    - {
-      src: "start-driver.sh.j2",
-      dest: "{{ dingo_home }}/bin/start-driver.sh"
     }
     - {
       src: "start-web.sh.j2",
@@ -57,24 +31,8 @@
       dest: "{{ dingo_home }}/bin/stop-all-component.sh"
     }
     - {
-      src: "import.sh.j2",
-      dest: "{{ dingo_home }}/bin/import.sh"
-    }
-    - {
-      src: "coordinator.yaml.j2",
-      dest: "{{ dingo_home }}/conf/coordinator.yaml"
-    }
-    - {
       src: "executor.yaml.j2",
       dest: "{{ dingo_home }}/conf/executor.yaml"
-    }
-    - {
-      src: "client.yaml.j2",
-      dest: "{{ dingo_home }}/conf/client.yaml"
-    }
-    - {
-      src: "application-dev.yaml.j2",
-      dest: "{{ dingo_home }}/conf/application-dev.yaml"
     }
 
 - name: "Remove unused configure files"

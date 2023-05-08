@@ -18,4 +18,4 @@
 
   - include: 03_config.yml
 
-  when: not jdk_installed.stat.exists
+#when: not jdk_installed.stat.exists

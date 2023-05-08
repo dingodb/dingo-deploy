@@ -1,0 +1,12 @@
+---
+
+#---------------------------------
+# 2. Install JDK
+#---------------------------------
+- hosts:
+    - all_nodes
+  vars_files:
+    - ../group_vars/all/_shared.yml
+  tasks:
+    - include_role: name=jdk
+      when: install_java_sdk

@@ -17,21 +17,16 @@
 #
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
-JAR_PATH=$(find $ROOT -name dingo-*-coordinator-*.jar)
 
-PID=`ps -eaf | grep coordinator.Starter | grep -v grep | awk '{print $2}'`
+
+PID=`ps -u {{ dingo_user }} -o pid,cmd | grep executor.Starter | grep -v grep | awk '{print $1}`
 if [[ "" !=  "$PID" ]]; then
   echo "killing $PID"
   kill -9 $PID
 fi
 
-PID=`ps -ef | grep executor.Starter | grep -v grep | awk '{print $2}'`
-if [[ "" !=  "$PID" ]]; then
-  echo "killing $PID"
-  kill -9 $PID
-fi
 
-PID=`ps -ef | grep dingo | grep java | grep -v grep | awk '{print $2}'`
-if [[ "" !=  "$PID" ]]; then
-   ps -ef | grep dingo | grep java | grep -v grep | awk '{print $2}' | xargs kill -9 
-fi
+# PID=`ps -ef | grep dingo | grep java | grep -v grep | awk '{print $2}'`
+# if [[ "" !=  "$PID" ]]; then
+#    ps -ef | grep dingo | grep java | grep -v grep | awk '{print $2}' | xargs kill -9 
+# fi

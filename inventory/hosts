@@ -13,7 +13,7 @@ ansible_python_interpreter=/usr/bin/python3
 # 172.20.3.201
 # 172.20.3.201 store_num=2 
 # 172.20.3.201 store_num=2 disk='/home/sd1 /home/sd2'
-172.20.3.201 store_num=2 disk='/home/sd1 /home/sd2'
+172.20.3.201
 172.20.3.200 
 172.20.3.202
 
@@ -28,6 +28,13 @@ ansible_python_interpreter=/usr/bin/python3
 [all_nodes:children]
 coordinator
 store
+
+[executor]
+172.20.3.201
+
+[executor_nodes:children]
+executor
+web
 
 
 [node_exporter]

@@ -18,6 +18,14 @@
       src: "start-store.sh.j2",
       dest: "{{ dingo_store_home }}/scripts/start-store.sh"
      }
+    - {
+      src: "mysql_init.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/mysql_init.sh"
+     }
+    - {
+      src: "gen_coor_list.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/gen_coor_list.sh"
+     }
 
 - name: "Remove dingo logrotate file if exist"
   file: path="{{ item }}" state=absent

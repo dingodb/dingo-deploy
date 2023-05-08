@@ -1,0 +1,49 @@
+
+BASE_DIR=$(dirname $(cd $(dirname $0); pwd))
+DIST_DIR=$BASE_DIR/dist
+
+COOR_SRV_PEERS=$1
+
+# regex
+regex='^([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{1,5}$'
+
+# param use ',' split 
+echo "$COOR_SRV_PEERS" | awk -F ',' '{for(i=1;i<=NF;i++) print $i}' | while read line; do
+  # check param
+  if echo "$line" | grep -qE "$regex"; then
+    echo "$line is good"
+  else
+    echo "$line id bad"
+    echo "please input param '172.0.0.1:22001,172.0.0.1:22001,172.0.0.1:22001'"
+    exit 1
+  fi
+done
+
+TMP_COORDINATOR_SERVICES=$BASE_DIR/build/bin/coor_list
+
+echo "# dingo-store coordinators" > ${TMP_COORDINATOR_SERVICES}
+echo $COOR_SRV_PEERS | tr ',' '\n' >> ${TMP_COORDINATOR_SERVICES}
+
+
+COOR_DIST=$BASE_DIR/dist
+DISK_LIST_STR="{{ hostvars[inventory_hostname]['disk']  | default('${DIST_DIR}') }}"
+eval DISK_LIST=($DISK_LIST_STR)
+DISK_LIST+=(COOR_DIST)
+echo "DISK_LIST: ${DISK_LIST[@]}"
+
+SORTED_LIST=($(echo "${DISK_LIST[@]}" | tr ' ' '\n' | sort -u))
+
+for dist_name in "${SORTED_LIST[@]}"
+do
+  store_dist=$(find "$dist_name" -type d -name "*conf*")
+  for dir in $store_dist
+  do
+    # copy file
+    cp ${TMP_COORDINATOR_SERVICES} "$dir"
+  done
+done
+
+
+
+
+

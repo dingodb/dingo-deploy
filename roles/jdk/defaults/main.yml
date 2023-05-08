@@ -1,7 +1,5 @@
 ---
 
-jdk_user: root
-jdk_group: root
 
 installer_cache_path: /tmp
 delete_cache_after_install: true
