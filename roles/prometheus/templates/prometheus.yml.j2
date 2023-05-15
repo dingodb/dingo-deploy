@@ -32,9 +32,15 @@ scrape_configs:
     - files:
       - {{ prometheus_home }}/file_sd/jmx.json
 
-  - job_name: "coordinator-exporter"
+  - job_name: "coordinator"
+    metrics_path: '/NodeService/DingoMetrics'
     static_configs:
       - targets: {{ dingo_coordinator_http_monitor_list }}
+
+  - job_name: "store"
+    metrics_path: '/NodeService/DingoMetrics'
+    static_configs:
+      - targets: {{ dingo_store_http_monitor_list }}
 
   - job_name: "executor-exporter"
     static_configs:

@@ -77,11 +77,7 @@
       dest: "{{ grafana_conf_path }}/grafana.ini",
       mode: "0644"
     }
-    - {
-      src: "index.html.j2",
-      dest: "{{ grafana_home }}/public/views/index.html",
-      mode: "0644"
-    }
+
 
 - name: "Set ownership of {{ grafana_home }} to {{ grafana_user }}"
   file: path={{ grafana_home }} owner={{ grafana_user }} group={{ grafana_group }} recurse=yes
@@ -131,36 +127,53 @@
 
 - name: "Generate grafana dashboard configuration file"
   template: >
-    src={{ default_dashboard_template }}  dest={{ installer_cache_path }}/dingo.json
+    src={{ item.src }}  dest={{ item.dest }}
     mode=0644 force=yes
+  with_items:
+    - {
+      src: "{{ default_dashboard_template }}",
+      dest: "{{ installer_cache_path }}/dingo.json",
+    }
+    - {
+      src: "{{ process_dashboard_template }}",
+      dest: "{{ installer_cache_path }}/process.json",
+    }
+    - {
+      src: "{{ dingo_store_dashboard_template }}",
+      dest: "{{ installer_cache_path }}/dingo_metrics.json",
+    }
+    - {
+      src: "{{ iostat_dashboard_template }}",
+      dest: "{{ installer_cache_path }}/iostat.json",
+    }
 
-- name: "Generate grafana dashboard configuration file process"
-  template: >
-    src={{ process_dashboard_template }}  dest={{ installer_cache_path }}/process.json
-    mode=0644 force=yes
 
-- name: "Delete existing dashboard uid={{ default_dashboard_uid }}"
+- name: "Delete existing dashboard {{ default_dashboard_uid }} {{ process_dashboard_uid }} {{ dingo_store_dashboard_uid }} {{ iostat_dashboard_uid }}"
   shell: >
-    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XDELETE localhost:{{ grafana_port }}/api/dashboards/uid/{{ default_dashboard_uid }}
+    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XDELETE localhost:{{ grafana_port }}/api/dashboards/uid/{{ item }}
   args:
     warn: false
   register: delete_result
+  with_items:
+    - "{{ default_dashboard_uid }}"
+    - "{{ process_dashboard_uid }}"
+    - "{{ dingo_store_dashboard_uid }}"
+    - "{{ iostat_dashboard_uid }}"
+    
 
 - debug: var=delete_result
 
-- name: "Import grafana dashboard process"
+- name: "Import grafana dashboard process dingo_metrics iostat dingo"
   shell: >
-    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST localhost:{{ grafana_port }}/api/dashboards/db -H "Content-Type:application/json" -d @{{ installer_cache_path }}/process.json
-  args:
-    warn: false
-
-
-- name: "Import grafana dashboard"
-  shell: >
-    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST localhost:{{ grafana_port }}/api/dashboards/db -H "Content-Type:application/json" -d @{{ installer_cache_path }}/dingo.json
+    curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST localhost:{{ grafana_port }}/api/dashboards/db -H "Content-Type:application/json" -d @{{ installer_cache_path }}/{{ item }}
   args:
     warn: false
   register: import_result
+  with_items:
+    - process.json
+    - dingo_metrics.json
+    - iostat.json
+    - dingo.json
 
 - debug: var=import_result
 
