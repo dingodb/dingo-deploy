@@ -14,20 +14,21 @@ The roles in the cluster are mainly divided into:
 
 Coordinator act as the master of the cluster. It is responsible for the management and scheduler of data replications of DingoDB cluster.
 
+- Store
+Store act as the storage of the cluster,  It is responsible for managing the entire storage
+
 - Executor
 
 Executor act as the worker of the cluster. It is responsible for executing the physical execution plan of  SQL to scan and compute the data.
 
-- Driver Proxy
+- Driver-MySQL/Driver-DIngo
 
 DingoDB uses JDBC driver to perform table-level data operations, such as create, insert, update, delete, etc. Driver Proxy act as the proxy of JDBC Connection.
-
-
 ### 1.1 Installation prerequisites
 
 - Version of OS
 
-CentOS 7 or higher.
+CentOS 8.x.
 
 - Repository of Yum works fine
 
@@ -35,7 +36,7 @@ The repository will be used to install basic tools needed by the cluster, such a
 
 - Ansible Host
 
-A host installed with `ansible` is required to  distribute cluster configuration and related software modules about DingoDB. This machine can also be replaced by one node in DingoDB cluster such as `Node-1`.
+A host installed with `ansible` is required to  distribute cluster configuration and related software modules about DingoDB. This machine can also be replaced by one node in DingoDB cluster such as `Store-1` or `Coordinator-1`.
 
 ### 1.2 Deployment Guidelines
 
@@ -46,7 +47,7 @@ In the cluster mode, `ansible` is selected as the deployment tools. You can use 
 
 You can follow this guide to install a dingo cluster:
 
-[![asciicast](https://asciinema.org/a/4INSgMgv1q7gW5NZrpIGVJWVt.svg)](https://asciinema.org/a/4INSgMgv1q7gW5NZrpIGVJWVt)
+[![asciicast](https://asciinema.org/a/kpqwIfdN2NcyUIqHC5RJrmMjK.svg)](https://asciinema.org/a/kpqwIfdN2NcyUIqHC5RJrmMjK)
 
 ### 1.2.2 Installation Notes
 
@@ -62,22 +63,28 @@ ansible_ssh_pass=123456
 ansible_python_interpreter=/usr/bin/python3
 
 [coordinator]
-172.20.3.13 
-172.20.3.14
-172.20.3.15
+172.20.3.201 
+172.20.3.200
+172.20.3.202
 
-[executor]
-172.20.3.15
-172.20.3.16
-172.20.3.17
-
-[driver]
-172.20.3.17
+[store]
+# 172.20.3.201
+# 172.20.3.201 store_num=2 
+# 172.20.3.201 store_num=2 disk='/home/sd1 /home/sd2'
+172.20.3.201
+172.20.3.200 
+172.20.3.202
 
 [all_nodes:children]
 coordinator
+store
+
+[executor]
+172.20.3.201
+
+[executor_nodes:children]
 executor
-driver
+
 ```
 
 #### 2. Check Python3 is installed
@@ -95,6 +102,7 @@ ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
 ```
 1. artifacts/jdk-8u171-linux-x64.tar.gz
 2. artifacts/dingo.zip
+3. artifacts/dingo-store.tar.gz
 ```
 
 - Executor ansible script
