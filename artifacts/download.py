@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/a/axel-2.4-9.el7.x86_64.rpm
+# rpm -ivh  axel-2.4-9.el7.x86_64.rpm
 import os
 import re
 import subprocess
@@ -11,12 +13,12 @@ import yaml
 
 class DownloadHelper(object):
     def __init__(self):
-        self.repo_ip = "172.20.3.185"
-        self.repo_user = "cduser"
-        self.repo_password = "cduser"
+        self.repo_ip = "repo.datacanvas.com"
+        self.repo_user = "xxx"
+        self.repo_password = "xxx"
         self.repo_url = "http://{}:8081/artifactory".format(self.repo_ip)
         self.repo_meta_url = "http://{}:8081/artifactory/ui/artifactgeneral".format(self.repo_ip)
-        self.repo_name = "generic-local"
+        self.repo_name = "dingo-snapshot"
 
     def download(self, path_in_repo: str, local_file: str, progress=""):
         download_url = "{}/{}/{}".format(self.repo_url, self.repo_name, path_in_repo)
@@ -56,6 +58,8 @@ class DownloadHelper(object):
                 print()
                 return True
             else:
+                print("local_file_checksum:", local_file_checksum)
+                print("remote_file_checksum: ", remote_file_checksum)
                 print("File already exists. ")
                 return False
         else:
@@ -168,7 +172,12 @@ class Config(object):
         if not resolve_only:
             print("Try loading config file: " + cfg_filename)
         with open(str(cfg_filename)) as f:
-            cfg = yaml.load(f.read())
+            content = f.read()
+            try:
+                cfg = yaml.load(content)
+            except Exception as e:
+                # print(e)
+                cfg = yaml.load(content,Loader=yaml.FullLoader)
             self.name = cfg["name"]
             self.version = cfg['version']
             for artifact_cfg in cfg['artifacts']:
@@ -185,7 +194,8 @@ def download(config: Config):
     total = len(config.artifacts)
     for index, artifact in enumerate(config.artifacts):
         progress = "({}/{})".format(index + 1, total)
-        helper.download(artifact.path_in_repo, artifact.local_file, progress)
+        if artifact.path_in_repo.endswith(".zip") or artifact.path_in_repo.endswith("tar.gz"):
+            helper.download(artifact.path_in_repo, artifact.local_file, progress)
 
 
 def print_artifacts(config: Config):

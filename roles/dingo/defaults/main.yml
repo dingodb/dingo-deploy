@@ -1,6 +1,6 @@
 ---
 
-dingo_home: "{{ installer_root_path | default('/opt') }}/dingo"
+dingo_home: "{{ installer_root_path | default('/opt') }}/dingo-store"
 
 dingo_log_path: "{{ dingo_log_dir }}/dingo"
 dingo_data_path: "{{ dingo_data_dir }}/dingo"
@@ -10,8 +10,7 @@ root_log_level: error
 installer_cache_path: /tmp
 delete_cache_after_install: true
 
-dingo_coordinator_exchange_port: 22001
-dingo_executor_exchange_port: 8765
+
 
 dingo_executor_server_db_path: "{{ dingo_data_path }}/executor/meta"
 dingo_executor_raft_log_path: "{{ dingo_data_path }}/executor/raftLog"

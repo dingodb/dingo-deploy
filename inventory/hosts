@@ -4,6 +4,18 @@ ansible_connection=ssh
 #ansible_ssh_pass=datacanvas@123
 ansible_python_interpreter=/usr/bin/python3
 
+#[add_coordinator]
+# 172.20.3.203
+
+#[add_store]
+#172.20.3.203
+
+
+[scaling_in_dingo:children]
+add_coordinator
+add_store
+
+
 [coordinator]
 172.20.3.201 
 172.20.3.200

@@ -10,17 +10,17 @@ dingo_log_dir: "{{ installer_root_path }}/log"
 dingo_data_dir: "{{ installer_root_path }}/data"
 dingo_run_dir: "{{ installer_root_path }}/run"
 
-dingo_user: root
-dingo_group: root
-jdk_user: root
-jdk_group: root
+dingo_user: dingodb
+dingo_group: dingodb
+jdk_user: dingodb
+jdk_group: dingodb
 
 #-----------------------------------------------------
 # 1. Update System Configuration about OS
 #-----------------------------------------------------
 install_system: true
 install_system_basicTools: false
-install_system_fileLimits: false
+install_system_fileLimits: true
 set_core_file: false
 core_file_dir: /home/corefiles
 
@@ -84,6 +84,17 @@ default_dashboard_uid: "RNezu0fWk"
 dingo_tmp_coordinator_list: "{{ groups['coordinator'] }}"
 dingo_tmp_store_list: "{{ groups['store'] }}"
 dingo_tmp_executor_list: "{{ groups['executor'] | default(\"\") }}"
+
+# dingo-store port
+dingo_store_coordinator_exchange_port: 22001
+dingo_store_coordinator_raft_port: 22101
+dingo_store_exchange_port: 20001
+dingo_store_raft_port: 20101
+
+# executer port
+dingo_coordinator_exchange_port: 22001
+dingo_executor_exchange_port: 8765
+dingo_mysql_port: 3307
 
 # define dingo coordinator http monitor port: 172.20.3.18:8080,172.20.3.19:8080,172.20.3.20:8080
 dingo_coordinator_http_monitor_port: 22001

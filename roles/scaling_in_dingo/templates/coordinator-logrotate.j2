@@ -1,0 +1,10 @@
+{{ dingo_store_home }}/dist/coordinator1/log/COORDINATOR* {
+daily
+rotate 10
+size 80M
+create
+compress
+missingok
+dateext
+su {{ dingo_user }} {{ dingo_group }}
+}

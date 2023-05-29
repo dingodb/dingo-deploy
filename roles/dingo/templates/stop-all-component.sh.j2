@@ -19,7 +19,7 @@
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 
 
-PID=`ps -u {{ dingo_user }} -o pid,cmd | grep executor.Starter | grep -v grep | awk '{print $1}`
+PID=`ps -u {{ dingo_user }} -o pid,cmd | grep executor.Starter | grep -v grep | awk '{print $1}'`
 if [[ "" !=  "$PID" ]]; then
   echo "killing $PID"
   kill -9 $PID
