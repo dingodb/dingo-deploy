@@ -42,7 +42,7 @@ function show_help() {
 }
 
 function show_process() {
-  ansible all_nodes -m shell -a "ps -fu ${USER}"
+  ansible all_nodes,scaling_in_dingo -m shell -a "ps -fu ${USER}"
 }
 
 function show_file() {
@@ -146,15 +146,15 @@ function clean_all() {
   clean_process
   clean_prometheus
   clean_grafana
-  ansible all_nodes -m shell -a "rm -rf ${INSTALLER_PATH}"
+  ansible all_nodes,scaling_in_dingo -m shell -a "rm -rf ${INSTALLER_PATH}"
 }
 
 function clean_store() {
-  ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  clean" --become --become-user ${USER}
+  ansible store,add_store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  clean" --become --become-user ${USER}
 }
 
 function clean_coordinator() {
- ansible coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  clean" --become --become-user ${USER}
+ ansible coordinator,add_coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  clean" --become --become-user ${USER}
 }
 
 function clean_node() {
@@ -184,6 +184,8 @@ function start_help() {
   echo "  all               start all process"
   echo "  store             start store"
   echo "  coordinator       start coordinator"
+  echo "  one_store         start one store need param3=ip"
+  echo "  one_coordinator   start one coordinator need param3=ip"
   echo "  executor          start executor"
   echo "  node-exporter     start node-exporter"
   echo "  process-exporter  start process-exporter"
@@ -200,6 +202,10 @@ function start() {
     start_store
   elif [ "$1" == "coordinator" ]; then
     start_coordinator
+  elif [ "$1" == "one_store" ]; then
+    start_one_store $2
+  elif [ "$1" == "one_coordinator" ]; then
+    start_one_coordinator $2
   elif [ "$1" == "executor" ]; then
     start_executor
   elif [ "$1" == "node-exporter" ]; then
@@ -226,18 +232,31 @@ function start_all() {
   start_grafana 
 }
 
+function start_one_store() {
+  ip=$1
+  echo "ip: ${ip}"
+  ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  start" --become --become-user ${USER}
+}
+
+function start_one_coordinator() {
+ ip=$1
+ echo "ip: ${ip}"
+ ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  start" --become --become-user ${USER}
+ # add coor_list
+}
+
 function start_store() {
-  ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  start" --become --become-user ${USER}
+  ansible store,add_store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  start" --become --become-user ${USER}
   ansible store --list-hosts | grep -oP '(\d{1,3}\.){3}\d{1,3}' | head -n 1 | xargs ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/mysql_init.sh"  --limit
 }
 
 function start_coordinator() {
- ansible coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  start" --become --become-user ${USER}
+ ansible coordinator,add_coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  start" --become --become-user ${USER}
  sleep 10
 }
 
 function start_executor() {
- ansible executor -m shell -a "${INSTALLER_PATH}/dingo/bin/start-executor.sh" --become --become-user ${USER}
+ ansible executor -m shell -a "${INSTALLER_PATH}/dingo-store/bin/start-executor.sh" --become --become-user ${USER}
 }
 
 function start_node() {
@@ -264,6 +283,8 @@ function stop_help() {
   echo "  all               stop all process"
   echo "  store             stop store"
   echo "  coordinator       stop coordinator"
+  echo "  one_store         stop one store need param3=ip"
+  echo "  one_coordinator   stop one coordinator need param3=ip"
   echo "  executor          stop executor"
   echo "  node-exporter     stop node-exporter"
   echo "  process-exporter  stop process-exporter"
@@ -280,6 +301,11 @@ function stop() {
     stop_store
   elif [ "$1" == "coordinator" ]; then
     stop_coordinator
+  elif [ "$1" == "one_store" ]; then
+    stop_one_store $2
+  elif [ "$1" == "one_coordinator" ]; then
+    stop_one_coordinator $2
+
   elif [ "$1" == "executor" ]; then
     stop_executor
   elif [ "$1" == "node-exporter" ]; then
@@ -306,16 +332,29 @@ function stop_all() {
   stop_grafana 
 }
 
+function stop_one_store() {
+  ip=$1
+  echo "ip: ${ip}"
+  ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  stop" --become --become-user ${USER}
+}
+
+function stop_one_coordinator() {
+ ip=$1
+ echo "ip: ${ip}"
+ ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  stop" --become --become-user ${USER}
+}
+
+
 function stop_store() {
-  ansible store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  stop" --become --become-user ${USER}
+  ansible store,add_store -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-store.sh  stop" --become --become-user ${USER}
 }
 
 function stop_coordinator() {
- ansible coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  stop" --become --become-user ${USER}
+ ansible coordinator,add_coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-coordinator.sh  stop" --become --become-user ${USER}
 }
 
 function stop_executor() {
- ansible executor -m shell -a "${INSTALLER_PATH}/dingo/bin/stop-all-component.sh" --become --become-user ${USER}
+ ansible executor -m shell -a "${INSTALLER_PATH}/dingo-store/bin/stop-all-component.sh" --become --become-user ${USER}
 }
 
 function stop_node() {
@@ -374,6 +413,11 @@ function install_help() {
   echo "  dingo       install dingo"
   echo "  dingo-store install dingo-store"
   echo "  dingodb     install dingo and dingo-store"
+  echo "  scaling_in_dingodb   add node coordinator or store"
+  echo "  coor_list   gen_coor_list,use after scaling_in_dingodb"
+  echo "  addpeer     addpeer after gen_coor_list, defaults 22001 and 22101"
+  echo "  scaling_out_dingodb scaling coordinator, defaults 22001 and 22101"
+
   echo "  prometheus  install prometheus"
   echo "  grafana     install grafana"
   echo "  node        install node_exporter"
@@ -397,6 +441,14 @@ function install() {
     install_dingo-store
   elif [ "$1" == "dingodb" ]; then
     install_dingodb
+ elif [ "$1" == "scaling_in_dingodb" ]; then
+    install_scaling_in_dingodb
+  elif [ "$1" == "coor_list" ]; then
+    install_coor_list  $2
+  elif [ "$1" == "addpeer" ]; then
+    install_addpeer  $2
+  elif [ "$1" == "scaling_out_dingodb" ]; then
+    install_scaling_out_dingodb  $2
   elif [ "$1" == "prometheus" ]; then
     install_prometheus
   elif [ "$1" == "grafana" ]; then
@@ -436,6 +488,28 @@ function install_dingo-store(){
 function install_dingodb(){
   install_dingo-store
   install_dingo
+}
+
+function install_scaling_in_dingodb(){
+   ansible-playbook playbooks/031_scaling_in_dingo.yml -e "install_dingo_store=true"
+}
+
+function install_coor_list(){
+    coor_list=$1
+    ansible coordinator,add_coordinator -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/gen_coor_list.sh  ${coor_list}" --become --become-user ${USER}
+}
+
+function install_addpeer(){
+    peer_ip=$1
+    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftAddPeer --addr={{ inventory_hostname }}:22001 --peer=${peer_ip}:22101 --index=0" --become --become-user ${USER}
+    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftAddPeer --addr={{ inventory_hostname }}:22001 --peer=${peer_ip}:22101 --index=1" --become --become-user ${USER}
+}
+
+function install_scaling_out_dingodb(){
+    peer_ip=$1
+    stop_one_coordinator ${peer_ip}
+    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftRemovePeer --addr={{ inventory_hostname }}:22001 --peer=${peer_ip}:22101 --index=0" --become --become-user ${USER}
+    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftRemovePeer --addr={{ inventory_hostname }}:22001 --peer=${peer_ip}:22101 --index=1" --become --become-user ${USER}
 }
 
 function install_prometheus(){

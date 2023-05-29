@@ -8,22 +8,24 @@ dingo_store_data_path: "{{ dingo_data_dir }}/dingo-store"
 installer_cache_path: /tmp
 delete_cache_after_install: true
 
-
-
 dingo_store_coordinator_meta_path: "{{ dingo_store_data_path }}/coordinator"
 
 dingo_store_tmp_coordinator_list: "{{ groups['coordinator'] }}"
 dingo_store_tmp_store_list: "{{ groups['store'] }}"
+dingo_store_tmp_add_coordinator_list: "{{ groups['add_coordinator'] | default([]) }}"
+dingo_store_tmp_add_store_list: "{{ groups['add_store'] }}"
+
+new_dingo_store_tmp_coordinator_list: "{{ dingo_store_tmp_coordinator_list + dingo_store_tmp_add_coordinator_list  }}"
 
 # define dingo coordinator raft connection string: 172.20.3.18:22101,172.20.3.19:22101,172.20.3.20:22101 
-dingo_store_coordinator_raft_list: "{% for item in dingo_store_tmp_coordinator_list %} {{item}}:{{ dingo_store_coordinator_raft_port }} {% endfor %}"
+dingo_store_coordinator_raft_list: "{% for item in new_dingo_store_tmp_coordinator_list %} {{item}}:{{ dingo_store_coordinator_raft_port }} {% endfor %}"
 dingo_coordinator_raft_connection_list: "{{ dingo_store_coordinator_raft_list.split() | join(\",\") }}"
 
-dingo_store_store_exchange_list: "{% for item in dingo_store_tmp_coordinator_list %} {{item}}:{{ dingo_store_coordinator_exchange_port }} {% endfor %}"
+dingo_store_store_exchange_list: "{% for item in new_dingo_store_tmp_coordinator_list %} {{item}}:{{ dingo_store_coordinator_exchange_port }} {% endfor %}"
 dingo_store_store_exchange_connection_list: "{{ dingo_store_store_exchange_list.split() | join(\",\") }}"
 
-is_dingo_store_coordinator: "{{ 'coordinator' in group_names }}"
-is_dingo_store_store: "{{ 'store' in group_names }}"
+is_dingo_store_coordinator: "{{ 'add_coordinator' in group_names }}"
+is_dingo_store_store: "{{ 'add_store' in group_names }}"
 
 store_num: "{{ hostvars[inventory_hostname]['store_num'] | default(1) }}"
 default_disk_join: "{{ (dingo_store_home | string ~ '/dist ') * (store_num | int) }}"

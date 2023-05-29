@@ -15,7 +15,8 @@ The roles in the cluster are mainly divided into:
 Coordinator act as the master of the cluster. It is responsible for the management and scheduler of data replications of DingoDB cluster.
 
 - Store
-Store act as the storage of the cluster,  It is responsible for managing the entire storage
+  
+Store act as the storage of the cluster,  It is responsible for managing the entire storage.
 
 - Executor
 

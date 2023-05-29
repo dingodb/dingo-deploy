@@ -1,0 +1,61 @@
+---
+- name: "set disk_string"
+  set_fact:
+    store_disk_string: "{{ hostvars[inventory_hostname]['disk']  | default(default_disk_list) }}"
+
+- name: "split string into disk list"
+  set_fact:
+    store_disk_list: "{{ store_disk_string.split() }}"
+
+
+- name: "Generate dingo configuration files"
+  template: src={{ item.src }} dest={{ item.dest }} owner={{ dingo_user }} group={{ dingo_group }} mode=0755
+  with_items:
+    - {
+      src: "mysql_init.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/mysql_init.sh"
+     }
+    - {
+      src: "gen_coor_list.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/gen_coor_list.sh"
+     }
+
+
+- name: "Generate coordinator files"
+  template: src={{ item.src }} dest={{ item.dest }} owner={{ dingo_user }} group={{ dingo_group }} mode=0755
+  with_items:
+    - {
+      src: "start-coordinator.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/start-coordinator.sh",
+    }
+  when: is_dingo_store_coordinator
+
+- name: "Generate store  files"
+  template: src={{ item.src }} dest={{ item.dest }} owner={{ dingo_user }} group={{ dingo_group }} mode=0755
+  with_items:
+    - {
+      src: "start-store.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/start-store.sh",
+    }
+  when: is_dingo_store_store
+
+
+- name: "Remove dingo logrotate file if exist"
+  file: path="{{ item }}" state=absent
+  with_items: 
+    - "/etc/logrotate.d/store-logrotate"
+    - "/etc/logrotate.d/coordinator-logrotate"
+  when: open_dingo_store_logrotate == false
+  
+- name: "Generate dingo configuration files logrotate"
+  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root mode=0644
+  with_items:
+     - {
+      src: "store-logrotate.j2",
+      dest: "/etc/logrotate.d/store-logrotate"
+     }
+     - {
+      src: "coordinator-logrotate.j2",
+      dest: "/etc/logrotate.d/coordinator-logrotate"
+     }
+  when: open_dingo_store_logrotate

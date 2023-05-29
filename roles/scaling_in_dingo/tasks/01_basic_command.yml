@@ -1,0 +1,67 @@
+---
+
+- name: "Ensure dingo user group exist: {{ dingo_group }}"
+  group: name={{ dingo_group }} state=present
+
+- name: "Ensure dingo user exist {{ dingo_user }}"
+  user: name={{ dingo_user }} group={{ dingo_group }}
+
+
+
+- name: Check dingo-store if file exists
+  stat:
+    path: "{{ dingo_store_home }}"
+  register: file_status
+  check_mode: no
+
+- name: Set variable file_status
+  set_fact:
+    file_exists: "{{ file_status.stat.exists|default(false) }}"
+
+- name: Print variable debug info 
+  debug:
+    msg: "{{ dingo_store_log_path }}, {{ dingo_store_home }}, {{ dingo_store_data_path }}, {{ dingo_store_coordinator_meta_path }}" 
+
+
+- name: "Ensure installer cache Directory {{ installer_cache_path }}"
+  file: path={{ installer_cache_path }} state=directory
+
+- name: "Create dingo directories"
+  file: path="{{item}}" state=directory owner={{ dingo_user }} group={{ dingo_group }}
+  with_items:
+    - "{{ dingo_store_home }}"
+    - "{{ dingo_store_log_path }}"
+    - "{{ dingo_store_data_path }}"
+    - "{{ dingo_store_coordinator_meta_path }}"
+  when: file_exists == false
+
+
+- name: "Copy dingo zip archive to remote host"
+  copy: src={{ item }}  dest={{ installer_cache_path }} owner={{ dingo_user }} group={{ dingo_group }}
+  with_items:
+    - "{{ cfg_dingodb_store_local_path }}"
+  when: file_exists == false
+
+- name: "Unarchive {{ cfg_dingodb_store_local_path }} to {{ dingo_store_home }}"
+  unarchive:
+    src: "{{ installer_cache_path }}/{{ cfg_dingodb_store_local_path|basename}}"
+    dest: "{{ dingo_store_home }}"
+    mode: "go-w"
+    remote_src: yes
+    list_files: yes
+    owner: "{{ dingo_user }}"
+    group: "{{ dingo_group }}"
+  register: archive_contents
+  when: file_exists == False
+
+- name: "Delete temporary tarball file: {{ installer_cache_path }}/{{ cfg_dingodb_store_local_path|basename}}"
+  file: path={{ installer_cache_path }}/{{ cfg_dingodb_store_local_path|basename }} state=absent
+  when: delete_cache_after_install
+
+- name: Change owner of all files in directory
+  file:
+    path: "{{ dingo_store_home }}"
+    owner: "{{ dingo_user }}"
+    group: "{{ dingo_group }}"
+    recurse: yes
+
