@@ -4,7 +4,7 @@ version: develop
 artifacts:
   - {name: "cfg_jdk_local_path",  path_in_repo: "jdk-8u171-linux-x64.tar.gz" }
   - {name: "cfg_system_open_file_limits_path",  path_in_repo: "system/centos8/limits/limits.conf" }
-  - {name: "cfg_dingodb_store_local_path", path_in_repo: "dingo-store.tar.gz"}
+  - {name: "cfg_dingodb_store_local_path", path_in_repo: "dingo.tar.gz"}
   - {name: "prometheus_local_file", path_in_repo: "prometheus-2.14.0.linux-amd64.tar.gz" }
   - {name: "grafana_local_file", path_in_repo: "grafana-8.3.3.linux-amd64.tar.gz"}
   - {name: "node_exporter_local_file", path_in_repo: "node_exporter-0.18.1.linux-amd64.tar.gz"}
