@@ -415,8 +415,8 @@ function install_help() {
   echo "  dingodb     install dingo and dingo-store"
   echo "  scaling_in_dingodb   add node coordinator or store"
   echo "  coor_list   gen_coor_list,use after scaling_in_dingodb"
-  echo "  addpeer     addpeer after gen_coor_list, defaults 22001 and 22101"
-  echo "  scaling_out_dingodb scaling coordinator, defaults 22001 and 22101"
+  echo "  addpeer     addpeer after gen_coor_list, defaults dingo_store_coordinator_exchange_port and dingo_store_coordinator_raft_port"
+  echo "  scaling_out_dingodb scaling coordinator, defaults dingo_store_coordinator_exchange_port and dingo_store_coordinator_raft_port"
 
   echo "  prometheus  install prometheus"
   echo "  grafana     install grafana"
@@ -501,15 +501,15 @@ function install_coor_list(){
 
 function install_addpeer(){
     peer_ip=$1
-    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftAddPeer --addr={{ inventory_hostname }}:22001 --peer=${peer_ip}:22101 --index=0" --become --become-user ${USER}
-    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftAddPeer --addr={{ inventory_hostname }}:22001 --peer=${peer_ip}:22101 --index=1" --become --become-user ${USER}
+    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftAddPeer --addr={{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} --peer=${peer_ip}:{{ dingo_store_coordinator_raft_port }} --index=0" --become --become-user ${USER}
+    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftAddPeer --addr={{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} --peer=${peer_ip}:{{ dingo_store_coordinator_raft_port }} --index=1" --become --become-user ${USER}
 }
 
 function install_scaling_out_dingodb(){
     peer_ip=$1
     stop_one_coordinator ${peer_ip}
-    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftRemovePeer --addr={{ inventory_hostname }}:22001 --peer=${peer_ip}:22101 --index=0" --become --become-user ${USER}
-    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftRemovePeer --addr={{ inventory_hostname }}:22001 --peer=${peer_ip}:22101 --index=1" --become --become-user ${USER}
+    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftRemovePeer --addr={{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} --peer=${peer_ip}:{{ dingo_store_coordinator_raft_port }} --index=0" --become --become-user ${USER}
+    ansible coordinator,add_coordinator -m shell -a "cd ${INSTALLER_PATH}/dingo-store/build/bin;./dingodb_client_coordinator --method=RaftRemovePeer --addr={{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} --peer=${peer_ip}:{{ dingo_store_coordinator_raft_port }} --index=1" --become --become-user ${USER}
 }
 
 function install_prometheus(){
