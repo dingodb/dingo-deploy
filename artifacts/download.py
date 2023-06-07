@@ -14,8 +14,8 @@ import yaml
 class DownloadHelper(object):
     def __init__(self):
         self.repo_ip = "repo.datacanvas.com"
-        self.repo_user = "xxx"
-        self.repo_password = "xxx"
+        self.repo_user = "dingorouser"
+        self.repo_password = "AP82gDSNh12xjjuGQeKztnBzuth"
         self.repo_url = "http://{}:8081/artifactory".format(self.repo_ip)
         self.repo_meta_url = "http://{}:8081/artifactory/ui/artifactgeneral".format(self.repo_ip)
         self.repo_name = "dingo-snapshot"

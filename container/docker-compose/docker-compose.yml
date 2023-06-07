@@ -92,22 +92,6 @@ services:
       INSTANCE_START_ID: 1003
       <<: *shared-env
 
-  mysql_init:
-    image: dingodatabase/dingo-store:latest
-    hostname: mysql_init
-    container_name: mysql_init
-    network_mode: host
-    depends_on:
-      - store1
-      - store2
-      - store3
-    environment:
-      SERVER_HOST: ${DINGO_HOST_IP}
-      COORDINATOR_SERVER_START_PORT: 22001
-      COOR_SRV_PEERS: ${DINGO_HOST_IP}:22001,${DINGO_HOST_IP}:22002,${DINGO_HOST_IP}:22003
-    entrypoint: [ "/bin/sh", "-c" ]
-    command: /opt/dingo-store/scripts/mysql_init.sh
-
   executor:
     image: dingodatabase/dingo:latest
     hostname: executor
@@ -117,12 +101,11 @@ services:
       - 3307:3307
     networks:
       - dingo_net
-    depends_on:
-      - mysql_init
     environment:
        DINGO_ROLE: executor
        DINGO_HOSTNAME: executor
-       DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001
+       DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001,${DINGO_HOST_IP}:22002,${DINGO_HOST_IP}:22003
+
 
 networks:
     dingo_net:
