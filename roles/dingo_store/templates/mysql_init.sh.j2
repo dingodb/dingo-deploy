@@ -15,15 +15,15 @@ done
 echo "DINGODB_HAVE_STORE_AVAILABLE = 1, start to initialize MySQL"
 cd - || exit 1
 
-DINGODB_MYSQL_INIT=$(./dingodb_client_coordinator --method=GetSchemas 2>&1 >/dev/null |grep -c information_schema)
+DINGODB_MYSQL_INIT=$(./dingodb_client_coordinator --method=GetSchemaByName --name=mysql 2>&1 >/dev/null |grep -c table_ids)
 
 if [ "${DINGODB_MYSQL_INIT}" -ne 0 ]; then
-    echo "information_schema exists exit"
+    echo "mysql table_ids exists exit"
     exit 1
 fi
 
 # run Java start mysql_init 
-{{ jdk_home }}/bin/java -cp $BASE_DIR/build/bin/dingo-mysql-init-0.6.0-SNAPSHOT.jar io.dingodb.mysql.MysqlInit {{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} > mysql_init.log
+{{ jdk_home }}/bin/java -cp $BASE_DIR/libs/dingo-mysql-init-all.jar io.dingodb.mysql.MysqlInit {{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} > mysql_init.log
 
 # check status
 if [ $? -eq 0 ]
