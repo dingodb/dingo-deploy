@@ -146,7 +146,7 @@ function clean_all() {
   clean_process
   clean_prometheus
   clean_grafana
-  ansible all_nodes,scaling_in_dingo -m shell -a "rm -rf ${INSTALLER_PATH}"
+  ansible all_nodes,scaling_in_dingo -m shell -a "rm -rf ${INSTALLER_PATH}/*"
 }
 
 function clean_store() {
