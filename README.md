@@ -48,7 +48,7 @@ In the cluster mode, `ansible` is selected as the deployment tools. You can use 
 
 You can follow this guide to install a dingo cluster:
 
-[![asciicast](https://asciinema.org/a/kpqwIfdN2NcyUIqHC5RJrmMjK.svg)](https://asciinema.org/a/kpqwIfdN2NcyUIqHC5RJrmMjK)
+[![asciicast](https://asciinema.org/a/591330.svg)](https://asciinema.org/a/591330)
 
 ### 1.2.2 Installation Notes
 
@@ -127,4 +127,4 @@ ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
 
 ### 2.2 Install Steps
 
-[![asciicast](https://asciinema.org/a/J2BENeRd6yJoDVDfgfDFk7fao.svg)](https://asciinema.org/a/J2BENeRd6yJoDVDfgfDFk7fao)
+[![asciicast](https://asciinema.org/a/591177.svg)](https://asciinema.org/a/591177)

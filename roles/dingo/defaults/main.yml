@@ -9,7 +9,8 @@ root_log_level: warning
 
 installer_cache_path: /tmp
 delete_cache_after_install: true
-
+dingo_store_tmp_coordinator_list: "{{ groups['coordinator'] }}"
+dingo_store_coordinator_list: "{% for item in dingo_store_tmp_coordinator_list %} {{item}}:{{ dingo_store_coordinator_exchange_port }} {% endfor %}"
 
 
 dingo_executor_server_db_path: "{{ dingo_data_path }}/executor/meta"
@@ -20,7 +21,7 @@ dingo_executor_raft_db_path: "{{ dingo_data_path }}/executor/raftDb"
 dingo_tmp_executor_list: "{{ groups['executor'] }}"
 
 # define dingo coordinator exchange connection string: 172.20.3.18:22001
-dingo_coordinator_exchange_connection_list: "{{ inventory_hostname }}:{{ dingo_coordinator_exchange_port }}"
+dingo_coordinator_exchange_connection_list: "{{ dingo_store_coordinator_list.split() | join(\",\") }}"
 
 # define the flag to check current role executor
 is_dingo_executor: "{{ 'executor' in group_names }}"
