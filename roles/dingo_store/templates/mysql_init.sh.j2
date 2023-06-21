@@ -22,8 +22,9 @@ if [ "${DINGODB_MYSQL_INIT}" -ne 0 ]; then
 fi
 cd - || exit 1
 
-# run Java start mysql_init 
-{{ jdk_home }}/bin/java -cp $BASE_DIR/libs/dingo-mysql-init-all.jar io.dingodb.mysql.MysqlInit {{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} > mysql_init.log
+# run Java start mysql_init
+JAR_PATH=$(find ${BASE_DIR}/libs -name dingo-mysql-init-*.jar)
+{{ jdk_home }}/bin/java -cp ${JAR_PATH} io.dingodb.mysql.MysqlInit {{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} > mysql_init.log
 
 # check status
 if [ $? -eq 0 ]
