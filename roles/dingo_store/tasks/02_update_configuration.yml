@@ -19,6 +19,10 @@
       dest: "{{ dingo_store_home }}/scripts/start-store.sh"
      }
     - {
+      src: "start-index.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/start-index.sh"
+     }
+    - {
       src: "mysql_init.sh.j2",
       dest: "{{ dingo_store_home }}/scripts/mysql_init.sh"
      }

@@ -16,6 +16,14 @@
   args:
     chdir: "{{ dingo_store_home }}"
 
+# stop all the index
+- name: "Stop and Del db Index on all host"
+  become: true
+  become_user: "{{ dingo_user }}"
+  shell: "/bin/bash ./scripts/start-index.sh clean"
+  args:
+    chdir: "{{ dingo_store_home }}"
+
 # start coordinator
 - name: "Deploy and Start Coordinator using Script"
   become: true
@@ -36,6 +44,15 @@
   args:
     chdir: "{{ dingo_store_home }}"
   when: is_dingo_store_store
+
+# start index
+- name: "Deploy and Start index using Shell Script"
+  become: true
+  become_user: "{{ dingo_user }}"
+  shell: "/bin/bash ./scripts/start-index.sh cleanstart"
+  args:
+    chdir: "{{ dingo_store_home }}"
+  when: is_dingo_store_index
 
 - name: "Sleep wait store start"
   shell: "sleep 20"

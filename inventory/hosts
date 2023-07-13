@@ -29,6 +29,11 @@ add_store
 172.20.3.200 
 172.20.3.202
 
+[index]
+# 172.20.3.201 index_num=2 disk='/home/sd1 /home/sd2'
+172.20.3.201
+172.20.3.200 
+172.20.3.202
 
 [prometheus]
 172.20.3.201
@@ -40,8 +45,14 @@ add_store
 [all_nodes:children]
 coordinator
 store
+index
 
 [executor]
+172.20.3.201
+172.20.3.200
+172.20.3.202
+
+[web]
 172.20.3.201
 
 [executor_nodes:children]

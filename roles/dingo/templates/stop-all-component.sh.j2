@@ -25,6 +25,11 @@ if [[ "" !=  "$PID" ]]; then
   kill -9 $PID
 fi
 
+PID=`ps -u {{ dingo_user }} -o pid,cmd | grep dingo-web | grep -v grep | awk '{print $1}'`
+if [[ "" !=  "$PID" ]]; then
+  echo "killing $PID"
+  kill -9 $PID
+fi
 
 # PID=`ps -ef | grep dingo | grep java | grep -v grep | awk '{print $2}'`
 # if [[ "" !=  "$PID" ]]; then
