@@ -34,6 +34,10 @@
       src: "executor.yaml.j2",
       dest: "{{ dingo_home }}/conf/executor.yaml"
     }
+    - {
+      src: "application-dev.yaml.j2",
+      dest: "{{ dingo_home }}/conf/application-dev.yaml"
+    }
 
 - name: "Remove unused configure files"
   file: path="{{ item }}" state=absent
