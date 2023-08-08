@@ -5,4 +5,6 @@ server:
         min-response-size: 1024
     host: {{ inventory_hostname }}
     port: 13000
+    grpc:
+        port: 9999
     coordinatorExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
