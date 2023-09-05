@@ -88,12 +88,14 @@ clean()
 
 stop() 
 {
-   k_pid=$(ps -fu {{ dingo_user }} | grep "dingodb_server --role store"   |grep -v grep|awk '{printf $2 "\n"}')
-   for i in $k_pid
-   do
-   echo $i 
-   $(kill -9 $i)
-   done
+    for dir in "${DISK_LIST[@]}"; do
+      k_pid=$(ps -fu {{ dingo_user }} | grep "${dir}.*dingodb_server.*${FLAGS_role}" |grep -v grep|awk '{printf $2 "\n"}')
+      for i in $k_pid
+      do
+      echo $i 
+      $(kill -9 $i)
+      done
+    done
 }
 
 usage()
@@ -111,7 +113,7 @@ if [ "$1" = "deploy" ];then
 	
 elif [ "$1" = "clean" ];then
         stop
-	      clean
+	clean
 
 elif [ "$1" = "start" ];then
         start

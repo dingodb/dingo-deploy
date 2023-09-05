@@ -206,6 +206,7 @@ function start_help() {
   echo "  one_index         start one index need param3=ip"
   echo "  one_coordinator   start one coordinator need param3=ip"
   echo "  executor          start executor"
+  echo "  web               start web"
   echo "  node-exporter     start node-exporter"
   echo "  process-exporter  start process-exporter"
   echo "  prometheus        start prometheus"
@@ -231,6 +232,8 @@ function start() {
     start_one_coordinator $2
   elif [ "$1" == "executor" ]; then
     start_executor
+  elif [ "$1" == "web" ]; then
+    start_web
   elif [ "$1" == "node-exporter" ]; then
     start_node
   elif [ "$1" == "process-exporter" ]; then
@@ -250,6 +253,7 @@ function start_all() {
   start_store
   start_index
   start_executor
+  start_web
   start_node
   start_process
   start_prometheus
@@ -282,7 +286,6 @@ function start_store() {
 
 function start_index() {
   ansible index -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-index.sh  start" --become --become-user ${USER}
-  ansible index --list-hosts | grep -oP '(\d{1,3}\.){3}\d{1,3}' | head -n 1 | xargs ansible index -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/mysql_init.sh"  --limit
 }
 
 function start_coordinator() {
@@ -292,6 +295,10 @@ function start_coordinator() {
 
 function start_executor() {
  ansible executor -m shell -a "${INSTALLER_PATH}/dingo-store/bin/start-executor.sh" --become --become-user ${USER}
+}
+
+function start_web() {
+ ansible web -m shell -a "${INSTALLER_PATH}/dingo-store/bin/start-web.sh" --become --become-user ${USER}
 }
 
 function start_node() {
@@ -322,7 +329,7 @@ function stop_help() {
   echo "  one_store         stop one store need param3=ip"
   echo "  one_index         stop one index need param3=ip"
   echo "  one_coordinator   stop one coordinator need param3=ip"
-  echo "  executor          stop executor"
+  echo "  executor          stop executor and web"
   echo "  node-exporter     stop node-exporter"
   echo "  process-exporter  stop process-exporter"
   echo "  prometheus        stop prometheus"
@@ -430,7 +437,7 @@ function stop_grafana() {
 function cleanstart_help() {
   echo "Usage: Dingocontrol.sh cleanstart [OPTION]..."
   echo "Options:"
-  echo "  all   stop-clean-deploy store/coordinator and restart executor"
+  echo "  all   stop-clean-deploy store/coordinator/index and restart executor/web"
 }
 
 function cleanstart() {
@@ -451,10 +458,13 @@ function cleanstart_all(){
   stop_executor
   deploy_coordinator
   deploy_store
+  deploy_index
   start_coordinator
   sleep 20
   start_store
+  start_index
   start_executor
+  start_web
 }
 
 

@@ -92,6 +92,53 @@ services:
       INSTANCE_START_ID: 1003
       <<: *shared-env
 
+  index1:
+    image: dingodatabase/dingo-store:latest
+    hostname: index1
+    container_name: index1
+    network_mode: host
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+      FLAGS_role: index
+      INDEX_RAFT_START_PORT: 21101
+      INDEX_SERVER_START_PORT: 21001
+      INDEX_INSTANCE_START_ID: 1101
+      <<: *shared-env
+  index2:
+    image: dingodatabase/dingo-store:latest
+    hostname: index2
+    container_name: index2
+    network_mode: host
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+      FLAGS_role: index
+      INDEX_RAFT_START_PORT: 21102
+      INDEX_SERVER_START_PORT: 21002
+      INDEX_INSTANCE_START_ID: 1102
+      <<: *shared-env
+
+  index3:
+    image: dingodatabase/dingo-store:latest
+    hostname: index3
+    container_name: index3
+    network_mode: host
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+      FLAGS_role: index
+      INDEX_RAFT_START_PORT: 21103
+      INDEX_SERVER_START_PORT: 21003
+      INDEX_INSTANCE_START_ID: 1103
+      <<: *shared-env
+  
   executor:
     image: dingodatabase/dingo:latest
     hostname: executor
@@ -106,7 +153,20 @@ services:
        DINGO_HOSTNAME: executor
        DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001,${DINGO_HOST_IP}:22002,${DINGO_HOST_IP}:22003
        DINGO_MYSQL_COORDINATORS: ${DINGO_HOST_IP}:22001
-
+   
+  web:
+    image: dingodatabase/dingo:latest
+    hostname: web
+    container_name: web
+    ports:
+      - 13000:13000
+      - 9999:9999
+    networks:
+      - dingo_net
+    environment:
+      DINGO_ROLE: web
+      DINGO_HOSTNAME: web
+      DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001,${DINGO_HOST_IP}:22002,${DINGO_HOST_IP}:22003
 
 networks:
     dingo_net:

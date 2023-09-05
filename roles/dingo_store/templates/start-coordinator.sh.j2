@@ -71,7 +71,9 @@ clean()
 
 stop() 
 {
-   k_pid=$(ps -fu {{ dingo_user }} | grep "dingodb_server --role coordinator" |grep -v grep|awk '{printf $2 "\n"}')
+   i=1
+   program_dir=$BASE_DIR/dist/${FLAGS_role}${i}
+   k_pid=$(ps -fu {{ dingo_user }} | grep "${program_dir}.*dingodb_server.*${FLAGS_role}" |grep -v grep|awk '{printf $2 "\n"}')
    for i in $k_pid
    do
    echo $i 
@@ -94,7 +96,7 @@ if [ "$1" = "deploy" ];then
         deploy
 elif [ "$1" = "clean" ];then
         stop
-	      clean
+	clean
 elif [ "$1" = "start" ];then
         start
 
