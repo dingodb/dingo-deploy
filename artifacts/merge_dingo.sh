@@ -15,6 +15,7 @@ if [ -d dingo/dingo ]; then
         rm -rf dingo/dingo
 fi
 cd dingo
+cp ${NEW_DIR}/sqlline-*-SNAPSHOT-jar-with-dependencies.jar libs/
 tar -czvf ../dingo.tar.gz ./*
 cd ..
 rm -rf dingo
