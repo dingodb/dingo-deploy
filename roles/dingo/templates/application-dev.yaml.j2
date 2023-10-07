@@ -4,7 +4,7 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
         min-response-size: 1024
     host: {{ inventory_hostname }}
-    port: 13000
+    port: {{ dingo_web_http_port }}
     grpc:
-        port: 9999
+        port: {{ dingo_web_grpc_port }}
     coordinatorExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
