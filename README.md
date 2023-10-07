@@ -1,5 +1,5 @@
 # Deployment of DingoDB
-[DingoDB](https://github.com/dingodb/dingo) is a real-time Hybrid Serving & Analytical Processing (HSAP) Database. It can execute high-frequency queries and upsert, interactive analysis, multi-dimensional analysis in extremely low latency. To achieve high concurrency and high throughput, DingoDB uses an elastic distributed deployment mode.
+[DingoDB](https://github.com/dingodb/dingo) is a distributed multi-modal vector database that combines the characteristics of data lakes and vector databases and can store data of any type and size (Key-Value, PDF, audio, video, etc.). It has real-time low-latency processing capabilities, enables rapid insight and response, and can efficiently perform instant analysis and process multi-modal data.
 In order to simplify the deployment, this project introduces the deployment of DingoDB using [ansible](https://www.ansible.com/).
 
 ## 1. Cluster Mode
@@ -18,9 +18,17 @@ Coordinator act as the master of the cluster. It is responsible for the manageme
   
 Store act as the storage of the cluster,  It is responsible for managing the entire storage.
 
+- Index
+  
+Index is a specialized version of Dingo-Store. It not only offers distributed data storage capabilities but also ensures real-time construction of high-dimensional vector data and its indexing. It provides extensive search capabilities in high-dimensional spaces. The system supports vector index formats such as HNSW and IVF.
+
 - Executor
 
 Executor act as the worker of the cluster. It is responsible for executing the physical execution plan of  SQL to scan and compute the data.
+
+- Web
+
+Web provides a bridge for index operations, and provides http and grpc interfaces for use by pythonSDK
 
 - Driver-MySQL/Driver-DIngo
 
@@ -48,7 +56,7 @@ In the cluster mode, `ansible` is selected as the deployment tools. You can use 
 
 You can follow this guide to install a dingo cluster:
 
-[![asciicast](https://asciinema.org/a/591330.svg)](https://asciinema.org/a/591330)
+[![asciicast](https://asciinema.org/a/QGKWzvTp4b2nt8pmdjauDewIh.svg)](https://asciinema.org/a/QGKWzvTp4b2nt8pmdjauDewIh)
 
 ### 1.2.2 Installation Notes
 
@@ -59,9 +67,13 @@ Edit the configuration `inventory/hosts`, use the real host, user, password to r
 ```cfg
 [all:vars]
 ansible_connection=ssh
-ansible_ssh_user=root
-ansible_ssh_pass=123456
+#ansible_ssh_user=root
+#ansible_ssh_pass=datacanvas@123
 ansible_python_interpreter=/usr/bin/python3
+
+[scaling_in_dingo:children]
+add_coordinator
+add_store
 
 [coordinator]
 172.20.3.201 
@@ -76,15 +88,28 @@ ansible_python_interpreter=/usr/bin/python3
 172.20.3.200 
 172.20.3.202
 
+[index]
+# 172.20.3.201 index_num=2 disk='/home/sd1 /home/sd2'
+172.20.3.201
+172.20.3.200 
+172.20.3.202
+
 [all_nodes:children]
 coordinator
 store
+index
 
 [executor]
+172.20.3.201
+172.20.3.200
+172.20.3.202
+
+[web]
 172.20.3.201
 
 [executor_nodes:children]
 executor
+web
 
 ```
 
@@ -98,7 +123,7 @@ ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
 
 #### 3. Start to install
 
-- Copy artifacts 
+- Copy artifacts
 
 ```
 1. artifacts/jdk-8u171-linux-x64.tar.gz
@@ -106,13 +131,18 @@ ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
 3. artifacts/dingo-store.tar.gz
 ```
 
+- merge dingo.zip and dingo-store.tar.gz to dingo.tar.gz
+
+```shell
+ cd artifacts
+ bash merge_dingo.sh
+```
+
 - Executor ansible script
 
 ```shell
  ansible-playbook playbook.yml
 ```
-
-
 
 ## 2. Docker compose mode
 
@@ -127,4 +157,4 @@ ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
 
 ### 2.2 Install Steps
 
-[![asciicast](https://asciinema.org/a/591177.svg)](https://asciinema.org/a/591177)
+[![asciicast](https://asciinema.org/a/Wif9vRWXLnAvDkemXMuyShx5H.svg)](https://asciinema.org/a/Wif9vRWXLnAvDkemXMuyShx5H)
