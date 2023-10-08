@@ -1,0 +1,13 @@
+spring:
+    application:
+        name: dingodb-manager
+    profiles:
+        active: dev
+security:
+    cipher:
+        keyPath: {{ dingo_home }}/conf/dingodb.jks
+        keyPass: dingodb
+        storePass: dingodb
+        alias: dingodb
+        issuer: dingo
+    verify: true
