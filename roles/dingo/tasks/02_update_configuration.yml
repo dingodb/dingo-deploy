@@ -23,8 +23,8 @@
       dest: "{{ dingo_home }}/conf/logback.xml"
     }
     - {
-      src: "client.xml.j2",
-      dest: "{{ dingo_home }}/conf/client.xml"
+      src: "client.yaml.j2",
+      dest: "{{ dingo_home }}/conf/client.yaml"
     }
     - {
       src: "start-executor.sh.j2",
