@@ -63,18 +63,30 @@ services:
        DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001
        DINGO_MYSQL_COORDINATORS: ${DINGO_HOST_IP}:22001
    
+<<<<<<< HEAD
   proxy:
     image: dingodatabase/dingo:latest
     hostname: proxy
     container_name: proxy
+=======
+  web:
+    image: dingodatabase/dingo:latest
+    hostname: web
+    container_name: web
+>>>>>>> [chore][deploy] Add docker-compose single instance
     ports:
       - 13000:13000
       - 9999:9999
     networks:
       - dingo_net
     environment:
+<<<<<<< HEAD
       DINGO_ROLE: proxy
       DINGO_HOSTNAME: proxy
+=======
+      DINGO_ROLE: web
+      DINGO_HOSTNAME: web
+>>>>>>> [chore][deploy] Add docker-compose single instance
       DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001
 
 networks:
