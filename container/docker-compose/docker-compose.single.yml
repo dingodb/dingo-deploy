@@ -1,0 +1,82 @@
+---
+version: '2.2'
+
+x-shared-environment: &shared-env
+  SERVER_HOST: ${DINGO_HOST_IP}
+  RAFT_HOST: ${DINGO_HOST_IP}
+  COOR_RAFT_PEERS: ${DINGO_HOST_IP}:22101
+  COOR_SRV_PEERS: ${DINGO_HOST_IP}:22001
+
+services:
+  coordinator1:
+    image: dingodatabase/dingo-store:latest
+    hostname: coordinator1
+    container_name: coordinator1
+    network_mode: host
+    environment:
+      FLAGS_role: coordinator
+      COORDINATOR_SERVER_START_PORT: 22001
+      COORDINATOR_RAFT_START_PORT: 22101
+      INSTANCE_START_ID: 1001
+      <<: *shared-env
+
+  store1:
+    image: dingodatabase/dingo-store:latest
+    hostname: store1
+    container_name: store1
+    network_mode: host
+    depends_on:
+      - coordinator1
+    environment:
+      FLAGS_role: store
+      RAFT_START_PORT: 20101
+      SERVER_START_PORT: 20001
+      INSTANCE_START_ID: 1001
+      <<: *shared-env
+
+  index1:
+    image: dingodatabase/dingo-store:latest
+    hostname: index1
+    container_name: index1
+    network_mode: host
+    depends_on:
+      - coordinator1
+    environment:
+      FLAGS_role: index
+      INDEX_RAFT_START_PORT: 21101
+      INDEX_SERVER_START_PORT: 21001
+      INDEX_INSTANCE_START_ID: 1101
+      <<: *shared-env
+  
+  executor:
+    image: dingodatabase/dingo:latest
+    hostname: executor
+    container_name: executor
+    ports:
+      - 8765:8765
+      - 3307:3307
+    networks:
+      - dingo_net
+    environment:
+       DINGO_ROLE: executor
+       DINGO_HOSTNAME: executor
+       DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001
+       DINGO_MYSQL_COORDINATORS: ${DINGO_HOST_IP}:22001
+   
+  web:
+    image: dingodatabase/dingo:latest
+    hostname: web
+    container_name: web
+    ports:
+      - 13000:13000
+      - 9999:9999
+    networks:
+      - dingo_net
+    environment:
+      DINGO_ROLE: web
+      DINGO_HOSTNAME: web
+      DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001
+
+networks:
+    dingo_net:
+        driver: bridge
