@@ -17,12 +17,12 @@
     chdir: "{{ dingo_home }}"
   when: is_dingo_executor
 
-# Start dingo web 
-- name: "Start Dingo Web appliaction using Shell script"
+# Start dingo proxy 
+- name: "Start Dingo Proxy appliaction using Shell script"
   become: true
   become_user: "{{ dingo_user }}"
-  shell: "/bin/bash ./bin/start-web.sh"
+  shell: "/bin/bash ./bin/start-proxy.sh"
   args:
     chdir: "{{ dingo_home }}"
-  when: is_dingo_web
+  when: is_dingo_proxy
 

@@ -99,9 +99,9 @@ dingo_coordinator_exchange_port: 22001
 dingo_executor_exchange_port: 8765
 dingo_mysql_port: 3307
 
-# web port
-dingo_web_http_port: 13000
-dingo_web_grpc_port: 9999
+# proxy port
+dingo_proxy_http_port: 13000
+dingo_proxy_grpc_port: 9999
 
 # define dingo coordinator http monitor port: 172.20.3.18:8080,172.20.3.19:8080,172.20.3.20:8080
 dingo_coordinator_http_monitor_port: 22001

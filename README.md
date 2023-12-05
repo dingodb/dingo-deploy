@@ -26,9 +26,9 @@ Index is a specialized version of Dingo-Store. It not only offers distributed da
 
 Executor act as the worker of the cluster. It is responsible for executing the physical execution plan of  SQL to scan and compute the data.
 
-- Web
+- Proxy
 
-Web provides a bridge for index operations, and provides http and grpc interfaces for use by pythonSDK
+Proxy provides a bridge for index operations, and provides http and grpc interfaces for use by pythonSDK
 
 - Driver-MySQL/Driver-DIngo
 
@@ -104,12 +104,12 @@ index
 172.20.3.200
 172.20.3.202
 
-[web]
+[proxy]
 172.20.3.201
 
 [executor_nodes:children]
 executor
-web
+proxy
 
 ```
 

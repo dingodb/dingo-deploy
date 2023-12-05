@@ -18,10 +18,10 @@
 
 set -x
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
-JAR_PATH=$(find $ROOT -name dingo-web*.jar)
+JAR_PATH=$(find $ROOT -name dingo-proxy*.jar)
 
 nohup {{ jdk_home }}/bin/java ${JAVA_OPTS} \
-     -Dlogging.config=file:${ROOT}/conf/logback-web.xml \
+     -Dlogging.config=file:${ROOT}/conf/logback-proxy.xml \
      -jar ${JAR_PATH} \
-     --spring.config.location=${ROOT}/conf/application.yaml \
-     > {{ dingo_log_path }}/dingo-web.out &
+     --spring.config.location=${ROOT}/conf/application-proxy.yaml \
+     > {{ dingo_log_path }}/dingo-proxy.out &
