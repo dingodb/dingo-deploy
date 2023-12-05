@@ -52,12 +52,12 @@ index
 172.20.3.200
 172.20.3.202
 
-[web]
+[proxy]
 172.20.3.201
 
 [executor_nodes:children]
 executor
-web
+proxy
 
 
 [node_exporter]

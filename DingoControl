@@ -206,7 +206,7 @@ function start_help() {
   echo "  one_index         start one index need param3=ip"
   echo "  one_coordinator   start one coordinator need param3=ip"
   echo "  executor          start executor"
-  echo "  web               start web"
+  echo "  proxy             start proxy"
   echo "  node-exporter     start node-exporter"
   echo "  process-exporter  start process-exporter"
   echo "  prometheus        start prometheus"
@@ -232,8 +232,8 @@ function start() {
     start_one_coordinator $2
   elif [ "$1" == "executor" ]; then
     start_executor
-  elif [ "$1" == "web" ]; then
-    start_web
+  elif [ "$1" == "proxy" ]; then
+    start_proxy
   elif [ "$1" == "node-exporter" ]; then
     start_node
   elif [ "$1" == "process-exporter" ]; then
@@ -253,7 +253,7 @@ function start_all() {
   start_store
   start_index
   start_executor
-  start_web
+  start_proxy
   start_node
   start_process
   start_prometheus
@@ -297,8 +297,8 @@ function start_executor() {
  ansible executor -m shell -a "${INSTALLER_PATH}/dingo-store/bin/start-executor.sh" --become --become-user ${USER}
 }
 
-function start_web() {
- ansible web -m shell -a "${INSTALLER_PATH}/dingo-store/bin/start-web.sh" --become --become-user ${USER}
+function start_proxy() {
+ ansible proxy -m shell -a "${INSTALLER_PATH}/dingo-store/bin/start-proxy.sh" --become --become-user ${USER}
 }
 
 function start_node() {
@@ -329,7 +329,7 @@ function stop_help() {
   echo "  one_store         stop one store need param3=ip"
   echo "  one_index         stop one index need param3=ip"
   echo "  one_coordinator   stop one coordinator need param3=ip"
-  echo "  executor          stop executor and web"
+  echo "  executor          stop executor and proxy"
   echo "  node-exporter     stop node-exporter"
   echo "  process-exporter  stop process-exporter"
   echo "  prometheus        stop prometheus"
@@ -437,7 +437,7 @@ function stop_grafana() {
 function cleanstart_help() {
   echo "Usage: Dingocontrol.sh cleanstart [OPTION]..."
   echo "Options:"
-  echo "  all   stop-clean-deploy store/coordinator/index and restart executor/web"
+  echo "  all   stop-clean-deploy store/coordinator/index and restart executor/proxy"
 }
 
 function cleanstart() {
@@ -464,7 +464,7 @@ function cleanstart_all(){
   start_store
   start_index
   start_executor
-  start_web
+  start_proxy
 }
 
 

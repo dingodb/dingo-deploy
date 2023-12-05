@@ -15,8 +15,8 @@
       dest: "{{ dingo_home }}/conf/logback-executor.xml"
     }
     - {
-      src: "logback-web.xml.j2",
-      dest: "{{ dingo_home }}/conf/logback-web.xml"
+      src: "logback-proxy.xml.j2",
+      dest: "{{ dingo_home }}/conf/logback-proxy.xml"
     }
     - {
       src: "logback.xml.j2",
@@ -31,8 +31,8 @@
       dest: "{{ dingo_home }}/bin/start-executor.sh"
     }
     - {
-      src: "start-web.sh.j2",
-      dest: "{{ dingo_home }}/bin/start-web.sh"
+      src: "start-proxy.sh.j2",
+      dest: "{{ dingo_home }}/bin/start-proxy.sh"
     }
     - {
       src: "stop-all-component.sh.j2",
@@ -43,12 +43,12 @@
       dest: "{{ dingo_home }}/conf/executor.yaml"
     }
     - {
-      src: "application-dev.yaml.j2",
-      dest: "{{ dingo_home }}/conf/application-dev.yaml"
+      src: "application-proxy-dev.yaml.j2",
+      dest: "{{ dingo_home }}/conf/application-proxy-dev.yaml"
     }
     - {
-      src: "application.yaml.j2",
-      dest: "{{ dingo_home }}/conf/application.yaml"
+      src: "application-proxy.yaml.j2",
+      dest: "{{ dingo_home }}/conf/application-proxy.yaml"
     }
 
 - name: "Remove unused configure files"
