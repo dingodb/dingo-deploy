@@ -1,0 +1,78 @@
+#!/bin/bash
+
+export TIMEOUT_SECONDS=1
+export LOCAL_HOST_NAME="$(hostname)"
+export DEVICE_PATH_LIST=(
+{% if  install_dingo and (only_step == '' or only_step=="install_dingo")  %}
+  {% for coordinator_server in groups.coordinator %}
+     "/dev/tcp/{{ coordinator_server }}/{{ dingo_coordinator_exchange_port }}"
+     "/dev/tcp/{{ coordinator_server }}/{{ dingo_coordinator_exchange_port }}"
+  {% endfor %}
+  {% for executor_server in groups.executor %}
+     "/dev/tcp/{{ executor_server }}/{{ dingo_executor_exchange_port }}"
+     "/dev/tcp/{{ executor_server }}/{{ dingo_coordinator_http_monitor_port }}"
+     "/dev/tcp/{{ executor_server }}/{{ dingo_mysql_port }}"
+  {% endfor %}
+  {% for proxy_server in groups.proxy %}
+     "/dev/tcp/{{ proxy_server }}/{{ dingo_proxy_http_port }}"
+  {% endfor %}
+  {% for proxy_server in groups.proxy %}
+     "/dev/tcp/{{ proxy_server }}/{{ dingo_proxy_grpc_port }}"
+  {% endfor %}
+{% endif %}
+
+
+{% if  install_dingo_store and (only_step == '' or only_step=="install_dingo_store")   %}
+  {% for coordinator_server in groups.coordinator %}
+     "/dev/tcp/{{ coordinator_server }}/{{ dingo_store_coordinator_exchange_port }}"
+     "/dev/tcp/{{ coordinator_server }}/{{ dingo_store_coordinator_raft_port }}"
+  {% endfor %}
+  {% for store_server in groups.store %}
+     "/dev/tcp/{{ store_server }}/{{ dingo_store_exchange_port }}"
+     "/dev/tcp/{{ store_server }}/{{ dingo_store_raft_port }}"
+     "/dev/tcp/{{ store_server }}/{{ dingo_store_http_monitor_port }}"
+  {% endfor %}
+  {% for index_server in groups.index %}
+     "/dev/tcp/{{ index_server }}/{{ dingo_store_index_exchange_port }}"
+     "/dev/tcp/{{ index_server }}/{{ dingo_store_index_raft_port }}"
+     "/dev/tcp/{{ index_server }}/{{ dingo_index_http_monitor_port }}"
+  {% endfor %}
+{% endif %}
+
+{% if  install_prometheus and (only_step == '' or only_step=="install_prometheus")   %}
+  {% for prometheus_server in groups.prometheus %}
+     "/dev/tcp/{{ prometheus_server }}/{{ prometheus_port }}"
+     "/dev/tcp/{{ prometheus_server }}/{{ blackbox_exporter_port }}"
+     "/dev/tcp/{{ prometheus_server }}/{{ pushgateway_port }}"
+  {% endfor %}
+{% endif %}
+
+{% if install_node_exporter and (only_step == '' or only_step=="install_node_exporter") %}
+  {% for node_exporter_server in groups.node_exporter %}
+     "/dev/tcp/{{ node_exporter_server }}/{{ node_exporter_port }}"
+  {% endfor %}
+{% endif %}
+
+{% if  install_process_exporter and (only_step == '' or only_step=="install_process_exporter")  %}
+  {% for process_exporter_server in groups.process_exporter %}
+     "/dev/tcp/{{ process_exporter_server }}/{{ process_exporter_port }}"
+  {% endfor %}
+{% endif %}
+
+{% if  install_grafana and (only_step == '' or only_step=="install_grafana") %}
+  {% for grafana_server in groups.grafana %}
+     "/dev/tcp/{{ grafana_server }}/{{ grafana_port }}"
+  {% endfor %}
+{% endif %}
+)
+
+printf "\U1F4DD Test port on ${LOCAL_HOST_NAME}:\n"
+for device_path in "${DEVICE_PATH_LIST[@]}"; do
+    export HOST=$(echo "$device_path" | cut -d '/' -f 4)
+    export PORT=$(echo "$device_path" | cut -d '/' -f 5)
+    timeout $TIMEOUT_SECONDS bash -c "echo 'What is up by howhow ...' >${device_path}" 2>/dev/null && \
+    printf " \U1F4DB Ports Conflicts at $HOST:$PORT" || continue
+    echo 
+done
+
+exit 0

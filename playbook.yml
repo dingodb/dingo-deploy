@@ -18,6 +18,17 @@
     - include_role: name=jdk
       when: install_java_sdk
 
+
+#---------------------------------
+# 2_1. Check Port Conflicts
+#---------------------------------
+- hosts:
+    - localhost
+  tasks:
+    - include_role: name=check_ports
+      when: check_port_conflicts
+
+
 #---------------------------------
 # 3. Install Dingo_store nodes
 #---------------------------------

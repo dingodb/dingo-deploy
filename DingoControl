@@ -199,9 +199,12 @@ function start_help() {
   echo "Usage: Dingocontrol.sh start[OPTION]..."
   echo "Options:"
   echo "  all               start all process"
+  echo "  dingodb           start all dingodb process except monitor"
+  echo "  monitor           start all monitor process"
   echo "  store             start store"
   echo "  coordinator       start coordinator"
   echo "  index             start index"
+  echo "  one_executor      start one executor need param3=ip"
   echo "  one_store         start one store need param3=ip"
   echo "  one_index         start one index need param3=ip"
   echo "  one_coordinator   start one coordinator need param3=ip"
@@ -218,12 +221,18 @@ function start() {
     start_help
   elif [ "$1" == "all" ]; then
     start_all
+  elif [ "$1" == "dingodb" ]; then
+    start_dingodb
+  elif [ "$1" == "monitor" ]; then
+    start_monitor
   elif [ "$1" == "store" ]; then
     start_store
   elif [ "$1" == "index" ]; then
     start_index
   elif [ "$1" == "coordinator" ]; then
     start_coordinator
+  elif [ "$1" == "one_executor" ]; then
+    start_one_executor $2
   elif [ "$1" == "one_store" ]; then
     start_one_store $2
   elif [ "$1" == "one_index" ]; then
@@ -258,6 +267,29 @@ function start_all() {
   start_process
   start_prometheus
   start_grafana 
+}
+
+function start_dingodb() {
+  start_coordinator
+  sleep 10
+  start_store
+  start_index
+  start_executor
+  start_proxy
+}
+
+
+function start_monitor() {
+  start_node
+  start_process
+  start_prometheus
+  start_grafana 
+}
+
+function start_one_executor() {
+  ip=$1
+  echo "ip: ${ip}"
+  ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/bin/start-executor.sh  start" --become --become-user ${USER}
 }
 
 function start_one_store() {
@@ -323,9 +355,12 @@ function stop_help() {
   echo "Usage: Dingocontrol.sh stop [OPTION]..."
   echo "Options:"
   echo "  all               stop all process"
+  echo "  dingodb           stop all dingodb process except monitor"
+  echo "  monitor           stop all monitor process"
   echo "  store             stop store"
   echo "  index             stop index"
   echo "  coordinator       stop coordinator"
+  echo "  one_executor      stop one executor need param3=ip"
   echo "  one_store         stop one store need param3=ip"
   echo "  one_index         stop one index need param3=ip"
   echo "  one_coordinator   stop one coordinator need param3=ip"
@@ -341,12 +376,18 @@ function stop() {
     stop_help
   elif [ "$1" == "all" ]; then
     stop_all
+  elif [ "$1" == "dingodb" ]; then
+    stop_dingodb
+  elif [ "$1" == "monitor" ]; then
+    stop_monitor
   elif [ "$1" == "store" ]; then
     stop_store
   elif [ "$1" == "index" ]; then
     stop_index
   elif [ "$1" == "coordinator" ]; then
     stop_coordinator
+  elif [ "$1" == "one_executor" ]; then
+    stop_one_executor $2
   elif [ "$1" == "one_store" ]; then
     stop_one_store $2
   elif [ "$1" == "one_index" ]; then
@@ -379,6 +420,26 @@ function stop_all() {
   stop_process
   stop_prometheus
   stop_grafana 
+}
+
+function stop_dingodb() {
+  stop_store
+  stop_index
+  stop_coordinator
+  stop_executor
+ }
+
+function stop_monitor() {
+  stop_node
+  stop_process
+  stop_prometheus
+  stop_grafana 
+}
+
+function stop_one_executor() {
+ ip=$1
+ echo "ip: ${ip}"
+ ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/bin/stop-all-component.sh  stop" --become --become-user ${USER}
 }
 
 function stop_one_store() {
@@ -474,6 +535,7 @@ function install_help() {
   echo "  playbook    playbook.yml"
   echo "  system      install system"
   echo "  jdk         install jdk"
+  echo "  check-ports check port conflicts"
   echo "  dingo       install dingo"
   echo "  dingo-store install dingo-store"
   echo "  dingodb     install dingo and dingo-store"
@@ -481,7 +543,6 @@ function install_help() {
   echo "  coor_list   gen_coor_list,use after scaling_in_dingodb"
   echo "  addpeer     addpeer after gen_coor_list, defaults dingo_store_coordinator_exchange_port and dingo_store_coordinator_raft_port"
   echo "  scaling_out_dingodb scaling coordinator, defaults dingo_store_coordinator_exchange_port and dingo_store_coordinator_raft_port"
-
   echo "  prometheus  install prometheus"
   echo "  grafana     install grafana"
   echo "  node        install node_exporter"
@@ -499,6 +560,8 @@ function install() {
     install_system
   elif [ "$1" == "jdk" ]; then
     install_jdk
+  elif [ "$1" == "check-ports" ]; then
+    install_check_ports
   elif [ "$1" == "dingo" ]; then
     install_dingo
   elif [ "$1" == "dingo-store" ]; then
@@ -541,12 +604,16 @@ function install_jdk(){
   ansible-playbook playbooks/02_jdk.yml -e "install_java_sdk=true"
 }
 
+function install_check_ports(){
+  ansible-playbook playbooks/02_1_check_ports.yml -e "check_port_conflicts=true"
+}
+
 function install_dingo(){
-  ansible-playbook playbooks/04_dingo.yml -e "install_dingo=true"
+  ansible-playbook playbooks/04_dingo.yml -e "install_dingo=true" -e "only_step=install_dingo"
 }
 
 function install_dingo-store(){
-  ansible-playbook playbooks/03_dingo-store.yml -e "install_dingo_store=true"
+  ansible-playbook playbooks/03_dingo-store.yml -e "install_dingo_store=true" -e "only_step=install_dingo_store"
 }
 
 function install_dingodb(){
@@ -577,19 +644,19 @@ function install_scaling_out_dingodb(){
 }
 
 function install_prometheus(){
-  ansible-playbook playbooks/05_prometheus.yml -e "install_prometheus=true"
+  ansible-playbook playbooks/05_prometheus.yml -e "install_prometheus=true"  -e "only_step=install_prometheus"
 }
 
 function install_grafana(){
-  ansible-playbook playbooks/08_grafana.yml -e "install_grafana=true"
+  ansible-playbook playbooks/08_grafana.yml -e "install_grafana=true"  -e "only_step=install_grafana"
 }
 
 function install_node(){
-  ansible-playbook playbooks/06_node_exporter.yml -e "install_node_exporter=true"
+  ansible-playbook playbooks/06_node_exporter.yml -e "install_node_exporter=true"  -e "only_step=install_node_exporter"
 }
 
 function install_process(){
-  ansible-playbook playbooks/07_process_exporter.yml -e "install_process_exporter=true"
+  ansible-playbook playbooks/07_process_exporter.yml -e "install_process_exporter=true" -e "only_step=install_process_exporter"
 }
 
 function install_monitor(){

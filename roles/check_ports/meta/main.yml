@@ -1,0 +1,11 @@
+galaxy_info:
+  author: HowHowWen
+  description: 通訊埠檢測工具
+  blog : https://how64bit.com/posts/ansible/2023/ansible-role-check-ports/
+  mail : blog@how64bit.com
+
+  license: BSD
+
+  min_ansible_version: 2.1
+
+
