@@ -32,6 +32,12 @@ jdk_install_path: /opt
 jdk_home: "{{ jdk_install_path }}/jdk"
 
 #-----------------------------------------------------
+# 2_1. Check For Port Conflicts
+#-----------------------------------------------------
+check_port_conflicts: true
+
+
+#-----------------------------------------------------
 # 3. Install Dingo to Dingo home
 #-----------------------------------------------------
 install_dingo: true
