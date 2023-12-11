@@ -18,9 +18,12 @@ class DownloadHelper(object):
         self.repo_password = "AP82gDSNh12xjjuGQeKztnBzuth"
         self.repo_url = "http://{}:8081/artifactory".format(self.repo_ip)
         self.repo_meta_url = "http://{}:8081/artifactory/ui/artifactgeneral".format(self.repo_ip)
-        self.repo_name = "dingo-snapshot/artifact/common"
+        self.repo_name = "dingo-snapshot"
+        self.repo_path = "artifact/common"
+
 
     def download(self, path_in_repo: str, local_file: str, progress=""):
+        path_in_repo = os.path.join(self.repo_path, path_in_repo)
         download_url = "{}/{}/{}".format(self.repo_url, self.repo_name, path_in_repo)
         star_count = 50
         print("#" * star_count)
