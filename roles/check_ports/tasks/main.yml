@@ -1,0 +1,20 @@
+---
+# tasks file for check_ports
+
+
+- name: generat check port script to "{{ script_file_path }}"
+  template:
+    src: templates/check_port.sh.j2
+    dest: "{{ script_file_path }}"
+  run_once: true
+
+- name: run the script of check_ports
+  shell: |
+    bash /tmp/.check_ports.sh && \
+    rm -f  /tmp/.check_ports.sh
+  register: check_ports_result
+
+- name: summary check ports conflicts result
+  debug:
+    msg: "{{ check_ports_result.stdout_lines }}"
+  failed_when: check_ports_result.stdout_lines|length > 1

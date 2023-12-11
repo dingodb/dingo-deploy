@@ -1,0 +1,4 @@
+# vars file for JeffWen0105.check_ports
+
+script_base_directory: "/tmp"
+script_file_path: "{{ script_base_directory }}/.check_ports.sh"
