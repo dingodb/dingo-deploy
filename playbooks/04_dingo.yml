@@ -8,10 +8,6 @@
   vars_files:
     - ../group_vars/all/_shared.yml
   tasks:
-    - debug: 
-        msg: "{{ only_step }}"
-    - include_role: name=check_ports
-      when: check_port_conflicts
     - include_role: name=dingo
       when: install_dingo
   
