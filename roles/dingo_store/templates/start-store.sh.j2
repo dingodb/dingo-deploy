@@ -47,9 +47,9 @@ deploy() {
     N_SERVER_START_PORT=`expr $SERVER_START_PORT + $i - 1`
     N_RAFT_START_PORT=`expr $RAFT_START_PORT + $i - 1`
     # program_dir=$BASE_DIR/dist/${FLAGS_role}${i}
-    program_dir=${DISK_LIST[i - 1]}/${FLAGS_role}${i}
-    if [ ! -d "${DISK_LIST[i - 1]}" ]; then
-      mkdir -p "${DISK_LIST[i - 1]}"
+    program_dir=${DISK_LIST[i - 1]:-${DISK_LIST[0]}}/${FLAGS_role}${i}
+    if [ ! -d "${DISK_LIST[i - 1]:-${DISK_LIST[0]}}" ]; then
+      mkdir -p "${DISK_LIST[i - 1]:-${DISK_LIST[0]}}"
     fi
 
     deploy_store ${FLAGS_role} $BASE_DIR $program_dir  $N_SERVER_START_PORT $N_RAFT_START_PORT $INSTANCE_START_ID ${COOR_RAFT_PEERS:-fail} ${TMP_COORDINATOR_SERVICES}
@@ -62,7 +62,7 @@ start() {
   for i in $(seq 1 $STORE_NUM)
   do
     # program_dir=$BASE_DIR/dist/${FLAGS_role}${i}
-    program_dir=${DISK_LIST[i - 1]}/${FLAGS_role}${i}
+    program_dir=${DISK_LIST[i - 1]:-${DISK_LIST[0]}}/${FLAGS_role}${i}
     # clean log
     rm -f ${program_dir}/log/*
     start_program ${FLAGS_role} ${program_dir}
@@ -76,7 +76,7 @@ clean()
 {
   for i in $(seq 1 $STORE_NUM)
   do
-    program_dir=${DISK_LIST[i - 1]}/${FLAGS_role}${i}
+    program_dir=${DISK_LIST[i - 1]:-${DISK_LIST[0]}}/${FLAGS_role}${i}
     rm -rf ${program_dir}
     sleep 1
     echo "rm -rf ${program_dir}  files"
