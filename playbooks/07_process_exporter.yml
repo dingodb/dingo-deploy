@@ -1,14 +1,4 @@
 ---
-#---------------------------------
-# 2_1. Check Port Conflicts
-#---------------------------------
-- hosts:
-    - localhost
-  vars_files:
-    - ../group_vars/all/_shared.yml
-  tasks:
-    - include_role: name=check_ports
-      when: check_port_conflicts
 
 #---------------------------------
 # 7. Install process_exporter
