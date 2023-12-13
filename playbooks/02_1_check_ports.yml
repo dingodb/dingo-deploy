@@ -4,7 +4,7 @@
 # 2_1. Check Port Conflicts
 #---------------------------------
 - hosts:
-    - localhost
+    - all_nodes
   vars_files:
     - ../group_vars/all/_shared.yml
   tasks:
