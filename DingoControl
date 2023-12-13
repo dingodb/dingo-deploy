@@ -609,11 +609,11 @@ function install_check_ports(){
 }
 
 function install_dingo(){
-  ansible-playbook playbooks/04_dingo.yml -e "install_dingo=true" -e "only_step=install_dingo"
+  ansible-playbook playbooks/04_dingo.yml -e "install_dingo=true"
 }
 
 function install_dingo-store(){
-  ansible-playbook playbooks/03_dingo-store.yml -e "install_dingo_store=true" -e "only_step=install_dingo_store"
+  ansible-playbook playbooks/03_dingo-store.yml -e "install_dingo_store=true"
 }
 
 function install_dingodb(){
@@ -644,19 +644,19 @@ function install_scaling_out_dingodb(){
 }
 
 function install_prometheus(){
-  ansible-playbook playbooks/05_prometheus.yml -e "install_prometheus=true"  -e "only_step=install_prometheus"
+  ansible-playbook playbooks/05_prometheus.yml -e "install_prometheus=true"
 }
 
 function install_grafana(){
-  ansible-playbook playbooks/08_grafana.yml -e "install_grafana=true"  -e "only_step=install_grafana"
+  ansible-playbook playbooks/08_grafana.yml -e "install_grafana=true"
 }
 
 function install_node(){
-  ansible-playbook playbooks/06_node_exporter.yml -e "install_node_exporter=true"  -e "only_step=install_node_exporter"
+  ansible-playbook playbooks/06_node_exporter.yml -e "install_node_exporter=true"
 }
 
 function install_process(){
-  ansible-playbook playbooks/07_process_exporter.yml -e "install_process_exporter=true" -e "only_step=install_process_exporter"
+  ansible-playbook playbooks/07_process_exporter.yml -e "install_process_exporter=true"
 }
 
 function install_monitor(){

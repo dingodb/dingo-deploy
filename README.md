@@ -138,6 +138,12 @@ ansible all_nodes --become -m raw -a "yum install -y python3" -i ansible_hosts
  bash merge_dingo.sh
 ```
 
+- check whether there are ports in use in the nodes, and if so, modify the port configuration in Configuration `group_vars/all/_shared.yml`
+
+```shell
+ansible-playbook playbooks/02_1_check_ports.yml -e "check_port_conflicts=true" 
+```
+
 - Executor ansible script
 
 ```shell
