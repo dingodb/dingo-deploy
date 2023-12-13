@@ -120,7 +120,7 @@ dingo_coordinator_http_tmp_list: "{% for item in dingo_tmp_coordinator_list %} '
 dingo_coordinator_http_monitor_list: "[ {{ dingo_coordinator_http_tmp_list.split() | join(\",\") | default(\"\") }} ]"
 
 dingo_coordinator_exchange_tmp_list: "{% for item in dingo_tmp_coordinator_list %} '{{item}}:{{ dingo_store_coordinator_exchange_port }}' {% endfor %}"
-dingo_coordinator_exchange_tmp_list_string: "[ {{ dingo_coordinator_exchange_tmp_list.split() | join(\",\") | default(\"\") }} ]"
+dingo_coordinator_exchange_tmp_list_string: " {{ dingo_coordinator_exchange_tmp_list.split() | join(\",\") | default(\"\") }} "
 
 dingo_store_http_tmp_list: "{% for item in dingo_tmp_store_list %} '{{item}}:{{ dingo_store_http_monitor_port }}' {% endfor %}"
 dingo_store_http_monitor_list: "[ {{ dingo_store_http_tmp_list.split() | join(\",\") | default(\"\") }} ]"
