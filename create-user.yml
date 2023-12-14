@@ -1,0 +1,12 @@
+---
+
+#---------------------------------
+# 1. Prepare System
+#---------------------------------
+- hosts:
+    - all_nodes
+  vars_files:
+    - ./group_vars/all/user_info
+  tasks:
+    - include_role: name=create_users
+
