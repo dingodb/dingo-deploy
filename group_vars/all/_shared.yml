@@ -21,7 +21,7 @@ jdk_group: dingodb
 install_system: true
 install_system_basicTools: false
 install_system_fileLimits: true
-set_core_file: false
+set_core_file: true
 core_file_dir: /home/corefiles
 
 optimize_memory_switch: true
