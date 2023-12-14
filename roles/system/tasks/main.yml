@@ -22,3 +22,7 @@
 
 - include_tasks: 06_enable_core_dumps.yml
   when:  set_core_file
+
+
+- include_tasks: 07_optimize_memory.yml
+  when:  optimize_memory_switch
