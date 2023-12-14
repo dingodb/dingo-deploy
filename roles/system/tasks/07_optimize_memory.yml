@@ -1,0 +1,13 @@
+
+- name: Ensure transparent_hugepage
+  shell: |
+    echo "madvise" > /sys/kernel/mm/transparent_hugepage/enabled
+  become: yes
+
+- name: Set vm.overcommit_memory value to 1
+  sysctl:
+    name: vm.overcommit_memory
+    value: "1"
+    state: present
+    reload: yes
+  become: yes
