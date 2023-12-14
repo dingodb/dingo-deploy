@@ -8,7 +8,10 @@
   tasks:
     - include_role: name=system
       when: install_system
-
+  handlers:
+    - name: Reload limits
+      command: sysctl -p
+      ignore_errors: yes
 #---------------------------------
 # 2. Install JDK
 #---------------------------------
