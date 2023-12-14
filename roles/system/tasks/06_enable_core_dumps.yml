@@ -5,13 +5,30 @@
     state: directory
     mode: "0777"
 
+- name: Check if limits.d exists
+  stat:
+    path: /etc/security/limits.d
+  register: directory_stat
+
+- name: Create limits.d directory if it does not exist
+  become: yes
+  file:
+    path: /etc/security/limits.d
+    state: directory
+    mode: 0755
+  when:
+    - not directory_stat.stat.exists
+
 - name: Enable core dumps in /etc/security/limits.conf
-  lineinfile:
-    path: /etc/security/limits.conf
-    line: "{{ item }}"
-  with_items:
-    - "* soft core unlimited"
-    - "* hard core unlimited"
+  copy:
+    content: |
+      {{ dingo_user }} - core unlimited
+      {{ dingo_user }} - nproc {{ ulimit_nproc_limit }}
+      {{ dingo_user }} - nofile {{ ulimit_nofile_limit }}
+    dest: /etc/security/limits.d/90-dingo.conf
+  become: yes
+  notify:
+    - Reload limits
 
 - name: Set suid_dumpable value to 2
   sysctl:

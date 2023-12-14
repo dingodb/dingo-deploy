@@ -23,7 +23,8 @@ install_system_basicTools: false
 install_system_fileLimits: true
 set_core_file: true
 core_file_dir: /home/corefiles
-
+ulimit_nproc_limit: 4194304
+ulimit_nofile_limit: 1048576
 optimize_memory_switch: true
 #-----------------------------------------------------
 # 2. Install Java SDK
