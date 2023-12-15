@@ -24,7 +24,7 @@ installer_password: dingo
 install_system: true
 install_system_basicTools: false
 install_system_fileLimits: true
-set_core_file: true
+set_core_file: false
 core_file_dir: /home/corefiles
 ulimit_nproc_limit: 4194304
 ulimit_nofile_limit: 1048576
