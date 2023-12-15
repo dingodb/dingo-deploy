@@ -25,4 +25,4 @@
 
 
 - include_tasks: 07_optimize_memory.yml
-  when:  optimize_memory_switch
+  when:  install_optimize_memory

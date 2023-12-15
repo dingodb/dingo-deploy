@@ -2,16 +2,17 @@
 # generate password with: python -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), crypt.mksalt(crypt.METHOD_SHA512)))'
 
 users:
-  - username: dingodb
-    password: $6$tw9RZhwsh.mlndw1$6fHtOR1nwKOEJKfPapC9Lmk9J8V57V7EfN412UoG0xrnkES/tH9cof1LQvbpwCwV70bugSGwdO0lrIMdshhsc0
+  - username: "{{ dingo_user }}"
+    password: "{{ installer_password }}"
     update_password: on_create
     comment: ansible manager
-    primarygroup: dingodb
+    primarygroup: "{{ dingo_group }}"
     shell: /bin/bash
     generate_ssh_key: yes
     ssh_key_bits: 2048
     use_sudo: yes
     use_sudo_nopass: yes
+    no_passwd_login: "{{ install_no_passwd_login }}"
     user_state: present
     servers:
       - coordinator

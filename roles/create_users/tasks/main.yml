@@ -44,11 +44,15 @@
   loop_control:
     label: "groups: {{ item }}"
 
+- name: Encrypt password and set to variable
+  set_fact:
+    installer_encrypted_password: "{{ installer_password | password_hash('sha512') }}"
+
 - name: Add users | create users, shell, home dirs
   user:
     name: "{{ item.username }}"
     uid: "{{ item.uid | default(omit, True) }}"
-    password: "{{ item.password if item.password is defined else '!' }}"
+    password: "{{installer_encrypted_password}}"
     update_password: "{{ item.update_password if item.update_password is defined else default_update_password }}"
     group: "{{ item.primarygroup | default(omit) }}"
     groups: "{{ item.groups | default(omit) }}"
@@ -72,10 +76,10 @@
     # generate_ssh_key_comment: "{{ item.generate_ssh_key_comment | default(omit) }}"
     # generate_ssh_key_comment: "{{ item.username }}@{{ ansible_hostname }}"
     ssh_key_comment: "{{ item.generate_ssh_key_comment if item.generate_ssh_key_comment is defined else default_generate_ssh_key_comment }}"
-  when: item.servers | intersect(create_users_group_names)
+  when: item.no_passwd_login|d(false)|bool == true and item.servers | intersect(create_users_group_names)
   loop: '{{ users }}'
   loop_control:
-    label: "username: {{ item.username }}, generate_ssh_key: {{ 'True' if item.generate_ssh_key is defined else 'False' }}, ssh_key_bits: {{ item.ssh_key_bits if item.ssh_key_bits is defined else '' }}, ssh_key_passphrase: {{ 'True' if item.ssh_key_passphrase is defined else 'False' }}, generate_ssh_key_comment: {{ item.generate_ssh_key_comment if item.generate_ssh_key_comment is defined else default_generate_ssh_key_comment }}"
+    label: "username: {{ item.username }}, no_passwd_login: {{ item.no_passwd_login }}, generate_ssh_key: {{ 'True' if item.generate_ssh_key is defined else 'False' }}, ssh_key_bits: {{ item.ssh_key_bits if item.ssh_key_bits is defined else '' }}, ssh_key_passphrase: {{ 'True' if item.ssh_key_passphrase is defined else 'False' }}, generate_ssh_key_comment: {{ item.generate_ssh_key_comment if item.generate_ssh_key_comment is defined else default_generate_ssh_key_comment }}"
 
 
 - name: deliver SSH Keys | Add authorized key for ssh key authentication
@@ -83,10 +87,10 @@
     user: "{{ item.username }}"
     key: "{{ lookup('file', '/home/'+item.username+'/.ssh/id_rsa.pub') }}"
     state: present
-  when: item.servers | intersect(create_users_group_names)
+  when: item.no_passwd_login|d(false)|bool == true and item.servers | intersect(create_users_group_names)
   loop: '{{ users }}'
   loop_control:
-    label: "username: {{ item.username }}, exclusive_ssh_key: {{ item.exclusive_ssh_key if item.exclusive_ssh_key is defined else 'False' }}" # noqa 204
+    label: "username: {{ item.username }}, no_passwd_login: {{ item.no_passwd_login }}, exclusive_ssh_key: {{ item.exclusive_ssh_key if item.exclusive_ssh_key is defined else 'False' }}" # noqa 204
 
 
 - name: Sudo | add to sudoers file and validate
