@@ -15,6 +15,9 @@ dingo_group: dingodb
 jdk_user: dingodb
 jdk_group: dingodb
 
+#define installer password
+installer_password: dingo
+
 #-----------------------------------------------------
 # 1. Update System Configuration about OS
 #-----------------------------------------------------
@@ -25,7 +28,8 @@ set_core_file: true
 core_file_dir: /home/corefiles
 ulimit_nproc_limit: 4194304
 ulimit_nofile_limit: 1048576
-optimize_memory_switch: true
+install_optimize_memory: true
+install_no_passwd_login: true
 #-----------------------------------------------------
 # 2. Install Java SDK
 #-----------------------------------------------------
