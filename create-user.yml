@@ -7,7 +7,7 @@
     - all_nodes
   vars_files:
     - ./group_vars/all/_shared.yml
-    - ./group_vars/all/user_info
+    - ./group_vars/all/user_info.yml
   tasks:
     - include_role: name=create_users
 
