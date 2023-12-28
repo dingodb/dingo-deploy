@@ -26,3 +26,4 @@ dingo_coordinator_exchange_connection_list: "{{ dingo_store_coordinator_list.spl
 # define the flag to check current role executor
 is_dingo_executor: "{{ 'executor' in group_names }}"
 is_dingo_proxy: "{{ 'proxy' in group_names }}"
+is_dingo_web: "{{ 'web' in group_names }}"

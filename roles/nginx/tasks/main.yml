@@ -1,0 +1,22 @@
+---
+
+- name: "Load artifacts info"
+  action: resolve_artifacts
+
+- name: "Check nginx installed or not"
+  stat: path={{ nginx_home }}/usr/sbin/nginx
+  register: nginx_installed
+
+- import_tasks: 00_preflight.yml
+
+- import_tasks: 01_os_user.yml
+
+- import_tasks: 02_build.yml
+  when: not nginx_installed.stat.exists
+
+- import_tasks: 03_untar_monitor_web.yml
+
+- import_tasks: 04_config.yml
+
+- import_tasks: 05_startup.yml
+

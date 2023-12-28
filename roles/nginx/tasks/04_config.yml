@@ -1,0 +1,35 @@
+---
+
+- name: "Generate systemd service config file"
+  template: >
+    src=systemd/nginx.service.j2 dest=/etc/systemd/system/nginx.service
+    owner={{ nginx_user }} group={{ nginx_group }} mode=0644 force=yes
+  when: ansible_service_mgr == "systemd"
+
+- name: "Generate service init script"
+  template: >
+    src=service/nginx.j2 dest=/etc/init.d/nginx
+    owner={{ nginx_user }} group={{ nginx_group }} mode=0755 force=yes
+  when: (ansible_service_mgr == "upstart" or ansible_service_mgr == "sysvinit")
+
+- name: "Generate global nginx config file"
+  template: >
+    src=nginx.conf.j2 dest={{ nginx_conf_dir }}/nginx.conf
+    owner={{ nginx_user }} group={{ nginx_group }} mode=0644 force=yes
+
+- name: "Create the configurations for sites"
+  template: >
+    src="{{ item }}.conf.j2"
+    dest="{{ nginx_conf_dir }}/sites-available/{{ item }}.conf"
+    owner={{ nginx_user }} group={{ nginx_group }} mode=0644 force=yes
+  with_items:
+    - "default"
+
+- name: "Create links for sites-enabled"
+  file:
+    state: link
+    src: "{{ nginx_conf_dir }}/sites-available/{{ item }}.conf"
+    dest: "{{ nginx_conf_dir }}/sites-enabled/{{ item }}.conf"
+  with_items:
+    - "default"
+

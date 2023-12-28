@@ -1,0 +1,45 @@
+---
+- name: Get current Prometheus configuration
+  uri:
+    url: http://localhost:9090/api/v1/targets
+    method: GET
+    return_content: yes
+  register: prometheus_config
+
+- name: Add new target to configuration
+  set_fact:
+    new_target:
+      labels:
+        job: "{{ item }}"
+      targets:
+        - "http://{{item}}:{{dingo_store_coordinator_exchange_port}}/NodeService/DingoMetrics"
+  when: "'{{ item }}' not in prometheus_config.content"
+  register: new_target
+  loop: {{all_nodes}}
+
+- name: Add new target to configuration
+  set_fact:
+    new_target:
+      labels:
+        job: "{{ item }}"
+      targets:
+        - "http://{{item}}:{{dingo_store_coordinator_exchange_port}}/NodeService/DingoMetrics"
+  when: "'{{ item }}' not in prometheus_config.content"
+  register: new_target
+  loop: {{all_nodes}}
+
+- name: Update Prometheus configuration
+  uri:
+    url: http://localhost:9090/api/v1/targets
+    method: POST
+    body_format: json
+    body:
+      targets:
+        - "{{ new_target.new_target.labels.job }}/{{ item }}"
+      labels:
+        job: "{{ new_target.new_target.labels.job }}"
+    headers:
+      Content-Type: "application/json"
+    status_code: 200
+  with_items: "{{ new_target.new_target.targets }}"
+  when: new_target.changed

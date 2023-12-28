@@ -8,6 +8,19 @@
   args:
     chdir: "{{ dingo_home }}"
 
+- set_fact: remote_prometheus_javaagent_path={{ dingo_home }}/dingo-store/libs/
+
+# copy jmx_prometheus_javaagent-0.17.2.jar to remote host
+- name: "Copy jmx_prometheus_javaagent-0.17.2.jar to remote host"
+  copy: src={{ jmx_prometheus_javaagent_local_file }} dest={{ remote_prometheus_javaagent_path }}
+
+# create jmx_config.yaml
+- name: "Create jmx_config.yaml"
+  become: true
+  template:
+    src: "jmx_config.yaml.j2"
+    dest: "{{ dingo_home }}/conf/jmx_config.yaml"
+
 # start executor
 - name: "Start Executor using Shell Script"
   become: true
@@ -25,4 +38,13 @@
   args:
     chdir: "{{ dingo_home }}"
   when: is_dingo_proxy
+
+# Start dingo web
+- name: "Start Dingo Web appliaction using Shell script"
+  become: true
+  become_user: "{{ dingo_user }}"
+  shell: "/bin/bash ./bin/start-web.sh"
+  args:
+    chdir: "{{ dingo_home }}"
+  when: is_dingo_web
 

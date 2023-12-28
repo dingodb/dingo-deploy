@@ -21,7 +21,7 @@ installer_password: dingo
 #-----------------------------------------------------
 # 1. Update System Configuration about OS
 #-----------------------------------------------------
-install_system: true
+install_system: false
 install_system_basicTools: false
 install_system_fileLimits: true
 set_core_file: false
@@ -67,6 +67,9 @@ install_prometheus: true
 blackbox_exporter_port: 19115
 blackbox_exporter_server: "{{ prometheus_server }}"
 
+# JMX_PROMETHEUS_JAVAAGENT_PORT
+jmx_prometheus_javaagent_port: 8899
+
 # Node Exporter
 install_node_exporter: true
 node_exporter_port: 19100
@@ -94,6 +97,7 @@ default_dashboard_uid: "RNezu0fWk"
 
 dingo_tmp_coordinator_list: "{{ groups['coordinator'] }}"
 dingo_tmp_store_list: "{{ groups['store'] }}"
+dingo_tmp_index_list: "{{ groups['index'] }}"
 dingo_tmp_executor_list: "{{ groups['executor'] | default(\"\") }}"
 
 # dingo-store port
@@ -114,11 +118,24 @@ dingo_mysql_port: 3307
 dingo_proxy_http_port: 13000
 dingo_proxy_grpc_port: 9999
 
+# web port
+install_monitor_web: true
+dingo_web_http_port: 13001
+install_nginx: true
+nginx_install_path: "{{ installer_root_path }}"
+nginx_port: 13002
+nginx_user: "{{ dingo_user }}"
+nginx_group: "{{ dingo_group }}"
+nginx_data_path:  "{{ nginx_install_path }}/nginx"
+nginx_log_path: "{{ nginx_install_path }}/nginx"
+nginx_run_path: "{{ nginx_install_path }}/nginx"
+
+
 # define dingo coordinator http monitor port: 172.20.3.18:8080,172.20.3.19:8080,172.20.3.20:8080
 dingo_coordinator_http_monitor_port: "{{ dingo_store_coordinator_exchange_port }}"
 dingo_store_http_monitor_port: "{{ dingo_store_exchange_port }}"
 dingo_index_http_monitor_port: "{{ dingo_store_index_exchange_port }}"
-dingo_executor_http_monitor_port: 9201
+dingo_executor_http_monitor_port: "{{ jmx_prometheus_javaagent_port }}"
 
 # ['172.20.31.10:9201','172.20.31.11:9201','172.20.31.12:9201']
 dingo_coordinator_http_tmp_list: "{% for item in dingo_tmp_coordinator_list %} '{{item}}:{{ dingo_coordinator_http_monitor_port }}' {% endfor %}"
@@ -127,8 +144,14 @@ dingo_coordinator_http_monitor_list: "[ {{ dingo_coordinator_http_tmp_list.split
 dingo_coordinator_exchange_tmp_list: "{% for item in dingo_tmp_coordinator_list %} '{{item}}:{{ dingo_store_coordinator_exchange_port }}' {% endfor %}"
 dingo_coordinator_exchange_tmp_list_string: " {{ dingo_coordinator_exchange_tmp_list.split() | join(\",\") | default(\"\") }} "
 
+dingo_coordinator_exchange_tmp_list_1: "{% for item in dingo_tmp_coordinator_list %} {{item}}:{{ dingo_store_coordinator_exchange_port }} {% endfor %}"
+dingo_coordinator_exchange_tmp_list_string_1: " {{ dingo_coordinator_exchange_tmp_list_1.split() | join(\",\") | default(\"\") }} "
+
 dingo_store_http_tmp_list: "{% for item in dingo_tmp_store_list %} '{{item}}:{{ dingo_store_http_monitor_port }}' {% endfor %}"
 dingo_store_http_monitor_list: "[ {{ dingo_store_http_tmp_list.split() | join(\",\") | default(\"\") }} ]"
+
+dingo_index_http_tmp_list: "{% for item in dingo_tmp_index_list %} '{{item}}:{{ dingo_index_http_monitor_port }}' {% endfor %}"
+dingo_index_http_monitor_list: "[ {{ dingo_index_http_tmp_list.split() | join(\",\") | default(\"\") }} ]"
 
 dingo_executor_http_tmp_list: "{% for item in dingo_tmp_executor_list %} '{{item}}:{{ dingo_executor_http_monitor_port }}' {% endfor %}"
 dingo_executor_http_monitor_list: "[ {{ dingo_executor_http_tmp_list.split() | join(\",\") | default(\"\") }} ]"

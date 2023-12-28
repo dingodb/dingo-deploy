@@ -7,7 +7,6 @@
     - "Coordinator Exchange Connection: {{ dingo_coordinator_exchange_connection_list }}"
 
 - name: "Generate dingo configuration files"
-
   template: src={{ item.src }} dest={{ item.dest }} owner={{ dingo_user }} group={{ dingo_group }} mode=0755
   with_items:
     - {
@@ -17,6 +16,10 @@
     - {
       src: "logback-proxy.xml.j2",
       dest: "{{ dingo_home }}/conf/logback-proxy.xml"
+    }
+    - {
+      src: "logback-web.xml.j2",
+      dest: "{{ dingo_home }}/conf/logback-web.xml"
     }
     - {
       src: "logback.xml.j2",
@@ -29,6 +32,10 @@
     - {
       src: "start-executor.sh.j2",
       dest: "{{ dingo_home }}/bin/start-executor.sh"
+    }
+    - {
+      src: "start-web.sh.j2",
+      dest: "{{ dingo_home }}/bin/start-web.sh"
     }
     - {
       src: "start-proxy.sh.j2",
@@ -49,6 +56,14 @@
     - {
       src: "application-proxy.yaml.j2",
       dest: "{{ dingo_home }}/conf/application-proxy.yaml"
+    }
+    - {
+      src: "application-web.yaml.j2",
+      dest: "{{ dingo_home }}/conf/application-web.yaml"
+    }
+    - {
+      src: "application-web-dev.yaml.j2",
+      dest: "{{ dingo_home }}/conf/application-web-dev.yaml"
     }
 
 - name: "Remove unused configure files"

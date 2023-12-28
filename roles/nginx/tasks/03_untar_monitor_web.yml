@@ -1,0 +1,39 @@
+---
+
+- name: "Remove previous install directories"
+  file: path={{ item }} state=absent
+  with_items:
+    - "{{ nginx_data_path }}/monitor_web"
+
+- name: "debug info"
+  debug: msg="{{ installer_cache_path }}/{{ monitor_web_local_file | basename}}"
+
+- set_fact: remote_tarball_path={{ installer_cache_path }}/{{ monitor_web_local_file | basename}}
+
+- name: "Ensure installer cache directory {{ installer_cache_path }}"
+  file: path={{ installer_cache_path }} state=directory
+
+- name: "Copy tarball to remote host {{ remote_tarball_path }}"
+  copy: src={{ monitor_web_local_file }} dest={{ remote_tarball_path }}
+
+- name: "Ensure monitor_web directories"
+  file: path={{ item }} state=directory owner={{ nginx_user }} group={{ nginx_group }}
+  with_items:
+    - "{{ nginx_data_path }}/monitor_web"
+
+- name: "Unarchive {{ remote_tarball_path }} to {{ nginx_data_path }}/monitor_web"
+  unarchive:
+    src: "{{ remote_tarball_path}}"
+    dest: "{{ nginx_data_path }}/monitor_web"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_group }}"
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+
+- name: "Set ownership of {{ nginx_data_path }} to {{ nginx_user }}"
+  file: path={{ nginx_data_path }} owner={{ nginx_user }} group={{ nginx_group }} recurse=yes
+
+- name: "Delete temporary tarball file: {{ remote_tarball_path}}"
+  file: path={{ remote_tarball_path }} state=absent
+  when: delete_cache_after_install
+
