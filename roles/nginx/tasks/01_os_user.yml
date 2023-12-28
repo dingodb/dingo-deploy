@@ -1,0 +1,7 @@
+---
+
+- name: "Ensure nginx group exist: {{ nginx_group }}"
+  group: name={{ nginx_group }} state=present
+
+- name: "Ensure nginx user exist: {{ nginx_user }}"
+  user: name="{{ nginx_user }}" group={{ nginx_group }}

@@ -1,0 +1,21 @@
+---
+
+- name: "Start nginx via systemd"
+  systemd: name=nginx state=started enabled=yes daemon_reload=yes
+  become: yes
+  when: ansible_service_mgr == "systemd"
+
+- name: "Start nginx service"
+  service: name=nginx state=started enabled=yes
+  become: yes
+  when: (ansible_service_mgr == "upstart" or ansible_service_mgr == "sysvinit")
+
+- name: "Ensure nginx service is started via systemd"
+  systemd: name=nginx state=restarted enabled=yes daemon_reload=yes
+  become: yes
+  when: ansible_service_mgr == "systemd"
+
+- name: "Ensure nginx service is started"
+  service: name=nginx state=restarted enabled=yes
+  become: yes
+  when: (ansible_service_mgr == "upstart" or ansible_service_mgr == "sysvinit")

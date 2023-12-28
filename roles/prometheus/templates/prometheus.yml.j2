@@ -27,11 +27,6 @@ scrape_configs:
     - files:
       - "{{ prometheus_home }}/file_sd/process*.yml"
 
-  - job_name: "jmx"
-    file_sd_configs:
-    - files:
-      - {{ prometheus_home }}/file_sd/jmx.json
-
   - job_name: "coordinator"
     metrics_path: '/NodeService/DingoMetrics'
     static_configs:
@@ -42,6 +37,13 @@ scrape_configs:
     static_configs:
       - targets: {{ dingo_store_http_monitor_list }}
 
+  - job_name: "index"
+    metrics_path: '/NodeService/DingoMetrics'
+    static_configs:
+      - targets: {{ dingo_index_http_monitor_list }}
+
   - job_name: "executor-exporter"
+    metrics_path: '/metrics'
     static_configs:
       - targets: {{ dingo_executor_http_monitor_list }}
+

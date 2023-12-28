@@ -1,0 +1,33 @@
+#{{ ansible_managed }}
+user {{ nginx_user }} {{ nginx_group }};
+worker_processes  {{ nginx_worker_processes }};
+
+events {
+    worker_connections  1024;
+}
+
+http {
+        client_max_body_size 256m;
+        include {{ nginx_conf_dir }}/mime.types;
+        default_type application/octet-stream;
+{% for v in nginx_http_params %}
+        {{ v if "}" in v[-2:] else v+";" }}
+{% endfor %}
+
+        ##
+        # Gzip Settings
+        ##
+        gzip on;
+        gzip_http_version 1.0;
+        gzip_disable "msie6";
+
+        # gzip_vary on;
+        # gzip_proxied any;
+        # gzip_comp_level 6;
+        # gzip_buffers 16 8k;
+        # gzip_http_version 1.1;
+        gzip_types text/plain text/css application/json application/javascript application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+        include {{ nginx_conf_dir }}/conf.d/*.conf;
+        include {{ nginx_conf_dir }}/sites-enabled/*;
+}

@@ -14,3 +14,5 @@
   with_items: "{{ groups['all'] }}"
 
 - import_tasks: 03_prometheus_server.yml
+
+#- import_tasks: 04_add_target.yml

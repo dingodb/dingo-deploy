@@ -1,0 +1,34 @@
+#Ansible managed
+map $http_upgrade $connection_upgrade {
+        default upgrade;
+        '' close;
+}
+
+upstream monitorcluster {
+{% for host in groups['web'] %}
+    server {{ host }}:{{ dingo_web_http_port }};
+{% endfor %}
+}
+
+limit_req_zone $binary_remote_addr zone=req_zone_wl:100m rate=150r/s;
+
+
+
+server {
+   listen {{ nginx_port }} default_server;
+   proxy_set_header X-Forwarded-For $remote_addr;
+   root {{nginx_data_path}}/monitor_web/;
+   location /home {
+      alias {{nginx_data_path}}/monitor_web;
+      autoindex on;
+   }
+   location /fetchApi/monitor/  {
+        proxy_pass http://monitorcluster/monitor/;
+        add_header Access-Control-Allow-Origin '*';
+        add_header Access-Control-Allow-Credentials 'true';
+        add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+}

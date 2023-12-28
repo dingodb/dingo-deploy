@@ -1,0 +1,143 @@
+---
+
+- name: "Try stopping nginx service via systemd"
+  systemd:  name=nginx state=stopped
+  when: ansible_service_mgr == "systemd"
+  failed_when: false
+
+- name: "Try stopping nginx service"
+  service: name=nginx state=stopped
+  when: (ansible_service_mgr == "upstart" or ansible_service_mgr == "sysvinit")
+  failed_when: false
+
+- name: "Remove previous install directories"
+  file: path={{ item }} state=absent
+  with_items:
+  - "{{ nginx_home }}"
+
+- set_fact: nginx_src_cache_root="{{ installer_cache_path }}/nginx"
+
+- name: "Cleanup installer cache directory {{ nginx_src_cache_root }}"
+  file: path={{ nginx_src_cache_root }}/{{ item }} state=absent
+  with_items:
+    - "nginx"
+    - "openssl"
+    - "pcre"
+    - "zlib"
+
+- name: "Ensure installer cache directory {{ nginx_src_cache_root }}"
+  file: path={{ nginx_src_cache_root }}/{{ item }} state=directory
+  with_items:
+  - "nginx"
+  - "openssl"
+  - "pcre"
+  - "zlib"
+
+- name: "Copy source tarball to remote host"
+  copy: src={{ item }} dest={{ nginx_src_cache_root }}/{{ item | basename}}
+  with_items:
+  - "{{ nginx_src_file }}"
+  - "{{ openssl_src_file }}"
+  - "{{ pcre_src_file }}"
+  - "{{ zlib_src_file }}"
+
+- name: "Unarchive nginx source files"
+  unarchive:
+    src: "{{ nginx_src_cache_root }}/{{ item.src | basename}}"
+    dest: "{{ nginx_src_cache_root }}/{{ item.dest }}"
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+  with_items:
+  - {src: "{{ nginx_src_file }}", dest: "nginx"}
+  - {src: "{{ openssl_src_file }}", dest: "openssl"}
+  - {src: "{{ pcre_src_file }}", dest: "pcre"}
+  - {src: "{{ zlib_src_file }}", dest: "zlib"}
+
+- name: "Ensure nginx directories"
+  file: path={{ item }} state=directory owner={{ nginx_user }} group={{ nginx_group }}
+  with_items:
+  - "{{ nginx_home }}"
+  - "{{ nginx_data_path }}"
+  - "{{ nginx_log_path }}"
+  - "{{ nginx_run_path }}"
+
+# Require build tools:
+#  - "gcc"
+#  - "gcc-c++"
+#  - "automake"
+#  - "autoconf"
+#  - "libtool"
+- name: "Run configure for building nginx"
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ nginx_src_cache_root }}/nginx"
+  with_items:
+  - |
+    ./configure --prefix={{ nginx_home }}/etc/nginx  \
+                --sbin-path={{ nginx_home }}/usr/sbin/nginx  \
+                --modules-path={{ nginx_home }}/usr/lib64/nginx/modules  \
+                --conf-path={{ nginx_home }}/etc/nginx/nginx.conf  \
+                --error-log-path={{ nginx_error_log }}  \
+                --http-log-path={{ nginx_access_log }}  \
+                --pid-path={{ nginx_home }}/var/run/nginx.pid  \
+                --lock-path={{ nginx_home }}/var/run/nginx.lock  \
+                --http-client-body-temp-path={{ nginx_home }}/var/cache/nginx/client_temp  \
+                --http-proxy-temp-path={{ nginx_home }}/var/cache/nginx/proxy_temp  \
+                --http-fastcgi-temp-path={{ nginx_home }}/var/cache/nginx/fastcgi_temp  \
+                --http-uwsgi-temp-path={{ nginx_home }}/var/cache/nginx/uwsgi_temp  \
+                --http-scgi-temp-path={{ nginx_home }}/var/cache/nginx/scgi_temp  \
+                --user={{ nginx_user }}  \
+                --group={{ nginx_group }}  \
+                --with-compat  \
+                --with-file-aio  \
+                --with-threads  \
+                --with-http_addition_module  \
+                --with-http_auth_request_module  \
+                --with-http_dav_module  \
+                --with-http_flv_module  \
+                --with-http_gunzip_module  \
+                --with-http_gzip_static_module  \
+                --with-http_mp4_module  \
+                --with-http_random_index_module  \
+                --with-http_realip_module  \
+                --with-http_secure_link_module  \
+                --with-http_slice_module  \
+                --with-http_ssl_module  \
+                --with-http_stub_status_module  \
+                --with-http_sub_module  \
+                --with-http_v2_module  \
+                --with-mail  \
+                --with-mail_ssl_module  \
+                --with-stream  \
+                --with-stream_realip_module  \
+                --with-stream_ssl_module  \
+                --with-stream_ssl_preread_module  \
+                --with-pcre=../pcre \
+                --with-pcre-jit \
+                --with-zlib=../zlib \
+                --with-openssl=../openssl \
+                --with-openssl-opt=no-nextprotoneg
+
+- name: "Run auto-re-configure for building pcre"
+  shell: "autoreconf -ivf"
+  args:
+    chdir: "{{ nginx_src_cache_root }}/pcre"
+
+- name: "Run make and make install for building nginx"
+  shell: "make && make install"
+  args:
+    chdir: "{{ nginx_src_cache_root }}/nginx"
+
+- name: "Ensure nginx directories"
+  file: path={{ item }} state=directory owner={{ nginx_user }} group={{ nginx_group }}
+  with_items:
+  - "{{ nginx_home }}/var/cache/nginx/client_temp"
+  - "{{ nginx_conf_dir }}/sites-available"
+  - "{{ nginx_conf_dir }}/sites-enabled"
+
+- name: "Set ownership of {{ nginx_home }} to {{ nginx_user }}"
+  file: path={{ nginx_home }} owner={{ nginx_user }} group={{ nginx_group }} recurse=yes
+
+- name: "Delete temporary tarball file: {{ nginx_src_cache_root }}"
+  file: path={{ nginx_src_cache_root }} state=absent
+  when: delete_cache_after_install

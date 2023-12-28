@@ -55,6 +55,9 @@ index
 [proxy]
 172.20.3.201
 
+[web]
+172.20.3.201
+
 [executor_nodes:children]
 executor
 proxy

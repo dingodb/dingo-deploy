@@ -119,6 +119,7 @@ class DownloadHelper(object):
 
         if not os.path.exists(os.path.join(local_file, '.st')) and os.path.exists(local_file):
             os.remove(local_file)
+        os.makedirs(os.path.dirname(local_file), exist_ok=True)
         self.__cmd(cmd_txt)
 
     @staticmethod
@@ -150,7 +151,7 @@ class Artifact(object):
         # expand version
         self.path_in_repo = self.path_in_repo.replace("${version}", version)
 
-        self.filename = os.path.basename(self.path_in_repo)
+        self.filename = self.path_in_repo
         # initialize later
         self.local_file = ""
 

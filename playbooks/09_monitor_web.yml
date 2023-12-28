@@ -1,0 +1,14 @@
+---
+
+#---------------------------------
+# 8. Install  grafana
+#---------------------------------
+
+- hosts:
+    - web
+  vars_files:
+    - ../group_vars/all/_shared.yml
+  tasks:
+    - include_role: name=nginx
+      when: install_monitor_web
+

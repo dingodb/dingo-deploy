@@ -1,0 +1,21 @@
+[Unit]
+Description=nginx - high performance web server
+Documentation=http://nginx.org/en/docs/
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+User={{ nginx_user }}
+Group={{ nginx_group }}
+PermissionsStartOnly=true
+ExecStartPre=/bin/chown -R {{ nginx_user }}:{{ nginx_group }} {{ nginx_home }}
+ExecStartPre=/bin/chown -R {{ nginx_user }}:{{ nginx_group }} {{nginx_log_path}}
+PIDFile={{ nginx_home }}/var/run/nginx.pid
+ExecStart=/bin/sh -c 'exec {{ nginx_home }}/usr/sbin/nginx -c {{ nginx_conf_dir }}/nginx.conf >{{ nginx_access_log | dirname }}/nginx.out 2>&1 '
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
