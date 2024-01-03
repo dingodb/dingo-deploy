@@ -19,6 +19,8 @@
 set -x
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 JAR_PATH=$(find $ROOT -name dingo-proxy*.jar)
+JAVA_OPTS="-Xms1g -Xmx1g -XX:+AlwaysPreTouch -XX:+UseG1GC -XX:+ScavengeBeforeFullGC -XX:+DisableExplicitGC -XX:+HeapDumpOnOutOfMemoryError"
+
 
 nohup {{ jdk_home }}/bin/java ${JAVA_OPTS} \
      -Dlogging.config=file:${ROOT}/conf/logback-proxy.xml \
