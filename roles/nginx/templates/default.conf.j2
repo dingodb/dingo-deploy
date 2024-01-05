@@ -5,8 +5,8 @@ map $http_upgrade $connection_upgrade {
 }
 
 upstream monitorcluster {
-{% for host in groups['web'] %}
-    server {{ host }}:{{ dingo_web_http_port }};
+{% for host in groups['proxy'] %}
+    server {{ host }}:{{ dingo_monitor_backend_port }};
 {% endfor %}
 }
 
@@ -15,7 +15,7 @@ limit_req_zone $binary_remote_addr zone=req_zone_wl:100m rate=150r/s;
 
 
 server {
-   listen {{ nginx_port }} default_server;
+   listen {{ dingo_monitor_frontend_port }} default_server;
    proxy_set_header X-Forwarded-For $remote_addr;
    root {{nginx_data_path}}/monitor_web/;
    location /home {

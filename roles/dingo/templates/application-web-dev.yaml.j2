@@ -4,7 +4,7 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
         min-response-size: 1024
     host: {{ inventory_hostname }}
-    port: {{ dingo_web_http_port }}
+    port: {{ dingo_monitor_backend_port }}
     coordinatorExchangeSvrList: {{ dingo_coordinator_exchange_tmp_list_string_1 }}
     prometheus: http://{{groups['prometheus'][0]}}:{{prometheus_port}}/prometheus/api/v1/query
     monitor:
