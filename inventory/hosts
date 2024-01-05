@@ -3,6 +3,8 @@ ansible_connection=ssh
 #ansible_ssh_user=root
 #ansible_ssh_pass=datacanvas@123
 ansible_python_interpreter=/usr/bin/python3
+#centos7采用yum安装依赖包，yum要求必须是python2，所以如果是centos7系统，需要指定python2路径，否则忽略此配置
+python2_path=/usr/bin/python
 
 #[add_coordinator]
 # 172.20.3.203

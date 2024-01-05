@@ -1,10 +1,6 @@
 ---
-- name: Check if file exists
-  stat:
-    path: /usr/bin/python
-  register: python2_exists
-
-- name: "Install required packages"
+- name: Install required packages using Python 2.*
+  when: python2_path is defined
   package: name={{ item }} state=present
   with_items:
     - "gcc"
@@ -14,10 +10,10 @@
     - "autoconf"
     - "libtool"
   vars:
-    ansible_python_interpreter: /usr/bin/python
-  when: python2_exists.stat.exists == true
+    ansible_python_interpreter: "{{ python2_path }}"
+  failed_when: false
 
-- name: "Install required packages"
+- name: Install required packages using Python 3.*
   package: name={{ item }} state=present
   with_items:
     - "gcc"
@@ -26,5 +22,7 @@
     - "automake"
     - "autoconf"
     - "libtool"
-  when: python2_exists.stat.exists == false
+  failed_when: false
+
+
 
