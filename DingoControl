@@ -284,6 +284,7 @@ function start_monitor() {
   start_process
   start_prometheus
   start_grafana 
+  start_monitor_web
 }
 
 function start_one_executor() {
@@ -349,6 +350,10 @@ function start_grafana() {
   ansible grafana -m shell -a "systemctl start dingo-grafana.service"
 }
 
+function start_monitor_web() {
+  ansible web -m shell -a "systemctl start nginx.service"
+}
+
 
 
 function stop_help() {
@@ -369,6 +374,7 @@ function stop_help() {
   echo "  process-exporter  stop process-exporter"
   echo "  prometheus        stop prometheus"
   echo "  grafana           stop grafana"
+  echo "  monitor_web       stop monitor web"
 }
 
 function stop() {
@@ -405,6 +411,8 @@ function stop() {
     stop_prometheus
   elif [ "$1" == "grafana" ]; then
     stop_grafana
+  elif [ "$1" == "web_monitor" ]; then
+    stop_web_monitor
     
   else
     stop_help
@@ -419,7 +427,8 @@ function stop_all() {
   stop_node
   stop_process
   stop_prometheus
-  stop_grafana 
+  stop_grafana
+  stop_monitor_web
 }
 
 function stop_dingodb() {
@@ -433,7 +442,8 @@ function stop_monitor() {
   stop_node
   stop_process
   stop_prometheus
-  stop_grafana 
+  stop_grafana
+  stop_monitor_web
 }
 
 function stop_one_executor() {
@@ -494,6 +504,10 @@ function stop_grafana() {
   ansible grafana -m shell -a "systemctl stop dingo-grafana.service"
 }
 
+function stop_monitor_web() {
+  ansible web -m shell -a "systemctl stop nginx.service"
+}
+
 
 function cleanstart_help() {
   echo "Usage: Dingocontrol.sh cleanstart [OPTION]..."
@@ -545,9 +559,10 @@ function install_help() {
   echo "  scaling_out_dingodb scaling coordinator, defaults dingo_store_coordinator_exchange_port and dingo_store_coordinator_raft_port"
   echo "  prometheus  install prometheus"
   echo "  grafana     install grafana"
+  echo "  monitor_web install monitor_web"
   echo "  node        install node_exporter"
   echo "  process     install process_exporter"
-  echo "  monitor     install prometheus grafana node_exporter process_exporter"
+  echo "  monitor     install prometheus grafana node_exporter process_exporter monitor_web"
    
 }
 
@@ -586,7 +601,8 @@ function install() {
     install_process
   elif [ "$1" == "monitor" ]; then
     install_monitor
-
+  elif [ "$1" == "monitor_web" ]; then
+    install_monitor_web
   else
     install_help
   fi
@@ -651,6 +667,10 @@ function install_grafana(){
   ansible-playbook playbooks/08_grafana.yml -e "install_grafana=true"
 }
 
+function install_monitor_web(){
+  ansible-playbook playbooks/09_monitor_web.yml -e "install_monitor_web=true"
+}
+
 function install_node(){
   ansible-playbook playbooks/06_node_exporter.yml -e "install_node_exporter=true"
 }
@@ -664,6 +684,7 @@ function install_monitor(){
   install_node
   install_process
   install_grafana
+  install_monitor_web
 }
 
 
