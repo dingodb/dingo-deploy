@@ -1,28 +1,38 @@
 ---
+# 定义一个变量，它代表一个列表，包含要安装的软件包的名称，这个变量会在后面两个task中使用
+- name: Required package list
+  set_fact:
+    required_packages:
+      - "gcc"
+      - "gcc-c++"
+      - "make"
+      - "automake"
+      - "autoconf"
+      - "libtool"
+      - "autoconf"
+
+# 获取python2关键的第一个符合要求的路径
+- name: Get Python 2 path
+  shell: ls /usr/bin/python* | grep python2 | head -n 1
+  register: python2_output
+  ignore_errors: true
+
+- debug:
+    msg: "{{ python2_output.stdout }}"
+
+- name: Set Python 2 path
+  set_fact:
+    python2_path: "{{ python2_output.stdout }}"
+
 - name: Install required packages using Python 2.*
   when: python2_path is defined
   package: name={{ item }} state=present
-  with_items:
-    - "gcc"
-    - "gcc-c++"
-    - "make"
-    - "automake"
-    - "autoconf"
-    - "libtool"
+  with_items: "{{ required_packages }}"
   vars:
     ansible_python_interpreter: "{{ python2_path }}"
   failed_when: false
 
 - name: Install required packages using Python 3.*
   package: name={{ item }} state=present
-  with_items:
-    - "gcc"
-    - "gcc-c++"
-    - "make"
-    - "automake"
-    - "autoconf"
-    - "libtool"
+  with_items: "{{ required_packages }}"
   failed_when: false
-
-
-
