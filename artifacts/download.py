@@ -198,8 +198,7 @@ def download(config: Config):
     total = len(config.artifacts)
     for index, artifact in enumerate(config.artifacts):
         progress = "({}/{})".format(index + 1, total)
-        if artifact.path_in_repo.endswith(".zip") or artifact.path_in_repo.endswith("tar.gz"):
-            helper.download(artifact.path_in_repo, artifact.local_file, progress)
+        helper.download(artifact.path_in_repo, artifact.local_file, progress)
 
 
 def print_artifacts(config: Config):
