@@ -8,11 +8,12 @@
   args:
     chdir: "{{ dingo_home }}"
 
-- set_fact: remote_prometheus_javaagent_path={{ dingo_home }}/dingo-store/libs/
+- set_fact: remote_prometheus_javaagent_path={{ dingo_home }}/libs/
 
 # copy jmx_prometheus_javaagent-0.17.2.jar to remote host
 - name: "Copy jmx_prometheus_javaagent-0.17.2.jar to remote host"
   copy: src={{ jmx_prometheus_javaagent_local_file }} dest={{ remote_prometheus_javaagent_path }}
+  when: install_monitor_web
 
 # create jmx_config.yaml
 - name: "Create jmx_config.yaml"
@@ -20,17 +21,27 @@
   template:
     src: "jmx_config.yaml.j2"
     dest: "{{ dingo_home }}/conf/jmx_config.yaml"
+  when: install_monitor_web
+
+# start executor
+- name: "Add Monitor Jar to Executor"
+  become: true
+  become_user: "{{ dingo_user }}"
+  shell: "/bin/bash ./bin/replace-executor.sh"
+  args:
+    chdir: "{{ dingo_home }}"
+  when: is_dingo_executor and install_monitor_web
 
 # start executor
 - name: "Start Executor using Shell Script"
   become: true
   become_user: "{{ dingo_user }}"
-  shell: "/bin/bash ./bin/start-executor.sh " 
+  shell: "/bin/bash ./bin/start-executor.sh "
   args:
     chdir: "{{ dingo_home }}"
   when: is_dingo_executor
 
-# Start dingo proxy 
+# Start dingo proxy
 - name: "Start Dingo Proxy appliaction using Shell script"
   become: true
   become_user: "{{ dingo_user }}"
