@@ -119,7 +119,7 @@ dingo_proxy_http_port: 13000
 dingo_proxy_grpc_port: 9999
 
 # web port
-install_monitor_web: true
+install_monitor_web: false
 dingo_monitor_backend_port: 13001
 install_nginx: true
 nginx_install_path: "{{ installer_root_path }}"
