@@ -13,6 +13,10 @@
   shell: pgrep -fu {{ dingo_user }} "proxy"| xargs -r kill -9
 
 
+- name: "Kill old process of DingoDB dingo-web"
+  shell: pgrep -fu {{ dingo_user }} "dingo-web"| xargs -r kill -9
+
+
 - name: "Remove dingo home/log/data directories if exist"
   file: path="{{ item }}" state=absent
   with_items: 
