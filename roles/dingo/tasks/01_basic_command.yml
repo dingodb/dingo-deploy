@@ -6,6 +6,13 @@
 - name: "Ensure dingo user exist {{ dingo_user }}"
   user: name={{ dingo_user }} group={{ dingo_group }}
 
+- name: "Kill old process of DingoDB executor"
+  shell: pgrep -fu {{ dingo_user }} "executor" | xargs -r kill -9
+
+- name: "Kill old process of DingoDB proxy"
+  shell: pgrep -fu {{ dingo_user }} "proxy"| xargs -r kill -9
+
+
 - name: "Remove dingo home/log/data directories if exist"
   file: path="{{ item }}" state=absent
   with_items: 
