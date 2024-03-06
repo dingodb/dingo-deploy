@@ -8,13 +8,16 @@
 
 - name: "Kill old process of DingoDB executor"
   shell: pgrep -fu {{ dingo_user }} "executor" | xargs -r kill -9
+  ignore_errors: yes
 
 - name: "Kill old process of DingoDB proxy"
   shell: pgrep -fu {{ dingo_user }} "proxy"| xargs -r kill -9
+  ignore_errors: yes
 
 
 - name: "Kill old process of DingoDB dingo-web"
   shell: pgrep -fu {{ dingo_user }} "dingo-web"| xargs -r kill -9
+  ignore_errors: yes
 
 
 - name: "Remove dingo home/log/data directories if exist"
