@@ -113,6 +113,10 @@ dingo_store_index_raft_port: 21101
 dingo_coordinator_exchange_port: "{{ dingo_store_coordinator_exchange_port }}"
 dingo_executor_exchange_port: 8765
 dingo_mysql_port: 3307
+dingo_auto_increment_cache_count: 10000
+dingo_executor_buffer_size: 8388608
+dingo_executor_buffer_number: 2
+dingo_executor_file_size: 2097152
 
 # proxy port
 dingo_proxy_http_port: 13000
