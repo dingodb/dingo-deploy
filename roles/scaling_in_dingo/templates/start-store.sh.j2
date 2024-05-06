@@ -30,7 +30,7 @@ SERVER_START_PORT={{ dingo_store_exchange_port | default(20001) }}
 DISK_LIST_STR="{{ hostvars[inventory_hostname]['disk']  | default('${DIST_DIR}') }}"
 eval DISK_LIST=($DISK_LIST_STR)
 TMP_COORDINATOR_SERVICES=$BASE_DIR/build/bin/coor_list
-
+DEFAULT_REPLICA_NUM=3
 
 if [ ! -d "$DIST_DIR" ]; then
   mkdir "$DIST_DIR"
