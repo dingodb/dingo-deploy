@@ -4,7 +4,6 @@ mydir="${BASH_SOURCE%/*}"
 if [[ ! -d "$mydir" ]]; then mydir="$PWD"; fi
 . $mydir/shflags
 
-
 DEFINE_string role 'store' 'server role'
 DEFINE_boolean clean_db 1 'clean db'
 DEFINE_boolean clean_raft 1 'clean raft'
@@ -14,7 +13,6 @@ DEFINE_boolean replace_conf 0 'replace conf'
 # parse the command-line
 FLAGS "$@" || exit 1
 eval set -- "${FLAGS_ARGV}"
-
 
 BASE_DIR=$(dirname $(cd $(dirname $0); pwd))
 DIST_DIR=$BASE_DIR/dist
@@ -30,7 +28,7 @@ SERVER_START_PORT={{ dingo_store_exchange_port | default(20001) }}
 DISK_LIST_STR="{{ hostvars[inventory_hostname]['disk']  | default('${DIST_DIR}') }}"
 eval DISK_LIST=($DISK_LIST_STR)
 TMP_COORDINATOR_SERVICES=$BASE_DIR/build/bin/coor_list
-
+DEFAULT_REPLICA_NUM=3
 
 if [ ! -d "$DIST_DIR" ]; then
   mkdir "$DIST_DIR"
@@ -58,7 +56,6 @@ deploy() {
   done
 }
 
-
 start() {
   #FLAGS_role=${FLAGS_role}
   for i in $(seq 1 $STORE_NUM)
@@ -71,9 +68,6 @@ start() {
   done    
 }
 
-
-
-
 clean() 
 {
   for i in $(seq 1 $STORE_NUM)
@@ -84,9 +78,6 @@ clean()
     echo "rm -rf ${program_dir}  files"
   done
 }
-
-
-
 
 stop() 
 {

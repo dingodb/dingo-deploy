@@ -1,13 +1,11 @@
 ---
-version: '2.2'
-
 x-shared-environment: &shared-env
   SERVER_LISTEN_HOST: 0.0.0.0
-  SERVER_HOST: ${DINGO_HOST_IP}
+  SERVER_HOST: host.docker.internal
   RAFT_LISTEN_HOST: 0.0.0.0
-  RAFT_HOST: ${DINGO_HOST_IP}
-  COOR_RAFT_PEERS: ${DINGO_HOST_IP}:22101
-  COOR_SRV_PEERS: ${DINGO_HOST_IP}:22001
+  RAFT_HOST: host.docker.internal
+  COOR_RAFT_PEERS: host.docker.internal:22101
+  COOR_SRV_PEERS: host.docker.internal:22001
   DEFAULT_REPLICA_NUM: 1
 
 services:
@@ -15,7 +13,13 @@ services:
     image: dingodatabase/dingo-store:latest
     hostname: coordinator1
     container_name: coordinator1
-    network_mode: host
+    ports:
+      - 22001:22001
+      - 22101:22101
+      - 28001:8000
+    # network_mode: host
+    networks:
+      - dingo_net
     environment:
       FLAGS_role: coordinator
       COORDINATOR_SERVER_START_PORT: 22001
@@ -27,7 +31,12 @@ services:
     image: dingodatabase/dingo-store:latest
     hostname: store1
     container_name: store1
-    network_mode: host
+    ports:
+      - 20001:20001
+      - 20101:20101
+    # network_mode: host
+    networks:
+      - dingo_net
     depends_on:
       - coordinator1
     environment:
@@ -41,7 +50,12 @@ services:
     image: dingodatabase/dingo-store:latest
     hostname: index1
     container_name: index1
-    network_mode: host
+    ports:
+      - 21001:21001
+      - 21101:21101
+    # network_mode: host
+    networks:
+      - dingo_net
     depends_on:
       - coordinator1
     environment:
@@ -50,7 +64,7 @@ services:
       INDEX_SERVER_START_PORT: 21001
       INDEX_INSTANCE_START_ID: 1101
       <<: *shared-env
-  
+
   executor:
     image: dingodatabase/dingo:latest
     hostname: executor
@@ -61,11 +75,11 @@ services:
     networks:
       - dingo_net
     environment:
-       DINGO_ROLE: executor
-       DINGO_HOSTNAME: executor
-       DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001
-       DINGO_MYSQL_COORDINATORS: ${DINGO_HOST_IP}:22001
-   
+      DINGO_ROLE: executor
+      DINGO_HOSTNAME: executor
+      DINGO_COORDINATORS: host.docker.internal:22001
+      DINGO_MYSQL_COORDINATORS: host.docker.internal:22001
+
   proxy:
     image: dingodatabase/dingo:latest
     hostname: proxy
@@ -78,8 +92,8 @@ services:
     environment:
       DINGO_ROLE: proxy
       DINGO_HOSTNAME: proxy
-      DINGO_COORDINATORS: ${DINGO_HOST_IP}:22001
+      DINGO_COORDINATORS: host.docker.internal:22001
 
 networks:
-    dingo_net:
-        driver: bridge
+  dingo_net:
+    driver: bridge

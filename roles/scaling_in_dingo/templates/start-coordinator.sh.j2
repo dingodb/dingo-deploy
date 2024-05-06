@@ -19,8 +19,6 @@ eval set -- "${FLAGS_ARGV}"
 BASE_DIR=$(dirname $(cd $(dirname $0); pwd))
 DIST_DIR=$BASE_DIR/dist
 
-
-
 if [ ! -d "$DIST_DIR" ]; then
   mkdir "$DIST_DIR"
 fi
@@ -35,6 +33,7 @@ COOR_RAFT_PEERS={{ dingo_coordinator_raft_connection_list }}
 COOR_SRV_PEERS={{ dingo_store_store_exchange_connection_list }}
 INSTANCE_START_ID={{ 2000 | int +  groups['add_coordinator'].index(inventory_hostname) | int }}
 TMP_COORDINATOR_SERVICES=$BASE_DIR/build/bin/coor_list
+DEFAULT_REPLICA_NUM=3
 
 source $mydir/deploy_func.sh
 
