@@ -152,7 +152,7 @@
     }
 
 
-- name: "Delete existing dashboard {{ default_dashboard_uid }} {{ process_dashboard_uid }} {{ dingo_store_dashboard_uid }} {{ iostat_dashboard_uid }}"
+- name: "Delete existing dashboard {{ default_dashboard_uid }} {{ process_dashboard_uid }} {{ dingo_store_dashboard_uid }} {{ iostat_dashboard_uid }} {{ sql_dashboard_uid }}"
   shell: >
     curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XDELETE localhost:{{ grafana_port }}/api/dashboards/uid/{{ item }}
   args:
@@ -168,7 +168,7 @@
 
 - debug: var=delete_result
 
-- name: "Import grafana dashboard process dingo_metrics iostat dingo"
+- name: "Import grafana dashboard process dingo_metrics iostat dingo sqlmetric"
   shell: >
     curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST localhost:{{ grafana_port }}/api/dashboards/db -H "Content-Type:application/json" -d @{{ installer_cache_path }}/{{ item }}
   args:
