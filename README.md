@@ -68,7 +68,7 @@ Edit the configuration `inventory/hosts`, use the real host, user, password to r
 [all:vars]
 ansible_connection=ssh
 #ansible_ssh_user=root
-#ansible_ssh_pass=datacanvas@123
+#ansible_ssh_pass=Password@123
 ansible_python_interpreter=/usr/bin/python3
 
 [scaling_in_dingo:children]
