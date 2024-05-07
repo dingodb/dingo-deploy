@@ -146,6 +146,10 @@
       src: "{{ iostat_dashboard_template }}",
       dest: "{{ installer_cache_path }}/iostat.json",
     }
+    - {
+      src: "{{ sql_dashboard_template }}",
+      dest: "{{ installer_cache_path }}/sqlmetric.json",
+    }
 
 
 - name: "Delete existing dashboard {{ default_dashboard_uid }} {{ process_dashboard_uid }} {{ dingo_store_dashboard_uid }} {{ iostat_dashboard_uid }}"
@@ -159,7 +163,8 @@
     - "{{ process_dashboard_uid }}"
     - "{{ dingo_store_dashboard_uid }}"
     - "{{ iostat_dashboard_uid }}"
-    
+    - "{{ sql_dashboard_uid }}"
+
 
 - debug: var=delete_result
 
@@ -174,6 +179,7 @@
     - dingo_metrics.json
     - iostat.json
     - dingo.json
+    - sqlmetric.json
 
 - debug: var=import_result
 
