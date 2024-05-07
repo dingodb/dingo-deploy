@@ -1,4 +1,5 @@
 ---
+
 x-shared-environment: &shared-env
   SERVER_LISTEN_HOST: 0.0.0.0
   SERVER_HOST: host.docker.internal
@@ -79,6 +80,7 @@ services:
       DINGO_HOSTNAME: executor
       DINGO_COORDINATORS: host.docker.internal:22001
       DINGO_MYSQL_COORDINATORS: host.docker.internal:22001
+      <<: *shared-env
 
   proxy:
     image: dingodatabase/dingo:latest
@@ -93,6 +95,7 @@ services:
       DINGO_ROLE: proxy
       DINGO_HOSTNAME: proxy
       DINGO_COORDINATORS: host.docker.internal:22001
+      <<: *shared-env
 
 networks:
   dingo_net:
