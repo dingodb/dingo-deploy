@@ -1,0 +1,103 @@
+---
+
+x-shared-environment: &shared-env
+  SERVER_LISTEN_HOST: 0.0.0.0
+  SERVER_HOST: host.docker.internal
+  RAFT_LISTEN_HOST: 0.0.0.0
+  RAFT_HOST: host.docker.internal
+  COOR_RAFT_PEERS: host.docker.internal:22101
+  COOR_SRV_PEERS: host.docker.internal:22001
+  DEFAULT_REPLICA_NUM: 1
+  DINGODB_ENABLE_LITE: 1
+
+services:
+  coordinator1:
+    image: dingodatabase/dingo-store:latest
+    hostname: coordinator1
+    container_name: coordinator1
+    ports:
+      - 22001:22001
+      - 22101:22101
+      - 28001:8000
+    # network_mode: host
+    networks:
+      - dingo_net
+    environment:
+      FLAGS_role: coordinator
+      COORDINATOR_SERVER_START_PORT: 22001
+      COORDINATOR_RAFT_START_PORT: 22101
+      INSTANCE_START_ID: 1001
+      <<: *shared-env
+
+  store1:
+    image: dingodatabase/dingo-store:latest
+    hostname: store1
+    container_name: store1
+    ports:
+      - 20001:20001
+      - 20101:20101
+    # network_mode: host
+    networks:
+      - dingo_net
+    depends_on:
+      - coordinator1
+    environment:
+      FLAGS_role: store
+      RAFT_START_PORT: 20101
+      SERVER_START_PORT: 20001
+      INSTANCE_START_ID: 1001
+      <<: *shared-env
+
+  index1:
+    image: dingodatabase/dingo-store:latest
+    hostname: index1
+    container_name: index1
+    ports:
+      - 21001:21001
+      - 21101:21101
+    # network_mode: host
+    networks:
+      - dingo_net
+    depends_on:
+      - coordinator1
+    environment:
+      FLAGS_role: index
+      INDEX_RAFT_START_PORT: 21101
+      INDEX_SERVER_START_PORT: 21001
+      INDEX_INSTANCE_START_ID: 1101
+      <<: *shared-env
+
+  executor:
+    image: dingodatabase/dingo:latest
+    hostname: executor
+    container_name: executor
+    ports:
+      - 8765:8765
+      - 3307:3307
+    networks:
+      - dingo_net
+    environment:
+      DINGO_ROLE: executor
+      DINGO_HOSTNAME: executor
+      DINGO_COORDINATORS: host.docker.internal:22001
+      DINGO_MYSQL_COORDINATORS: host.docker.internal:22001
+      <<: *shared-env
+
+  proxy:
+    image: dingodatabase/dingo:latest
+    hostname: proxy
+    container_name: proxy
+    ports:
+      - 13000:13000
+      - 9999:9999
+    networks:
+      - dingo_net
+    environment:
+      DINGO_ROLE: proxy
+      DINGO_HOSTNAME: proxy
+      DINGO_COORDINATORS: host.docker.internal:22001
+      <<: *shared-env
+
+networks:
+  dingo_net:
+    driver: bridge
