@@ -18,6 +18,12 @@ store:
     bufferNumber: {{ dingo_executor_buffer_number }}
     fileSize: {{ dingo_executor_file_size }}
 security:
+    ldap:
+        ldapHost: {{ openldap_server_ip }}
+        ldapPort: 389
+        bindDN: cn=admin,dc=localdomain,dc=com
+        password: {{ vault_openldap_server_rootpw }}
+        baseDN: dc=localdomain,dc=com
     cipher:
         keyPath: {{ dingo_home }}/conf/dingodb.jks
         keyPass: dingodb
