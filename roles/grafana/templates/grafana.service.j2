@@ -7,7 +7,6 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-EnvironmentFile={{ grafana_home }}/grafana-env
 User={{ grafana_user }}
 Group={{ grafana_group }}
 Type=notify
@@ -16,12 +15,12 @@ WorkingDirectory={{ grafana_home }}
 RuntimeDirectory=grafana
 RuntimeDirectoryMode=0750
 ExecStart=/bin/sh -c 'exec {{ grafana_home }}/bin/grafana-server                                     \
-                            --config=${CONF_FILE}                                   \
-                            --pidfile=${PID_FILE_DIR}/grafana-server.pid            \
-                            cfg:default.paths.logs=${LOG_DIR}                       \
-                            cfg:default.paths.data=${DATA_DIR}                      \
-                            cfg:default.paths.plugins=${PLUGINS_DIR}                \
-                            cfg:default.paths.provisioning=${PROVISIONING_CFG_DIR} >{{ grafana_log_path }}/{{ grafana_service_name }}.out 2>&1 '
+                            --config={{ grafana_conf_path }}/grafana.ini                                   \
+                            --pidfile={{ grafana_run_path }}/grafana-server.pid            \
+                            cfg:default.paths.logs={{ grafana_log_path }}                       \
+                            cfg:default.paths.data={{ grafana_data_path }}                      \
+                            cfg:default.paths.plugins={{ grafana_plugin_path }}                \
+                            cfg:default.paths.provisioning={{ grafana_conf_path }}/provisioning >{{ grafana_log_path }}/{{ grafana_service_name }}.out 2>&1 '
 
 LimitNOFILE=10000
 TimeoutStopSec=20
