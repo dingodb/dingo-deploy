@@ -5,6 +5,14 @@ spring:
         type: ehcache
         ehcache:
           config: classpath:ehcache.xml
+    datasource:
+        url: jdbc:mysql://{{groups['executor'][0]}}:{{dingo_mysql_port}}/information_schema?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+        username: root
+        password: 123123
+    jpa:
+        database-platform: org.hibernate.dialect.MySQLDialect
+        show-sql: true
+
 server:
   compression:
     enabled: true
@@ -17,8 +25,10 @@ server:
   monitor:
     executor:
       heapAlarmThreshold: 80
+      logPath: {{ dingo_log_path }}/log/
     instance:
       exportPort: {{node_exporter_port}}
       cpuAlarmThreshold: 70
       memAlarmThreshold: 70
       diskAlarmThreshold: 90
+

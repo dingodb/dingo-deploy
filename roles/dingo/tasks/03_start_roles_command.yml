@@ -21,16 +21,8 @@
   template:
     src: "jmx_config.yaml.j2"
     dest: "{{ dingo_home }}/conf/jmx_config.yaml"
-  when: install_monitor_web
+  when: is_dingo_executor
 
-# start executor
-- name: "Add Monitor Jar to Executor"
-  become: true
-  become_user: "{{ dingo_user }}"
-  shell: "/bin/bash ./bin/replace-executor.sh"
-  args:
-    chdir: "{{ dingo_home }}"
-  when: is_dingo_executor and install_monitor_web
 
 # start executor
 - name: "Start Executor using Shell Script"
