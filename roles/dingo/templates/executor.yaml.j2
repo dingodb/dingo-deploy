@@ -22,7 +22,7 @@ security:
         ldapHost: {{ openldap_server_ip }}
         ldapPort: 389
         bindDN: cn=admin,dc=localdomain,dc=com
-        password: {{ vault_openldap_server_rootpw }}
+        password: {{ openldap_server_rootpw }}
         baseDN: dc=localdomain,dc=com
     cipher:
         keyPath: {{ dingo_home }}/conf/dingodb.jks
