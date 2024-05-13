@@ -1,2 +1,0 @@
-#!/bin/bash
-sed -i "s#nohup#JAVA_OPTS=\"\$JAVA_OPTS -javaagent:{{ dingo_home }}/libs/jmx_prometheus_javaagent-0.17.2.jar={{ jmx_prometheus_javaagent_port }}:{{ dingo_home }}/conf/jmx_config.yaml\"\nnohup#g" ./bin/start-executor.sh

@@ -33,6 +33,21 @@
 - name: "Set ownership of {{ nginx_data_path }} to {{ nginx_user }}"
   file: path={{ nginx_data_path }} owner={{ nginx_user }} group={{ nginx_group }} recurse=yes
 
+- name: Find JS files in {{ nginx_data_path }}/monitor_web
+  find:
+    paths: "{{ nginx_data_path }}/monitor_web"
+    patterns: "*.js"
+  register: js_files
+
+- name: "Replace {{ nginx_data_path }}/monitor_web/*.js"
+  lineinfile:
+    path: "{{ item.path }}"
+    regexp: "http://[^/]*/d/Bm4sOIfSz/sql_metrics"
+    line: "http://{{ grafana_server }}:{{ grafana_port }}/d/Bm4sOIfSz/sql_metrics"
+    backrefs: yes
+    state: present
+  with_items: "{{ js_files.files }}"
+
 - name: "Delete temporary tarball file: {{ remote_tarball_path}}"
   file: path={{ remote_tarball_path }} state=absent
   when: delete_cache_after_install
