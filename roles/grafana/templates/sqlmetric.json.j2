@@ -66,7 +66,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "metrics_select_latency_Value",
+          "expr": "metrics_select_latency_Value{instance="{{ groups['executor'][0] }}:{{ jmx_prometheus_javaagent_port }}}",
           "interval": "",
           "legendFormat": "select",
           "queryType": "randomWalk",
@@ -74,7 +74,7 @@
         },
         {
           "exemplar": true,
-          "expr": "metrics_delete_latency_Value",
+          "expr": "metrics_delete_latency_Value{instance="{{ groups['executor'][0] }}:{{ jmx_prometheus_javaagent_port }}}",
           "hide": false,
           "interval": "",
           "legendFormat": "delete",
@@ -82,7 +82,7 @@
         },
         {
           "exemplar": true,
-          "expr": "metrics_update_latency_Value",
+          "expr": "metrics_update_latency_Value{instance="{{ groups['executor'][0] }}:{{ jmx_prometheus_javaagent_port }}}",
           "hide": false,
           "interval": "",
           "legendFormat": "update",
@@ -90,7 +90,7 @@
         },
         {
           "exemplar": true,
-          "expr": "metrics_insert_latency_Value",
+          "expr": "metrics_insert_latency_Value{instance="{{ groups['executor'][0] }}:{{ jmx_prometheus_javaagent_port }}}",
           "hide": false,
           "interval": "",
           "legendFormat": "insert",
@@ -185,7 +185,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "metrics_connection_count_Value",
+          "expr": "metrics_connection_count_Value{instance="{{ groups['executor'][0] }}:{{ jmx_prometheus_javaagent_port }}}",
           "interval": "",
           "legendFormat": "count",
           "queryType": "randomWalk",
@@ -280,7 +280,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "metrics_heapUsage_Value",
+          "expr": "metrics_heapUsage_Value{instance="{{ groups['executor'][0] }}:{{ jmx_prometheus_javaagent_port }}}",
           "interval": "",
           "legendFormat": "memoryUsage",
           "queryType": "randomWalk",

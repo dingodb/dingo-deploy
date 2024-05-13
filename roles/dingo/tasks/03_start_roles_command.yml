@@ -13,7 +13,7 @@
 # copy jmx_prometheus_javaagent-0.17.2.jar to remote host
 - name: "Copy jmx_prometheus_javaagent-0.17.2.jar to remote host"
   copy: src={{ jmx_prometheus_javaagent_local_file }} dest={{ remote_prometheus_javaagent_path }}
-  when: install_monitor_web
+  when: is_dingo_executor
 
 # create jmx_config.yaml
 - name: "Create jmx_config.yaml"
