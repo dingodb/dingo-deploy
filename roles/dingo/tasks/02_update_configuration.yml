@@ -50,6 +50,10 @@
       dest: "{{ dingo_home }}/conf/executor.yaml"
     }
     - {
+      src: "executor-noldap.yaml.j2",
+      dest: "{{ dingo_home }}/conf/executor-noldap.yaml"
+    }
+    - {
       src: "application-proxy-dev.yaml.j2",
       dest: "{{ dingo_home }}/conf/application-proxy-dev.yaml"
     }
@@ -65,6 +69,15 @@
       src: "application-web-dev.yaml.j2",
       dest: "{{ dingo_home }}/conf/application-web-dev.yaml"
     }
+
+# 如果is_support_ldap是false，将{{ dingo_home }}/conf/executor.yaml删除，并将{{ dingo_home }}/conf/executor-noldap.yaml重命名为executor.yaml
+- name: "Remove executor.yaml if is_support_ldap is false"
+  file: path="{{ dingo_home }}/conf/executor.yaml" state=absent
+  when: is_support_ldap == false
+
+- name: "Rename executor-noldap.yaml to executor.yaml if is_support_ldap is false"
+  file: path="{{ dingo_home }}/conf/executor-noldap.yaml" state=rename dest="{{ dingo_home }}/conf/executor.yaml"
+  when: is_support_ldap == false
 
 - name: "Remove unused configure files"
   file: path="{{ item }}" state=absent

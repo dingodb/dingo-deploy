@@ -1,0 +1,26 @@
+cluster:
+    name: dingo
+exchange:
+    host: {{ inventory_hostname }}
+    port: {{ dingo_executor_exchange_port }}
+server:
+    coordinators: {{ dingo_coordinator_exchange_connection_list }}
+    user: user
+    keyring: TO_BE_CONTINUED
+    resourceTag: 1
+    mysqlPort: {{ dingo_mysql_port }}
+variable:
+    autoIncrementCacheCount: {{ dingo_auto_increment_cache_count }}
+    autoIncrementIncrement: 1
+    autoIncrementOffset: 1
+store:
+    bufferSize: {{ dingo_executor_buffer_size }}
+    bufferNumber: {{ dingo_executor_buffer_number }}
+    fileSize: {{ dingo_executor_file_size }}
+security:
+    cipher:
+        keyPath: {{ dingo_home }}/conf/dingodb.jks
+        keyPass: dingodb
+        storePass: dingodb
+        alias: dingodb
+        issuer: dingo

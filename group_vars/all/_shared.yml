@@ -51,6 +51,7 @@ install_dingo_update_configuration: true
 install_dingo_start_roles: true
 
 # support ldap(optional)
+is_support_ldap: false
 openldap_server_ip: localhost
 openldap_server_port: 389
 openldap_server_root_password: "123456"
