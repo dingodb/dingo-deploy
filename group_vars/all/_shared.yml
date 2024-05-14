@@ -49,10 +49,14 @@ install_dingo: true
 install_dingo_basic_command: true
 install_dingo_update_configuration: true
 install_dingo_start_roles: true
-openldap_server_ip: localhost
 
-install_ldap: true
-openldap_server_rootpw: "123456"              # This is the password for admin for openldap
+# support ldap(optional)
+openldap_server_ip: localhost
+openldap_server_port: 389
+openldap_server_root_password: "123456"
+openldap_server_bindDN: "cn=admin,dc=localdomain,dc=com"
+openldap_server_baseDN: "dc=localdomain,dc=com"
+
 
 #-----------------------------------------------------
 # 4.Install Dingo-store to Dingo home
