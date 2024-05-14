@@ -76,7 +76,7 @@
   when: is_support_ldap == false
 
 - name: "Rename executor-noldap.yaml to executor.yaml if is_support_ldap is false"
-  file: path="{{ dingo_home }}/conf/executor-noldap.yaml" state=rename dest="{{ dingo_home }}/conf/executor.yaml"
+  command: mv "{{ dingo_home }}/conf/executor-noldap.yaml" "{{ dingo_home }}/conf/executor.yaml"
   when: is_support_ldap == false
 
 - name: "Remove unused configure files"
