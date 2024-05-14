@@ -20,10 +20,10 @@ store:
 security:
     ldap:
         ldapHost: {{ openldap_server_ip }}
-        ldapPort: 389
-        bindDN: cn=admin,dc=localdomain,dc=com
-        password: {{ openldap_server_rootpw }}
-        baseDN: dc=localdomain,dc=com
+        ldapPort: {{ openldap_server_port }}
+        bindDN: {{ openldap_server_bindDN }}
+        password: {{ openldap_server_root_password }}
+        baseDN: {{ openldap_server_baseDN }}
     cipher:
         keyPath: {{ dingo_home }}/conf/dingodb.jks
         keyPass: dingodb
