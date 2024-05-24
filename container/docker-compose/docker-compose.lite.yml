@@ -9,6 +9,8 @@ x-shared-environment: &shared-env
   COOR_SRV_PEERS: host.docker.internal:22001
   DEFAULT_REPLICA_NUM: 1
   DINGODB_ENABLE_LITE: 1
+  DEFAULT_MIN_SYSTEM_DISK_CAPACITY_FREE_RATIO: 0.05
+  DEFAULT_MIN_SYSTEM_MEMORY_CAPACITY_FREE_RATIO: 0.20
 
 services:
   coordinator1:
