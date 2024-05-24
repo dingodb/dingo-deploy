@@ -351,6 +351,7 @@ function start_grafana() {
 }
 
 function start_monitor_web() {
+  ansible executor -m shell -a "${INSTALLER_PATH}/dingo-store/bin/start-web.sh" --become --become-user ${USER}
   ansible web -m shell -a "systemctl start nginx.service"
 }
 
@@ -413,7 +414,7 @@ function stop() {
     stop_grafana
   elif [ "$1" == "web_monitor" ]; then
     stop_web_monitor
-    
+
   else
     stop_help
   fi
@@ -449,7 +450,7 @@ function stop_monitor() {
 function stop_one_executor() {
  ip=$1
  echo "ip: ${ip}"
- ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/bin/stop-all-component.sh  stop" --become --become-user ${USER}
+ ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/bin/stop-executor-proxy.sh  stop" --become --become-user ${USER}
 }
 
 function stop_one_store() {
@@ -485,7 +486,7 @@ function stop_coordinator() {
 }
 
 function stop_executor() {
- ansible executor -m shell -a "${INSTALLER_PATH}/dingo-store/bin/stop-all-component.sh" --become --become-user ${USER}
+ ansible executor -m shell -a "${INSTALLER_PATH}/dingo-store/bin/stop-executor-proxy.sh" --become --become-user ${USER}
 }
 
 function stop_node() {
@@ -505,6 +506,7 @@ function stop_grafana() {
 }
 
 function stop_monitor_web() {
+  ansible executor -m shell -a "${INSTALLER_PATH}/dingo-store/bin/stop-dingo-web.sh" --become --become-user ${USER}
   ansible web -m shell -a "systemctl stop nginx.service"
 }
 
