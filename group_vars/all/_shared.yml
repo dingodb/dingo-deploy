@@ -49,6 +49,8 @@ install_dingo: true
 install_dingo_basic_command: true
 install_dingo_update_configuration: true
 install_dingo_start_roles: true
+# is license support
+is_license_support: false
 
 # support ldap(optional)
 is_support_ldap: false
