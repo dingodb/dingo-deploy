@@ -15,3 +15,4 @@ artifacts:
   - { name: "pcre_src_file",  path_in_repo: "nginx/pcre-8.41.tar.gz" }
   - { name: "openssl_src_file",  path_in_repo: "nginx/OpenSSL_1_1_0f.tar.gz" }
   - { name: "zlib_src_file",  path_in_repo: "nginx/zlib-1.2.11.tar.gz" }
+  - { name: "license_src_file",  path_in_repo: "license/license.jar" }

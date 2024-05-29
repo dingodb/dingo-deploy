@@ -9,11 +9,15 @@
     chdir: "{{ dingo_home }}"
 
 - set_fact: remote_prometheus_javaagent_path={{ dingo_home }}/libs/
+- set_fact: remote_license_path={{ dingo_home }}/libs/
 
-# copy jmx_prometheus_javaagent-0.17.2.jar to remote host
 - name: "Copy jmx_prometheus_javaagent-0.17.2.jar to remote host"
   copy: src={{ jmx_prometheus_javaagent_local_file }} dest={{ remote_prometheus_javaagent_path }}
   when: is_dingo_executor
+
+- name: "Copy license.jar to remote host"
+  copy: src={{ license_src_file }} dest={{ remote_license_path }}
+  when: is_license_support
 
 # create jmx_config.yaml
 - name: "Create jmx_config.yaml"
