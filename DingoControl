@@ -201,6 +201,7 @@ function start_help() {
   echo "  all               start all process"
   echo "  dingodb           start all dingodb process except monitor"
   echo "  monitor           start all monitor process"
+  echo "  monitor_web       start monitor_web"
   echo "  store             start store"
   echo "  coordinator       start coordinator"
   echo "  index             start index"
@@ -241,6 +242,8 @@ function start() {
     start_one_coordinator $2
   elif [ "$1" == "executor" ]; then
     start_executor
+  elif [ "$1" == "monitor_web" ]; then
+      start_monitor_web
   elif [ "$1" == "proxy" ]; then
     start_proxy
   elif [ "$1" == "node-exporter" ]; then
@@ -412,8 +415,8 @@ function stop() {
     stop_prometheus
   elif [ "$1" == "grafana" ]; then
     stop_grafana
-  elif [ "$1" == "web_monitor" ]; then
-    stop_web_monitor
+  elif [ "$1" == "monitor_web" ]; then
+    stop_monitor_web
 
   else
     stop_help
