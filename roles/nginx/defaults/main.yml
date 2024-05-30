@@ -1,7 +1,7 @@
 ---
 
 nginx_home: "{{ nginx_install_path }}/nginx"
-nginx_conf_dir: "{{ nginx_home }}/etc/nginx"
+nginx_conf_dir: "{{ nginx_home }}/etc/"
 # Just for nginx init script
 nginx_log_path: "{{ nginx_home }}/var/log/nginx"
 nginx_pid_file: "{{ nginx_home }}/var/run/nginx.pid"
@@ -25,7 +25,6 @@ nginx_http_default_params:
 
 nginx_http_params: "{{ nginx_http_default_params }}"
 
-nginx_default_site_template: "site.conf.j2"
 nginx_disabled_sites: []
 
 installer_cache_path: /tmp

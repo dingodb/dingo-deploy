@@ -7,8 +7,6 @@
   stat: path={{ nginx_home }}/usr/sbin/nginx
   register: nginx_installed
 
-- import_tasks: 00_preflight.yml
-
 - import_tasks: 01_os_user.yml
 
 - import_tasks: 02_build.yml

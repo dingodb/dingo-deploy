@@ -10,9 +10,8 @@ artifacts:
   - {name: "node_exporter_local_file", path_in_repo: "node_exporter-0.18.1.linux-amd64.tar.gz"}
   - {name: "process_exporter_local_file", path_in_repo: "process-exporter-0.7.10.linux-amd64.tar.gz"}
   - {name: "jmx_prometheus_javaagent_local_file", path_in_repo: "jmx_prometheus_javaagent-0.17.2.jar"}
-  - { name: "nginx_src_file",  path_in_repo: "nginx/nginx-1.17.8.tar.gz" }
   - { name: "monitor_web_local_file",  path_in_repo: "nginx/dingo-monitor.tar.gz" }
-  - { name: "pcre_src_file",  path_in_repo: "nginx/pcre-8.41.tar.gz" }
-  - { name: "openssl_src_file",  path_in_repo: "nginx/OpenSSL_1_1_0f.tar.gz" }
   - { name: "zlib_src_file",  path_in_repo: "nginx/zlib-1.2.11.tar.gz" }
   - { name: "license_src_file",  path_in_repo: "license/license.jar" }
+  - { name: "nginx_local_file",  path_in_repo: "nginx/nginx-x86.zip" }
+  - { name: "nginx_arm_local_file",  path_in_repo: "nginx/nginx-arm.zip" }
