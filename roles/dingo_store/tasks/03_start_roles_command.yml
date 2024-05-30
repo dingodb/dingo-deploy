@@ -68,4 +68,21 @@
     - is_dingo_store_coordinator
     - inventory_hostname == ansible_play_batch[0]
 
+- name: "install license"
+  register: license_id
+  shell: "/bin/bash ./scripts/generate_id.sh"
+  args:
+    chdir: "{{ dingo_store_home }}"
+  when:
+    - is_license_support
+    - inventory_hostname == groups['store'][0]
+
+# 将上一步/bin/bash ./scripts/generate_id.sh执行的结果打印出来
+- name: "Print license_id"
+  debug:
+    msg: "license ID {{ license_id.stdout_lines|join(',')|regex_search('value: \"(.*?)\"') }}"
+  when:
+    - is_license_support
+    - inventory_hostname == groups['store'][0]
+
 
