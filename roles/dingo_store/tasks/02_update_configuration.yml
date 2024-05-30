@@ -29,7 +29,11 @@
     - {
       src: "gen_coor_list.sh.j2",
       dest: "{{ dingo_store_home }}/scripts/gen_coor_list.sh"
-     }
+    }
+    - {
+      src: "generate_id.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/generate_id.sh"
+    }
 
 - name: "Remove dingo logrotate file if exist"
   file: path="{{ item }}" state=absent

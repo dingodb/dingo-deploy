@@ -4,7 +4,6 @@ uuid=$(uuidgen)
 echo "uuid: $uuid"
 
 key="coor13"
-cd ""${BASE_DIR}/build/bin/"
-# ./dingodb_client CoorKvPut --key=$key --value=$uuid --need-prev-kv=true --lease=0这个命令返回的结果是一个json，{kvs:{kv:{key:"coor13",value:"abedoijweroverf"}}}，解析出其中的value值
-value=$(./dingodb_client CoorKvPut --key=$key --value=$uuid --need-prev-kv=true --lease=0 | jq -r '.kvs.kv.value')
-echo "value: $value"
+cd "${BASE_DIR}/build/bin/"
+./dingodb_client CoorKvPut --key=$key --value=$uuid --need-prev-kv=true --lease=0
+./dingodb_client CoorKvGet --key=$key
