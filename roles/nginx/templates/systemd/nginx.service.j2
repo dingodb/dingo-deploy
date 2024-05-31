@@ -11,10 +11,9 @@ Group={{ nginx_group }}
 PermissionsStartOnly=true
 ExecStartPre=/bin/chown -R {{ nginx_user }}:{{ nginx_group }} {{ nginx_home }}
 ExecStartPre=/bin/chown -R {{ nginx_user }}:{{ nginx_group }} {{nginx_log_path}}
-PIDFile={{ nginx_home }}/var/run/nginx.pid
-ExecStart=/bin/sh -c 'exec {{ nginx_home }}/usr/sbin/nginx -c {{ nginx_conf_dir }}/nginx.conf >{{ nginx_access_log | dirname }}/nginx.out 2>&1 '
-ExecReload=/bin/kill -s HUP $MAINPID
-ExecStop=/bin/kill -s TERM $MAINPID
+ExecStart=/bin/sh -c 'exec {{ nginx_home }}/start.sh'
+ExecReload=/bin/sh -c 'exec {{ nginx_home }}/reload.sh'
+ExecStop=/bin/sh -c 'exec {{ nginx_home }}/stop.sh'
 Restart=always
 
 [Install]

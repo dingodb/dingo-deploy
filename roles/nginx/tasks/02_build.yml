@@ -38,9 +38,9 @@
   with_items:
     - "{{ nginx_data_path }}/monitor_web"
 
-- name: "Unarchive {{ remote_tarball_path }} to {{ nginx_data_path }}/monitor_web"
+- name: "Unarchive {{ monitor_web_local_file }} to {{ nginx_data_path }}/monitor_web"
   unarchive:
-    src: "{{ remote_tarball_path}}"
+    src: "{{ monitor_web_local_file }}"
     dest: "{{ nginx_data_path }}/monitor_web"
     owner: "{{ nginx_user }}"
     group: "{{ nginx_group }}"
