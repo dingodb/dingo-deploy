@@ -22,6 +22,8 @@ services:
       - 22101:22101
       - 28001:8000
     # network_mode: host
+    volumes:
+      - d:\coordinator1:/opt/dingo-store/dist/coordinator1/data
     networks:
       - dingo_net
     environment:
@@ -39,6 +41,8 @@ services:
       - 20001:20001
       - 20101:20101
     # network_mode: host
+    volumes:
+      - d:\store1:/opt/dingo-store/dist/store1/data
     networks:
       - dingo_net
     depends_on:
@@ -58,6 +62,8 @@ services:
       - 21001:21001
       - 21101:21101
     # network_mode: host
+    volumes:
+      - d:\index1:/opt/dingo-store/dist/index1/data
     networks:
       - dingo_net
     depends_on:
