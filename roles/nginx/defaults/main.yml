@@ -1,7 +1,7 @@
 ---
 
 nginx_home: "{{ nginx_install_path }}/nginx"
-nginx_conf_dir: "{{ nginx_home }}/etc/"
+nginx_conf_dir: "{{ nginx_home }}/conf/"
 # Just for nginx init script
 nginx_log_path: "{{ nginx_home }}/var/log/nginx"
 nginx_pid_file: "{{ nginx_home }}/var/run/nginx.pid"
@@ -12,16 +12,11 @@ nginx_group: "datacanvas"
 
 nginx_worker_processes: "{% if ansible_processor_vcpus is defined %}{{ ansible_processor_vcpus }}{% else %}auto{% endif %}"
 
-nginx_access_log: "{{ nginx_log_path }}/access.log"
-nginx_error_log: "{{ nginx_log_path }}/error.log"
-
 nginx_http_default_params:
 - sendfile on
 - tcp_nopush on
 - tcp_nodelay on
 - server_tokens off
-- access_log "{{ nginx_access_log }}"
-- error_log "{{ nginx_error_log }}" error
 
 nginx_http_params: "{{ nginx_http_default_params }}"
 

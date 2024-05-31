@@ -33,3 +33,12 @@
   with_items:
     - "default"
 
+- name: "Generate nginx start script"
+  template: >
+    src="{{ item }}.sh.j2"
+    dest="{{ nginx_home }}/{{ item }}.sh"
+    owner={{ nginx_user }} group={{ nginx_group }} mode=0777 force=yes
+  with_items:
+    - "start"
+    - "stop"
+    - "reload"
