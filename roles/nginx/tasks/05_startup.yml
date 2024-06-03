@@ -11,7 +11,7 @@
   when: (ansible_service_mgr == "upstart" or ansible_service_mgr == "sysvinit")
 
 - name: "Ensure nginx service is started via systemd"
-  systemd: name=nginx state=restarted enabled=yes daemon_reload=yes
+  shell: "{{ nginx_home }}/reload.sh"
   become: yes
   when: ansible_service_mgr == "systemd"
 
