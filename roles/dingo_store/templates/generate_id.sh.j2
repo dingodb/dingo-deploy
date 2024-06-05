@@ -3,7 +3,7 @@ BASE_DIR=$(dirname $(cd $(dirname $0); pwd))
 uuid=$(uuidgen)
 echo "uuid: $uuid"
 
-key="coor13"
+key="dingo"
 cd "${BASE_DIR}/build/bin/"
 ./dingodb_client CoorKvPut --key=$key --value=$uuid --need-prev-kv=true --lease=0
 ./dingodb_client CoorKvGet --key=$key
