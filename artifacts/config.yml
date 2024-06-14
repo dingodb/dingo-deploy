@@ -12,6 +12,6 @@ artifacts:
   - {name: "jmx_prometheus_javaagent_local_file", path_in_repo: "jmx_prometheus_javaagent-0.17.2.jar"}
   - { name: "monitor_web_local_file",  path_in_repo: "nginx/dingo-monitor.tar.gz" }
   - { name: "zlib_src_file",  path_in_repo: "nginx/zlib-1.2.11.tar.gz" }
-  - { name: "license_src_file",  path_in_repo: "license/license.jar" }
+  - { name: "license_src_file",  path_in_repo: "license/dingo-license.zip" }
   - { name: "nginx_local_file",  path_in_repo: "nginx/nginx-x86.zip" }
   - { name: "nginx_arm_local_file",  path_in_repo: "nginx/nginx-arm.zip" }
