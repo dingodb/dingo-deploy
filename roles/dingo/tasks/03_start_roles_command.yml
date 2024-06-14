@@ -15,8 +15,8 @@
   copy: src={{ jmx_prometheus_javaagent_local_file }} dest={{ remote_prometheus_javaagent_path }}
   when: is_dingo_executor
 
-- name: "Copy license.jar to remote host"
-  copy: src={{ license_src_file }} dest={{ remote_license_path }}
+- name: "Unzip license.zip to remote host"
+  unarchive: src={{ license_src_file }} dest={{ remote_license_path }}
   when: is_license_support
 
 # create jmx_config.yaml
