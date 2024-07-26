@@ -24,13 +24,19 @@ add_store
 [store]
 # 172.20.3.201
 # 172.20.3.201 store_num=2 
-# 172.20.3.201 store_num=2 disk='/home/sd1 /home/sd2'
+# 172.20.3.201 store_num=2 disk='/home/sd1/store1 /home/sd2/store2'
+172.20.3.201
+172.20.3.200 
+172.20.3.202
+
+[document]
+# 172.20.3.201 document_num=2 disk='/home/sd1/document1 /home/sd2/document2'
 172.20.3.201
 172.20.3.200 
 172.20.3.202
 
 [index]
-# 172.20.3.201 index_num=2 disk='/home/sd1 /home/sd2'
+# 172.20.3.201 index_num=2 disk='/home/sd1/index1 /home/sd2/index2'
 172.20.3.201
 172.20.3.200 
 172.20.3.202

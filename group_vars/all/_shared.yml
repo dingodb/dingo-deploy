@@ -68,6 +68,7 @@ install_dingo_store: true
 install_dingo_store_basic_command: true
 install_dingo_store_update_configuration: true
 install_dingo_store_start_roles: true
+install_dingo_store_default_replica_num: 3
 open_dingo_store_logrotate: false
 
 
@@ -116,6 +117,8 @@ dingo_store_coordinator_exchange_port: 22001
 dingo_store_coordinator_raft_port: 22101
 dingo_store_exchange_port: 20001
 dingo_store_raft_port: 20101
+dingo_store_document_exchange_port: 23001
+dingo_store_document_raft_port: 23101
 dingo_store_index_exchange_port: 21001
 dingo_store_index_raft_port: 21101
 
