@@ -31,7 +31,7 @@ COOR_RAFT_PEERS={{ dingo_coordinator_raft_connection_list }}
 COOR_SRV_PEERS={{ dingo_store_store_exchange_connection_list }}
 INSTANCE_START_ID={{ 1000 | int +  groups['coordinator'].index(inventory_hostname) | int }}
 TMP_COORDINATOR_SERVICES=$BASE_DIR/build/bin/coor_list
-DEFAULT_REPLICA_NUM=3
+DEFAULT_REPLICA_NUM={{ install_dingo_store_default_replica_num }}
 
 source $mydir/deploy_func.sh
 

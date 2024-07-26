@@ -4,7 +4,7 @@ mydir="${BASH_SOURCE%/*}"
 if [[ ! -d "$mydir" ]]; then mydir="$PWD"; fi
 . $mydir/shflags
 
-DEFINE_string role 'index' 'server role'
+DEFINE_string role 'document' 'server role'
 DEFINE_boolean clean_db 1 'clean db'
 DEFINE_boolean clean_raft 1 'clean raft'
 DEFINE_boolean clean_log 0 'clean log'
@@ -22,9 +22,9 @@ SERVER_LISTEN_HOST={{ inventory_hostname | default('127.0.0.1') }}
 RAFT_HOST={{ inventory_hostname | default('127.0.0.1') }}
 RAFT_LISTEN_HOST={{ inventory_hostname | default('127.0.0.1') }}
 COOR_SRV_PEERS={{ dingo_store_store_exchange_connection_list }}
-STORE_NUM={{ index_num | int }}
-RAFT_START_PORT={{ dingo_store_index_raft_port | default(21101) }}
-SERVER_START_PORT={{ dingo_store_index_exchange_port | default(21001) }}
+STORE_NUM={{ document_num | int }}
+RAFT_START_PORT={{ dingo_store_document_raft_port | default(23101) }}
+SERVER_START_PORT={{ dingo_store_document_exchange_port | default(23001) }}
 DISK_LIST_STR="{{ hostvars[inventory_hostname]['disk']  | default('${DIST_DIR}') }}"
 eval DISK_LIST=($DISK_LIST_STR)
 TMP_COORDINATOR_SERVICES=$BASE_DIR/build/bin/coor_list
@@ -43,7 +43,7 @@ deploy() {
   for i in $(seq 1 $STORE_NUM)
   do
     START_ID={{ groups['coordinator'].index(inventory_hostname) * 100 }}
-    INSTANCE_START_ID=`expr 2000 + $i + $START_ID`
+    INSTANCE_START_ID=`expr 3000 + $i + $START_ID`
     N_SERVER_START_PORT=`expr $SERVER_START_PORT + $i - 1`
     N_RAFT_START_PORT=`expr $RAFT_START_PORT + $i - 1`
     # program_dir=$BASE_DIR/dist/${FLAGS_role}${i}

@@ -16,6 +16,14 @@
   args:
     chdir: "{{ dingo_store_home }}"
 
+# stop all the document 
+- name: "Stop and Del db Document on all host"
+  become: true
+  become_user: "{{ dingo_user }}"
+  shell: "/bin/bash ./scripts/start-document.sh clean"
+  args:
+    chdir: "{{ dingo_store_home }}"
+
 # stop all the index
 - name: "Stop and Del db Index on all host"
   become: true
@@ -45,6 +53,15 @@
     chdir: "{{ dingo_store_home }}"
   when: is_dingo_store_store
 
+# start document
+- name: "Deploy and Start document using Shell Script"
+  become: true
+  become_user: "{{ dingo_user }}"
+  shell: "/bin/bash ./scripts/start-document.sh cleanstart"
+  args:
+    chdir: "{{ dingo_store_home }}"
+  when: is_dingo_store_document
+
 # start index
 - name: "Deploy and Start index using Shell Script"
   become: true
@@ -57,16 +74,6 @@
 - name: "Sleep wait store start"
   shell: "sleep 20"
 
-# start init mysql
-- name: "init mysql using Shell Script"
-  become: true
-  become_user: "{{ dingo_user }}"
-  shell: "/bin/bash ./scripts/mysql_init.sh" 
-  args:
-    chdir: "{{ dingo_store_home }}"
-  when: 
-    - is_dingo_store_coordinator
-    - inventory_hostname == ansible_play_batch[0]
 
 - name: "install license"
   register: license_id

@@ -15,16 +15,16 @@
       dest: "{{ dingo_store_home }}/scripts/start-coordinator.sh"
     }
     - {
+      src: "start-document.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/start-document.sh"
+     }
+    - {
       src: "start-store.sh.j2",
       dest: "{{ dingo_store_home }}/scripts/start-store.sh"
      }
     - {
       src: "start-index.sh.j2",
       dest: "{{ dingo_store_home }}/scripts/start-index.sh"
-     }
-    - {
-      src: "mysql_init.sh.j2",
-      dest: "{{ dingo_store_home }}/scripts/mysql_init.sh"
      }
     - {
       src: "gen_coor_list.sh.j2",

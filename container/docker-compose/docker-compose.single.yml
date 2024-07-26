@@ -36,6 +36,22 @@ services:
       SERVER_START_PORT: 20001
       INSTANCE_START_ID: 1001
       <<: *shared-env
+  
+  document1:
+    image: dingodatabase/dingo-store:latest
+    hostname: document1
+    container_name: document1
+    network_mode: host
+    depends_on:
+      - coordinator1
+      - coordinator2
+      - coordinator3
+    environment:
+      FLAGS_role: document
+      RAFT_START_PORT: 23101
+      SERVER_START_PORT: 23001
+      INSTANCE_START_ID: 1201
+      <<: *shared-env
 
   index1:
     image: dingodatabase/dingo-store:latest
