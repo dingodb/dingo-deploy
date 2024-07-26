@@ -554,11 +554,11 @@ function stop_coordinator() {
 }
 
 function stop_executor() {
- ansible executor -m shell -a "${installer_path}/dingo-store/bin/stop-executor-proxy.sh" --become --become-user ${user}
+ ansible executor -m shell -a "${INSTALLER_PATH}/dingo-store/bin/stop-executor-proxy.sh" --become --become-user ${USER}
 }
 
 function stop_web() {
- ansible web -m shell -a "${installer_path}/dingo-store/bin/stop-dingo-web.sh" --become --become-user ${user}
+ ansible web -m shell -a "${INSTALLER_PATH}/dingo-store/bin/stop-dingo-web.sh" --become --become-user ${USER}
 }
 
 function stop_node() {
