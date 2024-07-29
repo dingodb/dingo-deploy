@@ -245,7 +245,7 @@ function start() {
     start_monitor
   elif [ "$1" == "store" ]; then
     start_store
-  elif [ "$1" == "document"]; then
+  elif [ "$1" == "document" ]; then
     start_document
   elif [ "$1" == "index" ]; then
     start_index
