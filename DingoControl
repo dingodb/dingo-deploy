@@ -222,6 +222,7 @@ function start_help() {
   echo "  index             start index"
   echo "  one_executor      start one executor need param3=ip"
   echo "  one_store         start one store need param3=ip"
+  echo "  one_document      start one document need param3=ip"
   echo "  one_index         start one index need param3=ip"
   echo "  one_coordinator   start one coordinator need param3=ip"
   echo "  executor          start executor"
@@ -254,6 +255,8 @@ function start() {
     start_one_executor $2
   elif [ "$1" == "one_store" ]; then
     start_one_store $2
+  elif [ "$1" == "one_document" ]; then
+    start_one_document $2
   elif [ "$1" == "one_index" ]; then
     start_one_index $2
   elif [ "$1" == "one_coordinator" ]; then
