@@ -37,6 +37,13 @@
     state: present
     reload: yes
 
+- name: Set aio-max-nr value 
+  sysctl:
+    name: fs.aio-max-nr
+    value: "{{ fs_aio_max_nr }}"
+    state: present
+    reload: yes
+
 - name: Set core file pattern in /etc/sysctl.conf
   sysctl:
     name: kernel.core_pattern

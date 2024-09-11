@@ -83,6 +83,8 @@ function deploy() {
     deploy_coordinator
   elif [ "$1" == "document" ]; then
     deploy_document
+  elif [ "$1" == "diskann" ]; then
+    deploy_diskann
   elif [ "$1" == "index" ]; then
     deploy_index
   else
@@ -103,6 +105,11 @@ function deploy_store() {
 function deploy_document() {
   ansible document -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-document.sh  clean" --become --become-user ${USER}
   ansible document -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-document.sh  deploy" --become --become-user ${USER}
+}
+
+function deploy_diskann() {
+  ansible diskann -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-diskann.sh  clean" --become --become-user ${USER}
+  ansible diskann -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-diskann.sh  deploy" --become --become-user ${USER}
 }
 
 function deploy_index() {
@@ -127,6 +134,7 @@ function clean_help() {
   echo "  store             stop/clean store"
   echo "  coordinator       stop/clean coordinator"
   echo "  document          stop/clean document"
+  echo "  diskann           stop/clean diskann"
   echo "  index             stop/clean index"
   echo "  node-exporter     stop/clean node-exporter"
   echo "  process-exporter  stop/clean process-exporter"
@@ -145,6 +153,8 @@ function clean() {
     clean_coordinator
   elif [ "$1" == "document" ]; then
     clean_document
+  elif [ "$1" == "diskann" ]; then
+    clean_diskann
   elif [ "$1" == "index" ]; then
     clean_index
   elif [ "$1" == "node-exporter" ]; then
@@ -163,6 +173,7 @@ function clean() {
 function clean_all() {
   clean_store
   clean_document
+  clean_diskann
   clean_index
   clean_coordinator
   stop_executor
@@ -178,6 +189,9 @@ function clean_store() {
 }
 function clean_document() {
   ansible document -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-document.sh  clean" --become --become-user ${USER}
+}
+function clean_diskann() {
+  ansible diskann -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-diskann.sh  clean" --become --become-user ${USER}
 }
 function clean_index() {
   ansible index -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-index.sh  clean" --become --become-user ${USER}
@@ -219,10 +233,12 @@ function start_help() {
   echo "  store             start store"
   echo "  coordinator       start coordinator"
   echo "  document          start document"
+  echo "  diskann           start diskann"
   echo "  index             start index"
   echo "  one_executor      start one executor need param3=ip"
   echo "  one_store         start one store need param3=ip"
   echo "  one_document      start one document need param3=ip"
+  echo "  one_diskann       start one diskann need param3=ip"
   echo "  one_index         start one index need param3=ip"
   echo "  one_coordinator   start one coordinator need param3=ip"
   echo "  executor          start executor"
@@ -247,6 +263,8 @@ function start() {
     start_store
   elif [ "$1" == "document" ]; then
     start_document
+  elif [ "$1" == "diskann" ]; then
+    start_diskann
   elif [ "$1" == "index" ]; then
     start_index
   elif [ "$1" == "coordinator" ]; then
@@ -257,6 +275,8 @@ function start() {
     start_one_store $2
   elif [ "$1" == "one_document" ]; then
     start_one_document $2
+  elif [ "$1" == "one_diskann" ]; then
+    start_one_diskann $2
   elif [ "$1" == "one_index" ]; then
     start_one_index $2
   elif [ "$1" == "one_coordinator" ]; then
@@ -287,6 +307,7 @@ function start_all() {
   sleep 10
   start_store
   start_document
+  start_diskann
   start_index
   start_executor
   start_proxy
@@ -302,6 +323,7 @@ function start_dingodb() {
   sleep 10
   start_store
   start_document
+  start_diskann
   start_index
   start_executor
   start_proxy
@@ -333,6 +355,11 @@ function start_one_document() {
   echo "ip: ${ip}"
   ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-document.sh  start" --become --become-user ${USER}
 }
+function start_one_diskann() {
+  ip=$1
+  echo "ip: ${ip}"
+  ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-diskann.sh  start" --become --become-user ${USER}
+}
 function start_one_index() {
   ip=$1
   echo "ip: ${ip}"
@@ -352,6 +379,9 @@ function start_store() {
 }
 function start_document() {
   ansible document -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-document.sh  start" --become --become-user ${USER}
+}
+function start_diskann() {
+  ansible diskann -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-diskann.sh  start" --become --become-user ${USER}
 }
 
 function start_index() {
@@ -404,12 +434,14 @@ function stop_help() {
   echo "  monitor           stop all monitor process"
   echo "  store             stop store"
   echo "  document          stop document"
+  echo "  diskann           stop diskann"
   echo "  index             stop index"
   echo "  coordinator       stop coordinator"
   echo "  one_executor      stop one executor need param3=ip"
   echo "  one_web           stop one web need param3=ip"
   echo "  one_store         stop one store need param3=ip"
   echo "  one_document      stop one document need param3=ip"
+  echo "  one_diskann       stop one diskann need param3=ip"
   echo "  one_index         stop one index need param3=ip"
   echo "  one_coordinator   stop one coordinator need param3=ip"
   echo "  executor          stop executor and proxy"
@@ -434,6 +466,8 @@ function stop() {
     stop_store
   elif [ "$1" == "document" ]; then
     stop_document
+  elif [ "$1" == "diskann" ]; then
+    stop_diskann
   elif [ "$1" == "index" ]; then
     stop_index
   elif [ "$1" == "coordinator" ]; then
@@ -444,8 +478,10 @@ function stop() {
     stop_one_web $2
   elif [ "$1" == "one_store" ]; then
     stop_one_store $2
-    elif [ "$1" == "one_document" ]; then
-    stop_one_index $2
+  elif [ "$1" == "one_document" ]; then
+    stop_one_document $2
+  elif [ "$1" == "one_diskann" ]; then
+    stop_one_diskann $2
   elif [ "$1" == "one_index" ]; then
     stop_one_index $2
   elif [ "$1" == "one_coordinator" ]; then
@@ -474,6 +510,7 @@ function stop() {
 function stop_all() {
   stop_store
   stop_document
+  stop_diskann
   stop_index
   stop_coordinator
   stop_executor
@@ -488,6 +525,7 @@ function stop_all() {
 function stop_dingodb() {
   stop_store
   stop_document
+  stop_diskann
   stop_index
   stop_coordinator
   stop_executor
@@ -526,6 +564,12 @@ function stop_one_document() {
   ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-document.sh  stop" --become --become-user ${USER}
 }
 
+function stop_one_diskann() {
+  ip=$1 
+  echo "ip: ${ip}"
+  ansible ${ip} -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-diskann.sh  stop" --become --become-user ${USER}
+}
+
 function stop_one_index() {
   ip=$1
   echo "ip: ${ip}"
@@ -545,6 +589,10 @@ function stop_store() {
 
 function stop_document() {
   ansible document -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-document.sh  stop" --become --become-user ${USER}
+}
+
+function stop_diskann() {
+  ansible diskann -m shell -a "${INSTALLER_PATH}/dingo-store/scripts/start-diskann.sh  stop" --become --become-user ${USER}
 }
 
 function stop_index() {

@@ -22,12 +22,14 @@ installer_password: dingo
 # 1. Update System Configuration about OS
 #-----------------------------------------------------
 install_system: false
-install_system_basicTools: false
+# disann is must libaio-devel and boost-devel
+install_system_basicTools: true
 install_system_fileLimits: true
 set_core_file: false
 core_file_dir: /home/corefiles
 ulimit_nproc_limit: 4194304
 ulimit_nofile_limit: 1048576
+fs_aio_max_nr: 1048576
 install_optimize_memory: true
 install_no_passwd_login: true
 #-----------------------------------------------------
@@ -121,6 +123,9 @@ dingo_store_document_exchange_port: 23001
 dingo_store_document_raft_port: 23101
 dingo_store_index_exchange_port: 21001
 dingo_store_index_raft_port: 21101
+dingo_store_diskann_exchange_port: 24001
+dingo_store_diskann_raft_port:  24101
+
 
 
 # executer port

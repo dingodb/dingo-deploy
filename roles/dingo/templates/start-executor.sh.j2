@@ -20,7 +20,7 @@ ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 JAR_PATH=$(find $ROOT -name dingo-executor-*.jar)
 STORE_JAR_PATH=$(find $ROOT -name dingo-store*.jar)
 NET_JAR_PATH=$(find $ROOT -name dingo-net-*.jar)
-JAVA_OPTS="-Xms2g -Xmx2g -XX:+AlwaysPreTouch -XX:+UseG1GC -XX:+ScavengeBeforeFullGC -XX:+DisableExplicitGC -XX:+HeapDumpOnOutOfMemoryError -javaagent:{{ dingo_home }}/libs/jmx_prometheus_javaagent-0.17.2.jar={{ jmx_prometheus_javaagent_port }}:{{ dingo_home }}/conf/jmx_config.yaml"
+JAVA_OPTS="-Xms8g -Xmx8g -XX:+AlwaysPreTouch -XX:+UseG1GC -XX:+ScavengeBeforeFullGC -XX:+DisableExplicitGC -XX:+HeapDumpOnOutOfMemoryError -XX:MaxDirectMemorySize=4096m -javaagent:{{ dingo_home }}/libs/jmx_prometheus_javaagent-0.17.2.jar={{ jmx_prometheus_javaagent_port }}:{{ dingo_home }}/conf/jmx_config.yaml"
 {% if is_license_support %}
  LICENSE_JAR_PATH=$(find $ROOT -name license.jar)
 nohup {{ jdk_home }}/bin/java ${JAVA_OPTS} \

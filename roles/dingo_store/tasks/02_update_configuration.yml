@@ -27,6 +27,10 @@
       dest: "{{ dingo_store_home }}/scripts/start-index.sh"
      }
     - {
+      src: "start-diskann.sh.j2",
+      dest: "{{ dingo_store_home }}/scripts/start-diskann.sh"
+     }
+    - {
       src: "gen_coor_list.sh.j2",
       dest: "{{ dingo_store_home }}/scripts/gen_coor_list.sh"
     }
