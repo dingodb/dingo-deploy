@@ -17,3 +17,6 @@
     - "vim"
     - "tmux"
     - "unzip"
+    - "libaio-devel"
+    - "boost-devel"
+  become: yes
