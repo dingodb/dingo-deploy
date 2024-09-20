@@ -21,7 +21,7 @@
     <!-- Control the Executor module public log level -->
     <property name="log.level" value="info"/>
     <!-- Control the RPC module public log level -->
-    <property name="rpcLog.level" value="debug"/>
+    <property name="rpcLog.level" value="info"/>
     <!-- Maximum time for log storage -->
     <property name="log.maxHistory" value="7"/>
     <!-- Log storage location -->
@@ -404,6 +404,27 @@
         <appender-ref ref="Ddl" />
     </appender>
     <logger name="io.dingodb.calcite.DingoDdlExecutor" level="${log.level}" additivity="false">
+        <appender-ref ref="ASYNC-Ddl"/>
+    </logger>
+    <logger name="io.dingodb.server.executor.ddl" level="${log.level}" additivity="false">
+        <appender-ref ref="ASYNC-Ddl"/>
+    </logger>
+    <logger name="io.dingodb.calcite.ddl" level="${log.level}" additivity="false">
+        <appender-ref ref="ASYNC-Ddl"/>
+    </logger>
+    <logger name="io.dingodb.store.service.SchemaSyncerService" level="${log.level}" additivity="false">
+        <appender-ref ref="ASYNC-Ddl"/>
+    </logger>
+    <logger name="io.dingodb.server.executor.schedule.LoadInfoSchemaTask" level="${log.level}" additivity="false">
+        <appender-ref ref="ASYNC-Ddl"/>
+    </logger>
+    <logger name="io.dingodb.meta.entity.InfoCache" level="${log.level}" additivity="false">
+        <appender-ref ref="ASYNC-Ddl"/>
+    </logger>
+    <logger name="io.dingodb.server.executor.schedule.MetaLockCheckHandler" level="${log.level}" additivity="false">
+        <appender-ref ref="ASYNC-Ddl"/>
+    </logger>
+    <logger name="io.dingodb.store.proxy.ddl.DdlHandler" level="${log.level}" additivity="false">
         <appender-ref ref="ASYNC-Ddl"/>
     </logger>
 
