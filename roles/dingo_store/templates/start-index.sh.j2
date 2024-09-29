@@ -29,7 +29,7 @@ DISK_LIST_STR="{{ hostvars[inventory_hostname]['disk']  | default('${DIST_DIR}')
 eval DISK_LIST=($DISK_LIST_STR)
 TMP_COORDINATOR_SERVICES=$BASE_DIR/build/bin/coor_list
 DEFAULT_REPLICA_NUM={{ install_dingo_store_default_replica_num }}
-
+DISKANN_SERVER_START_PORT=$(({{ dingo_store_diskann_exchange_port }} - 1))
 if [ ! -d "$DIST_DIR" ]; then
   mkdir "$DIST_DIR"
 fi

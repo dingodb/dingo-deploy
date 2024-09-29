@@ -157,6 +157,7 @@ services:
       INDEX_RAFT_START_PORT: 21101
       INDEX_SERVER_START_PORT: 21001
       INDEX_INSTANCE_START_ID: 1101
+      DISKANN_SERVER_START_PORT: 24000
       <<: *shared-env
   index2:
     image: dingodatabase/dingo-store:latest
@@ -172,6 +173,7 @@ services:
       INDEX_RAFT_START_PORT: 21102
       INDEX_SERVER_START_PORT: 21002
       INDEX_INSTANCE_START_ID: 1102
+      DISKANN_SERVER_START_PORT: 24000
       <<: *shared-env
 
   index3:
@@ -188,6 +190,7 @@ services:
       INDEX_RAFT_START_PORT: 21103
       INDEX_SERVER_START_PORT: 21003
       INDEX_INSTANCE_START_ID: 1103
+      DISKANN_SERVER_START_PORT: 24000
       <<: *shared-env
 
   diskann1:
