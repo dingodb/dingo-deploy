@@ -18,9 +18,9 @@ BASE_DIR=$(dirname $(cd $(dirname $0); pwd))
 DIST_DIR=$BASE_DIR/dist
 
 SERVER_HOST={{ inventory_hostname | default('127.0.0.1') }}
-SERVER_LISTEN_HOST={{ inventory_hostname | default('127.0.0.1') }}
+SERVER_LISTEN_HOST={{ server_listen_host | default('0.0.0.0') }}
 RAFT_HOST={{ inventory_hostname | default('127.0.0.1') }}
-RAFT_LISTEN_HOST={{ inventory_hostname | default('127.0.0.1') }}
+RAFT_LISTEN_HOST={{ raft_listen_host | default('0.0.0.0') }}
 COOR_SRV_PEERS={{ dingo_store_store_exchange_connection_list }}
 STORE_NUM={{ diskann_num | int }}
 RAFT_START_PORT={{ dingo_store_diskann_raft_port | default(24101) }}
