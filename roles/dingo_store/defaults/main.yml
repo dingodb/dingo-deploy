@@ -14,6 +14,8 @@ dingo_store_coordinator_meta_path: "{{ dingo_store_data_path }}/coordinator"
 
 dingo_store_tmp_coordinator_list: "{{ groups['coordinator'] }}"
 dingo_store_tmp_store_list: "{{ groups['store'] }}"
+dingo_diskann_list: "{{ groups['diskann'] }}"
+dingo_diskann_host: "{{ (dingo_diskann_list[0] | default('127.0.0.1')) }}"
 
 # define dingo coordinator raft connection string: 172.20.3.18:22101,172.20.3.19:22101,172.20.3.20:22101 
 dingo_store_coordinator_raft_list: "{% for item in dingo_store_tmp_coordinator_list %} {{item}}:{{ dingo_store_coordinator_raft_port }} {% endfor %}"

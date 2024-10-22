@@ -125,7 +125,9 @@ dingo_store_index_exchange_port: 21001
 dingo_store_index_raft_port: 21101
 dingo_store_diskann_exchange_port: 24001
 dingo_store_diskann_raft_port:  24101
-
+# lisence ip
+server_listen_host: 0.0.0.0
+raft_listen_host: 0.0.0.0
 
 
 # executer port
