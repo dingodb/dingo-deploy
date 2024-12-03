@@ -21,7 +21,7 @@
     <!-- Control the Executor module public log level -->
     <property name="log.level" value="info"/>
     <!-- Control the RPC module public log level -->
-    <property name="rpcLog.level" value="info"/>
+    <property name="rpcLog.level" value="off"/>
     <!-- Maximum time for log storage -->
     <property name="log.maxHistory" value="7"/>
     <!-- Log storage location -->
@@ -500,8 +500,8 @@
 
     <!-- Control RPC module log -->
     <!--Phase, RAfter is the stage name, supports all stages that can be monitored-->
-    <logger name="io.dingodb.sdk.service.ServiceCallCycles$RAfter" level="${rpcLog.level}"/>
-    <logger name="io.dingodb.sdk.service.ServiceCallCycles$RBefore" level="${rpcLog.level}"/>
+    <logger name="io.dingodb.sdk.service.ServiceCallCycles$RAfter" level="off"/>
+    <logger name="io.dingodb.sdk.service.ServiceCallCycles$RBefore" level="off"/>
     <logger name="io.dingodb.sdk.service.ServiceCallCycles$RError" level="${rpcLog.level}"/>
     <logger name="io.dingodb.sdk.service.ServiceCallCycles$Before" level="off"/>
     <logger name="io.dingodb.sdk.service.ServiceCallCycles$After" level="off"/>
