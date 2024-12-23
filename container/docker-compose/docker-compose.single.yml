@@ -45,8 +45,6 @@ services:
     network_mode: host
     depends_on:
       - coordinator1
-      - coordinator2
-      - coordinator3
     environment:
       FLAGS_role: document
       RAFT_START_PORT: 23101
