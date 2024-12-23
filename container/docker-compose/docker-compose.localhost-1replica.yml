@@ -75,6 +75,7 @@ services:
       - 3307:3307
     networks:
       - dingo_net
+    restart: on-failure:5
     environment:
       DINGO_ROLE: executor
       DINGO_HOSTNAME: executor
