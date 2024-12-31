@@ -6,7 +6,8 @@
 
 - set_fact:
     chrony_installed: "{{ 'chrony' in ansible_facts.packages }}"
-    ntp_installed: "{{ 'ntp' in ansible_facts.packages }}"
+    # ntp_installed: "{{ 'ntp' in ansible_facts.packages }}"
+    ntp_installed: false
 
 - debug: var=chrony_installed
 - debug: var=ntp_installed

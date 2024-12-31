@@ -11,3 +11,24 @@
     state: present
     reload: yes
   become: yes
+
+- name: Set suid_dumpable value to 2
+  sysctl:
+    name: fs.suid_dumpable
+    value: 2
+    state: present
+    reload: yes
+
+- name: Set aio-max-nr value 
+  sysctl:
+    name: fs.aio-max-nr
+    value: "{{ fs_aio_max_nr }}"
+    state: present
+    reload: yes
+
+- name: Set vm max_map_count value 
+  sysctl:
+    name: vm.max_map_count
+    value: "{{ max_map_count }}"
+    state: present
+    reload: yes
