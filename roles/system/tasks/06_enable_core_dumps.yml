@@ -30,19 +30,7 @@
   notify:
     - Reload limits
 
-- name: Set suid_dumpable value to 2
-  sysctl:
-    name: fs.suid_dumpable
-    value: 2
-    state: present
-    reload: yes
 
-- name: Set aio-max-nr value 
-  sysctl:
-    name: fs.aio-max-nr
-    value: "{{ fs_aio_max_nr }}"
-    state: present
-    reload: yes
 
 - name: Set core file pattern in /etc/sysctl.conf
   sysctl:
