@@ -20,7 +20,7 @@ set -x
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 JAR_PATH=$(find $ROOT -name dingo-web*.jar)
 
-nohup {{ jdk_home }}/bin/java ${JAVA_OPTS} \
+nohup $ROOT/Linux-x64/bin/java ${JAVA_OPTS} \
      -Dlogging.config=file:${ROOT}/conf/logback-web.xml \
      -jar ${JAR_PATH} \
      --spring.config.location=${ROOT}/conf/application-web.yaml \

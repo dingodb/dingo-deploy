@@ -36,7 +36,7 @@ install_no_passwd_login: true
 #-----------------------------------------------------
 # 2. Install Java SDK
 #-----------------------------------------------------
-install_java_sdk: true
+install_java_sdk: false
 jdk_install_path: /opt
 jdk_home: "{{ jdk_install_path }}/jdk"
 #-----------------------------------------------------
