@@ -23,7 +23,7 @@ if [ "${DINGODB_MYSQL_INIT}" -ne 0 ]; then
 fi
 
 # run Java start mysql_init 
-{{ jdk_home }}/bin/java -cp $BASE_DIR/build/bin/dingo-mysql-init-0.6.0-SNAPSHOT.jar io.dingodb.mysql.MysqlInit {{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} > mysql_init.log
+$BASE_DIR/Linux-x64/bin/java -cp $BASE_DIR/build/bin/dingo-mysql-init-0.6.0-SNAPSHOT.jar io.dingodb.mysql.MysqlInit {{ inventory_hostname }}:{{ dingo_store_coordinator_exchange_port }} > mysql_init.log
 
 # check status
 if [ $? -eq 0 ]
