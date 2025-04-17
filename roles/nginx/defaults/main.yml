@@ -1,7 +1,7 @@
 ---
 
 nginx_home: "{{ nginx_install_path }}/nginx"
-nginx_conf_dir: "{{ nginx_home }}/conf/"
+nginx_conf_dir: "{{ nginx_home }}/conf"
 # Just for nginx init script
 nginx_log_path: "{{ nginx_home }}/var/log/nginx"
 nginx_pid_file: "{{ nginx_home }}/var/run/nginx.pid"

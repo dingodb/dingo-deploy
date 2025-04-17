@@ -40,12 +40,10 @@
   register: js_files
 
 - name: "Replace {{ nginx_data_path }}/monitor_web/*.js"
-  lineinfile:
+  replace:
     path: "{{ item.path }}"
-    regexp: "http://[^/]*/d/Bm4sOIfSz/sql_metrics"
-    line: "http://{{ grafana_server }}:{{ grafana_port }}/d/Bm4sOIfSz/sql_metrics"
-    backrefs: yes
-    state: present
+    regexp: ".concat[^/]*/d/Bm4sOIfSz/sql_metrics"
+    replace: '.concat("{{ grafana_server }}", ":{{ grafana_port }}/d/Bm4sOIfSz/sql_metrics'
   with_items: "{{ js_files.files }}"
 
 - name: "Delete temporary tarball file: {{ remote_tarball_path}}"

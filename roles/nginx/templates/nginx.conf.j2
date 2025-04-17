@@ -8,7 +8,7 @@ events {
 
 http {
         client_max_body_size 256m;
-        default_type application/octet-stream;
+        include mime.types;
 {% for v in nginx_http_params %}
         {{ v if "}" in v[-2:] else v+";" }}
 {% endfor %}
@@ -25,7 +25,7 @@ http {
         # gzip_comp_level 6;
         # gzip_buffers 16 8k;
         # gzip_http_version 1.1;
-        gzip_types text/plain text/css application/json application/javascript application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+        # gzip_types text/plain text/css application/json application/javascript application/x-javascript text/xml application/xml application/xml+rss text/javascript;
 
         include {{ nginx_conf_dir }}/conf.d/*.conf;
         include {{ nginx_conf_dir }}/sites-enabled/*;
