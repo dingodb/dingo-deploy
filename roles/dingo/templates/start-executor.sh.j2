@@ -20,7 +20,27 @@ ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 JAR_PATH=$(find $ROOT -name dingo-executor-*.jar)
 STORE_JAR_PATH=$(find $ROOT -name dingo-store*.jar)
 NET_JAR_PATH=$(find $ROOT -name dingo-net-*.jar)
-JAVA_OPTS="-Xms8g -Xmx8g -XX:+AlwaysPreTouch -XX:+UseG1GC -XX:+ScavengeBeforeFullGC -XX:+DisableExplicitGC -XX:+HeapDumpOnOutOfMemoryError -XX:MaxDirectMemorySize=4096m -javaagent:{{ dingo_home }}/libs/jmx_prometheus_javaagent-0.17.2.jar={{ jmx_prometheus_javaagent_port }}:{{ dingo_home }}/conf/jmx_config.yaml"
+# JAVA_OPTS="-Xms8g -Xmx8g -XX:+AlwaysPreTouch -XX:+UseG1GC -XX:+ScavengeBeforeFullGC -XX:+DisableExplicitGC -XX:+HeapDumpOnOutOfMemoryError -XX:MaxDirectMemorySize=4096m -javaagent:{{ dingo_home }}/libs/jmx_prometheus_javaagent-0.17.2.jar={{ jmx_prometheus_javaagent_port }}:{{ dingo_home }}/conf/jmx_config.yaml"
+
+JAVA_OPTS="\
+    -Xms8g -Xmx8g \
+    -XX:+UseG1GC \
+    -XX:MaxGCPauseMillis=100 \
+    -XX:G1HeapRegionSize=4M \
+    -XX:+ParallelRefProcEnabled \
+    -XX:+AlwaysPreTouch \
+    -XX:+DisableExplicitGC \
+    -XX:+HeapDumpOnOutOfMemoryError \
+    -XX:MaxDirectMemorySize=4096m \
+    -XX:ReservedCodeCacheSize=256m \
+    -XX:+UseCodeCacheFlushing \
+    -XX:+TieredCompilation \
+    -XX:TieredStopAtLevel=4 \
+    -XX:InitialCodeCacheSize=256m \
+    -Xlog:gc*:file={{ dingo_log_path }}/gc.log:time:filecount=5,filesize=100M \
+    -javaagent:{{ dingo_home }}/libs/jmx_prometheus_javaagent-0.17.2.jar={{ jmx_prometheus_javaagent_port }}:{{ dingo_home }}/conf/jmx_config.yaml \
+"
+
 {% if is_license_support %}
  LICENSE_JAR_PATH=$(find $ROOT -name license.jar)
 nohup $ROOT/Linux-x64/bin/java ${JAVA_OPTS} \
@@ -31,6 +51,7 @@ nohup $ROOT/Linux-x64/bin/java ${JAVA_OPTS} \
       > {{ dingo_log_path }}/executor.out &
 {% else %}
 nohup $ROOT/Linux-x64/bin/java ${JAVA_OPTS} \
+     --add-opens java.base/java.util=ALL-UNNAMED \
      -Dlogback.configurationFile=file:${ROOT}/conf/logback-executor.xml \
      -classpath ${JAR_PATH}:${NET_JAR_PATH}:${STORE_JAR_PATH} \
      io.dingodb.server.executor.Starter \
