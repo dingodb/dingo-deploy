@@ -8,3 +8,5 @@ server:
     grpc:
         port: {{ dingo_proxy_grpc_port }}
     coordinatorExchangeSvrList: {{ dingo_coordinator_exchange_connection_list }}
+    client:
+      retry: 60
