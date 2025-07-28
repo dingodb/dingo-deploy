@@ -19,6 +19,8 @@ common:
     scheduledCoreThreads: 16
     lockCoreThreads: 0
     globalCoreThreads: 0
+    gcSafePointPeriod: 300
+    gcDeleteRegionPeriod: 60
 store:
     bufferSize: {{ dingo_executor_buffer_size }}
     bufferNumber: {{ dingo_executor_buffer_number }}
