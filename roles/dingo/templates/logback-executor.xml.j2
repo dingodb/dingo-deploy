@@ -21,11 +21,11 @@
     <!-- Control the Executor module public log level -->
     <property name="log.level" value="info"/>
     <!-- Control the RPC module public log level -->
-    <property name="rpcLog.level" value="info"/>
+    <property name="rpcLog.level" value="off"/>
     <!-- Maximum time for log storage -->
     <property name="log.maxHistory" value="7"/>
     <!-- Log storage location -->
-    <property name="log.filePath" value="{{ dingo_log_path }}"/>
+    <property name="log.filePath" value="${user.dir}"/>
     <!-- Display format of log -->
     <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}:%line] - %msg%n"/>
     <!-- Maximum size of log file -->
@@ -269,6 +269,26 @@
             <level>${rpcLog.level}</level>
         </filter>
     </appender>
+
+    <appender name="DOCUMENT_RPC" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.filePath}/log/documentRpc.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.filePath}/log/%d{yyyy-MM-dd}/documentRpc.%d{yyyyMMdd}.%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.file.max}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${log.maxHistory}</maxHistory>
+            <totalSizeCap>${log.file.total}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}:%line] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${rpcLog.level}</level>
+        </filter>
+    </appender>
+
     <appender name="COORDINATOR_RPC" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.filePath}/log/coordinatorRpc.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -500,8 +520,8 @@
 
     <!-- Control RPC module log -->
     <!--Phase, RAfter is the stage name, supports all stages that can be monitored-->
-    <logger name="io.dingodb.sdk.service.ServiceCallCycles$RAfter" level="${rpcLog.level}"/>
-    <logger name="io.dingodb.sdk.service.ServiceCallCycles$RBefore" level="${rpcLog.level}"/>
+    <logger name="io.dingodb.sdk.service.ServiceCallCycles$RAfter" level="off"/>
+    <logger name="io.dingodb.sdk.service.ServiceCallCycles$RBefore" level="off"/>
     <logger name="io.dingodb.sdk.service.ServiceCallCycles$RError" level="${rpcLog.level}"/>
     <logger name="io.dingodb.sdk.service.ServiceCallCycles$Before" level="off"/>
     <logger name="io.dingodb.sdk.service.ServiceCallCycles$After" level="off"/>
@@ -519,7 +539,6 @@
         <queueSize>512</queueSize>
         <appender-ref ref="STORE_RPC" />
     </appender>
-    <!--Only write the package name of the service, not the interface name, and it will take effect on all interfaces of the service-->
     <logger name="io.dingodb.sdk.service.desc.store" level="${rpcLog.level}" additivity="false">
         <appender-ref ref="ASYNC-STORE_RPC"/>
     </logger>
@@ -557,11 +576,25 @@
         <queueSize>512</queueSize>
         <appender-ref ref="INDEX_RPC" />
     </appender>
+    <!--Only write the package name of the service, not the interface name, and it will take effect on all interfaces of the service-->
     <logger name="io.dingodb.sdk.service.desc.index" level="${rpcLog.level}" additivity="false">
         <appender-ref ref="ASYNC-INDEX_RPC"/>
     </logger>
     <logger name="io.dingodb.sdk.service.desc.index.IndexServiceDescriptors$TxnScanLock" level="off" additivity="false">
         <appender-ref ref="ASYNC-INDEX_RPC"/>
+    </logger>
+
+    <appender name="ASYNC-DOCUMENT_RPC" class="ch.qos.logback.classic.AsyncAppender">
+        <includeCallerData>true</includeCallerData>
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>512</queueSize>
+        <appender-ref ref="DOCUMENT_RPC" />
+    </appender>
+    <logger name="io.dingodb.sdk.service.desc.document" level="${rpcLog.level}" additivity="false">
+        <appender-ref ref="ASYNC-DOCUMENT_RPC"/>
+    </logger>
+    <logger name="io.dingodb.sdk.service.desc.document.DocumentServiceDescriptors$TxnScanLock" level="off" additivity="false">
+        <appender-ref ref="ASYNC-DOCUMENT_RPC"/>
     </logger>
 
     <appender name="ASYNC-META_RPC" class="ch.qos.logback.classic.AsyncAppender">
@@ -637,6 +670,9 @@
         <appender-ref ref="ASYNC-TXN_RPC"/>
     </logger>
     <logger name ="io.dingodb.sdk.service.desc.store.StoreServiceDescriptors$TxnGet"  level="${rpcLog.level}" additivity="false">
+        <appender-ref ref="ASYNC-TXN_RPC"/>
+    </logger>
+    <logger name ="io.dingodb.sdk.service.desc.store.StoreServiceDescriptors$TxnCheckSecondaryLocks"  level="${rpcLog.level}" additivity="false">
         <appender-ref ref="ASYNC-TXN_RPC"/>
     </logger>
 
