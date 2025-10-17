@@ -1,7 +1,7 @@
 ---
 
-# stop all the coordinator and executor
-- name: "Stop Coordinator and Executor on all host"
+# stop dingo all role: executor, proxy, web
+- name: "Stop executor, proxy, web on all host"
   become: true
   become_user: "{{ dingo_user }}"
   shell: "/bin/bash ./bin/stop-all-component.sh"
