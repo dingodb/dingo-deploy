@@ -11,8 +11,6 @@
 
 - name: "Update hostname if not set"
   shell: "hostnamectl set-hostname --static dingo{{ ip_identity }}.{{ default_domain }}"
-  args:
-    warn: false
   when: ansible_hostname == "localhost" or ansible_hostname == default_hostname_rhel
 
 - name: "Refresh facts after hostname changed"

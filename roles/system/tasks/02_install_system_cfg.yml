@@ -3,8 +3,6 @@
 # Disable selinux temporarily
 - name: "Disable selinux temporarily"
   shell: "setenforce 0 || /bin/true"
-  args:
-    warn: false
   failed_when: false
 
 # Disable Firewall

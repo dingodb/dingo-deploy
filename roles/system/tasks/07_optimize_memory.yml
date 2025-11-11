@@ -32,3 +32,11 @@
     value: "{{ max_map_count }}"
     state: present
     reload: yes
+
+- name: Set large page nr_hugepages
+  sysctl:
+    name: vm.nr_hugepages
+    value: "{{ nr_hugepages }}"
+    state: present
+    reload: yes
+  
