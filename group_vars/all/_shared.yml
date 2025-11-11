@@ -31,6 +31,7 @@ ulimit_nproc_limit: 4194304
 ulimit_nofile_limit: 1048576
 fs_aio_max_nr: 1048576
 max_map_count: 655360
+nr_hugepages: 0
 install_optimize_memory: true
 install_no_passwd_login: true
 #-----------------------------------------------------

@@ -42,7 +42,7 @@ deploy() {
 
   for i in $(seq 1 $STORE_NUM)
   do
-    START_ID={{ groups['coordinator'].index(inventory_hostname) * 100 }}
+    START_ID={{ groups['coordinator'].index(inventory_hostname) }}
     INSTANCE_START_ID=`expr 4000 + $i + $START_ID`
     N_SERVER_START_PORT=`expr $SERVER_START_PORT + $i - 1`
     N_RAFT_START_PORT=`expr $RAFT_START_PORT + $i - 1`

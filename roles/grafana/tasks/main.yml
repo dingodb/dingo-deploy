@@ -99,8 +99,6 @@
 
 - name: "Check datasource exists or not"
   shell: "curl -I -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} localhost:{{ grafana_port }}/api/datasources/name/{{ default_datasource_name }} | head -n 1 | awk '{ print $2}'"
-  args:
-    warn: false
   register: datasource_result
 
 - debug: var=datasource_result
@@ -117,8 +115,6 @@
       "basicAuth":false
     }
     '
-  args:
-    warn: false
   register: datasource_setup_result
   when: datasource_result.stdout != '200'
 
@@ -155,8 +151,6 @@
 - name: "Delete existing dashboard {{ default_dashboard_uid }} {{ process_dashboard_uid }} {{ dingo_store_dashboard_uid }} {{ iostat_dashboard_uid }} {{ sql_dashboard_uid }}"
   shell: >
     curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XDELETE localhost:{{ grafana_port }}/api/dashboards/uid/{{ item }}
-  args:
-    warn: false
   register: delete_result
   with_items:
     - "{{ default_dashboard_uid }}"
@@ -171,8 +165,6 @@
 - name: "Import grafana dashboard process dingo_metrics iostat dingo sqlmetric"
   shell: >
     curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST localhost:{{ grafana_port }}/api/dashboards/db -H "Content-Type:application/json" -d @{{ installer_cache_path }}/{{ item }}
-  args:
-    warn: false
   register: import_result
   with_items:
     - process.json
@@ -185,8 +177,6 @@
 
 - name: "Get Dingo dashboard info"
   shell: "curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} localhost:{{ grafana_port }}/api/dashboards/uid/{{ default_dashboard_uid }}"
-  args:
-    warn: false
   register: get_dashboard_result
 
 - debug: var=get_dashboard_result
@@ -201,8 +191,6 @@
   shell: >
     curl -s -u {{ grafana_admin_user }}:{{ grafana_admin_password }} -XPOST \
       localhost:{{ grafana_port }}/api/user/stars/dashboard/{{ dingo_dashboard_id }} -H "Content-Type:application/json"
-  args:
-    warn: false
   register: star_result
 
 - debug: var=star_result
@@ -219,8 +207,6 @@
         "timezone":""
       }
     '
-  args:
-    warn: false
   register: set_default_result
 
 - debug: var=set_default_result
